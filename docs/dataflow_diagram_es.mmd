@@ -1,0 +1,38 @@
+graph TD
+    DS[DEXes/CEX APIs/Oracles] --> PC(python-collector)
+    GS[Google Sheets] --> PC
+    GS --> API(services/api-server)
+
+    PC --> QDB(Queues/Database)
+    QDB --> TSE(ts-executor)
+    API --> RE(rust-engine)
+    API --> TSE
+    RE --> TSE
+
+    TSE --> C(contracts)
+
+    CFG[configs/] --> PC
+    CFG --> API
+    CFG --> RE
+    CFG --> TSE
+    SCRIPTS[SCRIPTS/] --> CI(CI/CD .github/workflows)
+    CI --> DEPLOY[Deployment Fly.io]
+
+    FE[Frontend] --> API
+
+    PC -- "Ingesta y Normalización" --> QDB
+    QDB -- "Oportunidades/Señales" --> TSE
+    TSE -- "Simulación/Ejecución Tx" --> C
+    API -- "Solicitudes de Precios/Cálculo" --> RE
+    API -- "Encolar Trabajos/Estado" --> TSE
+    RE -- "Rutas Óptimas/Cálculos" --> TSE
+    FE -- "Monitoreo/Control" --> API
+    CFG -- "Parámetros de Configuración" --> PC
+    CFG -- "Parámetros de Configuración" --> API
+    CFG -- "Parámetros de Configuración" --> RE
+    CFG -- "Parámetros de Configuración" --> TSE
+    SCRIPTS -- "Validación Pre-Deploy" --> CI
+    CI -- "Despliegue/Verificación" --> DEPLOY
+    GS -- "Configuración/Resultados" <--> API
+    GS -- "Configuración/Resultados" <--> PC
+

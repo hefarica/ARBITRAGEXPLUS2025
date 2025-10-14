@@ -1,0 +1,24 @@
+# Node
+node_modules
+dist
+.env
+.env.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+# Python
+__pycache__/
+*.pyc
+.venv/
+# Rust
+target/
+# Solidity
+artifacts/
+cache/
+out/
+# OS
+.DS_Store
+Thumbs.db
+.github/workflows/
+

@@ -1,0 +1,1 @@
+This directory contains configuration loading logic. Use it to parse environment variables and expose typed configuration objects to the rest of the application.

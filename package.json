@@ -1,0 +1,23 @@
+{
+  "name": "arbitragexplus2025",
+  "version": "1.0.0",
+  "description": "Monorepo for ARBITRAGEXPLUS2025 project",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --recursive build",
+    "start": "pnpm --filter api-server start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "pnpm": "^8.15.1"
+  }
+}
+

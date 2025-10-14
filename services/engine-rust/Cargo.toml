@@ -1,0 +1,11 @@
+[package]
+name = "engine-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7"
+tokio = { version = "1.36", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+rust_core = { path = "../rust-core" }
+serde_json = "1.0"

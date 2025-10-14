@@ -1,0 +1,13 @@
+[package]
+name = "rust-core"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rust-core"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+thiserror = "1.0"
+serde_json = "1.0"
