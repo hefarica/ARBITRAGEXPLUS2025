@@ -1,0 +1,48 @@
+name: Deploy Google Apps Script
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: 624000370261
+  WIP_PROVIDER_ID: github-oidc-provider
+  WIP_POOL_ID: github-actions-pool
+  APPS_SCRIPT_PROJECT_ID: 1IupNf9oGVwFxXGCtYs_ImzmD7TQm7cQgcqDtj6JUfxYu92TT4mXIMwiO # Reemplazar con el ID del proyecto de Apps Script
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: projects/${{ env.PROJECT_ID }}/locations/global/workloadIdentityPools/${{ env.WIP_POOL_ID }}/providers/${{ env.WIP_PROVIDER_ID }}
+          service_account: arbitragex-sheets-service@gen-lang-client-0296716075.iam.gserviceaccount.com
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install clasp
+        run: |
+          npm install -g @google/clasp
+
+      - name: Deploy Apps Script
+        run: |
+          # Asegúrate de que el directorio de tu proyecto de Apps Script esté en la raíz del repositorio
+          # o ajusta la ruta si está en un subdirectorio.
+          # Por ejemplo, si tu código de Apps Script está en una carpeta 'apps-script-code':
+          # cd apps-script-code
+
+          GOOGLE_ACCESS_TOKEN=${{ steps.auth.outputs.access_token }} clasp push --project ${{ env.APPS_SCRIPT_PROJECT_ID }}
+
