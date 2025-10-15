@@ -44,5 +44,6 @@ jobs:
           # Por ejemplo, si tu código de Apps Script está en una carpeta 'apps-script-code':
           # cd apps-script-code
 
+          cd apps-script
           GOOGLE_ACCESS_TOKEN=${{ steps.auth.outputs.access_token }} clasp push --project ${{ env.APPS_SCRIPT_PROJECT_ID }}
 
