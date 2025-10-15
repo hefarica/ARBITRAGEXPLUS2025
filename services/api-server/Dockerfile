@@ -3,18 +3,18 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 RUN npm install -g pnpm
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+COPY services/api-server/package.json ./
+COPY services/api-server/pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 FROM node:20-alpine AS builder
 WORKDIR /app
 RUN npm install -g pnpm
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+COPY services/api-server/package.json ./
+COPY services/api-server/pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
-COPY tsconfig.json ./
-COPY src ./src
+COPY services/api-server/tsconfig.json ./
+COPY services/api-server/src ./src
 RUN pnpm run build
 
 FROM node:20-alpine AS runner
