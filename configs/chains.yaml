@@ -1,0 +1,7 @@
+# Chain configuration
+ethereum:
+  rpc_url: ${ETH_RPC_URL}
+polygon:
+  rpc_url: ${POLYGON_RPC_URL}
+bsc:
+  rpc_url: ${BSC_RPC_URL}

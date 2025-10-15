@@ -1,0 +1,13 @@
+# Node
+node_modules/
+dist/
+# Rust
+/target/
+# Python
+__pycache__/
+venv/
+# Contracts
+artifacts/
+cache/
+# Environment
+.env

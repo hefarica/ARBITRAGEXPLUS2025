@@ -1,0 +1,1 @@
+Middleware functions or plugins are defined here. Use this folder to implement authentication, authorization, rate limiting, and request logging.

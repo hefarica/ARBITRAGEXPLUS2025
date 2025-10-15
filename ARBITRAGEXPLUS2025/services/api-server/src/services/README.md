@@ -1,0 +1,2 @@
+The `services` directory contains abstractions over external dependencies or domain services.
+For example, interactions with the Rust engine, blockchain client, queues, or database should be placed here.

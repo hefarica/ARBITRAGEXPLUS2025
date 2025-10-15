@@ -1,0 +1,1 @@
+The `lib` folder contains shared utilities and helper functions used across controllers and services. Keep these modules pure and free from side effects.

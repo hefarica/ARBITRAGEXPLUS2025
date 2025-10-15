@@ -1,0 +1,2 @@
+The `controllers` directory contains classes or functions that implement the business logic for each route.
+Each file in this folder should handle a single resource or endpoint and should be kept free of direct side effects such as database or network access.
