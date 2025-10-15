@@ -1,10 +1,10 @@
-//! Mathematical utilities for arbitrage calculations.
+//! Mathematical utilities for pricing and risk calculations.
 
-pub fn calculate_profit(amount_in: f64, amount_out: f64) -> f64 {
-    amount_out - amount_in
+/// Compute a simple moving average for demonstration purposes.
+pub fn sma(data: &[f64]) -> Option<f64> {
+    if data.is_empty() {
+        None
+    } else {
+        Some(data.iter().sum::<f64>() / data.len() as f64)
+    }
 }
-
-pub fn calculate_slippage(expected: f64, actual: f64) -> f64 {
-    (expected - actual) / expected
-}
-

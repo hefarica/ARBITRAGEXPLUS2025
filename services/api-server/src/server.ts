@@ -1,44 +1,60 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyRequest, FastifyReply } from 'fastify';
+import websocket from '@fastify/websocket';
 import cors from '@fastify/cors';
 
-const app = Fastify({
-  logger: {
-    level: 'info',
-    transport: { target: 'pino-pretty', options: { colorize: true } }
-  }
-});
+const app = Fastify({ logger: { level: 'info' } });
 
+// Register CORS
 await app.register(cors, { origin: true });
+await app.register(websocket);
 
-app.get('/health', async () => ({
-  status: 'ok',
-  timestamp: new Date().toISOString(),
-  service: 'arbitragexplus-api'
-}));
+// Import routes lazily
+import { RouteOptions, HTTPMethods } from 'fastify';
 
-app.get('/', async () => ({
-  name: 'arbitragexplus-api',
-  version: '1.0.0',
-  status: 'running'
-}));
+type HttpRouteDef = { method: HTTPMethods; url: string; handler: (request: FastifyRequest, reply: FastifyReply) => Promise<any>; };
+type WsRouteDef = { method: HTTPMethods; url: string; handler: (connection: any, req: any) => void; websocket: true };
+type RouteDef = HttpRouteDef | WsRouteDef;
+const routes: RouteDef[] = [
+  {
+    method: 'GET',
+    url: '/health',
+    handler: async () => ({ status: 'ok', timestamp: new Date().toISOString(), service: 'arbitragexplus-api' })
+  },
+  {
+    method: 'GET',
+    url: '/',
+    handler: async () => ({ name: 'arbitragexplus-api', version: '1.0.0' })
+  },
+  {
+    method: 'GET',
+url: 
+    '/ws',
+    websocket: true,
+    handler: (conn: any, req: any) => {      conn.socket.on('message', (message: Buffer) => {
+        // Echo back the message
+        conn.socket.send(message);
+      });
+    }
+  }
+];
 
-// TODO: Implement actual logic for these endpoints
-app.get('/status', async () => ({ message: 'Status endpoint' }));
-app.get('/routes/live', async () => ({ message: 'Live routes endpoint' }));
-app.get('/rpc/latency', async () => ({ message: 'RPC Latency endpoint' }));
-app.get('/alerts', async () => ({ message: 'Alerts endpoint' }));
-app.get('/feeds/pyth', async () => ({ message: 'Pyth feeds endpoint' }));
-app.post('/sheets/push-config', async () => ({ message: 'Push config endpoint' }));
-app.get('/sheets/refresh-pools', async () => ({ message: 'Refresh pools endpoint' }));
-app.get('/sheets/sync-thresholds', async () => ({ message: 'Sync thresholds endpoint' }));
-app.get('/version', async () => ({ version: '1.0.0' }));
+for (const r of routes) {
+  if ('websocket' in r && r.websocket) {
+    app.get(r.url, { websocket: true }, r.handler);
+  } else if ('handler' in r) {
+    app.route(r as HttpRouteDef);
+  }
+}
 
-const port = Number(process.env.PORT || 3000);
-const host = '0.0.0.0';
-
-app.listen({ port, host }).then(() => {
-  app.log.info(`API listening on http://${host}:${port}`);
-}).catch(err => {
-  app.log.error(err); process.exit(1);
-});
-
+const start = async () => {
+  try {
+    const port = Number(process.env.PORT) || 3000;
+    const host = '0.0.0.0';
+    await app.listen({ port, host });
+    app.log.info(`Server listening on ${host}:${port}`);
+  } catch (err) {
+    app.log.error(err);
+    process.exit(1);
+  }
+};
+start();

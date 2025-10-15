@@ -1,9 +1,11 @@
-#!/usr/bin/env node
-/**
- * Validate that all required files and directories exist.
- * Fails the process if any are missing.
- */
 const fs = require('fs');
+const path = require('path');
+
+const PROJECT_ROOT = '/home/ubuntu/ARBITRAGEXPLUS2025';
+
+console.log('Current working directory:', process.cwd());
+console.log('Project root:', PROJECT_ROOT);
+
 const paths = [
   'fly.toml',
   'services/api-server/package.json',
@@ -17,13 +19,20 @@ const paths = [
   'scripts/validate-deployment.js',
   '.github/workflows/manu-fly-ops.yml',
 ];
+
 let missing = [];
 for (const p of paths) {
-  if (!fs.existsSync(p)) missing.push(p);
+  const fullPath = path.join(PROJECT_ROOT, p);
+  console.log('Checking for file:', fullPath);
+  if (!fs.existsSync(fullPath)) {
+    missing.push(p);
+  }
 }
+
 if (missing.length) {
   console.error('Missing required files:\n', missing.join('\n'));
   process.exit(1);
 } else {
   console.log('Structure looks good!');
 }
+

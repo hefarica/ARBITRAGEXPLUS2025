@@ -1,0 +1,59 @@
+name: \U0001F680 MANU Fly Ops - Deployment 5000%
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      note:
+        description: 'Reason for manual deploy'
+        required: false
+        default: 'Triggered manually'
+
+permissions:
+  contents: write
+  actions: write
+  packages: read
+
+jobs:
+  sanity-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --prefix scripts
+      - run: node scripts/verify-structure.js
+      - run: node scripts/check_fly_config.js
+      - run: node scripts/scan-dead-paths.js
+      - run: node scripts/guard-node-engines.js
+
+  build:
+    runs-on: ubuntu-latest
+    needs: sanity-check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --prefix services/api-server
+      - run: npm run build --prefix services/api-server
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+      - run: |
+          if [ -z "${{ secrets.FLY_API_TOKEN }}" ]; then
+            echo 'FLY_API_TOKEN secret is missing';
+            exit 1;
+          fi
+          flyctl deploy --remote-only --app arbitragexplus-api --build-arg NODE_ENV=production --now
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - run: npm ci --prefix scripts
+      - run: node scripts/validate-deployment.js

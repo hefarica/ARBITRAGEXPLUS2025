@@ -1,9 +1,0 @@
-{
-  "name": "arbitragexplus-scripts",
-  "version": "1.0.0",
-  "type": "commonjs",
-  "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "axios": "^1.6.0"
-  }
-}

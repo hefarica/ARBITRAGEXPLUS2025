@@ -1,51 +1,26 @@
-[app]
-name = "arbitragexplus-api"
+# Fly.io app configuration
+app = "arbitragexplus-api"
 
+# Docker build (preferred for reliability)
 [build]
-builder = "dockerfile"
-dockerfile = "services/api-server/Dockerfile"
+  dockerfile = "services/api-server/Dockerfile"
 
+# Environment variables exposed at runtime
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+
+# HTTP service configuration
 [http_service]
-internal_port = 3000
-force_https = true
-auto_stop_machines = true
-auto_start_machines = true
-min_machines_running = 0
-processes = ["app"]
-
-[[services]]
   internal_port = 3000
-  protocol = "tcp"
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
   processes = ["app"]
 
-  [services.concurrency]
-    type = "connections"
-    hard_limit = 1000
-    soft_limit = 800
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
-    force_https = true
-
-  [[services.ports]]
-    port = 443
-    handlers = ["tls", "http"]
-
-  [[services.tcp_checks]]
-    interval = "15s"
-    timeout = "2s"
-    grace_period = "1s"
-    restart_limit = 0
-
-  [[services.http_checks]]
+  [http_service.healthcheck]
+    path = "/health"
     interval = "10s"
     timeout = "2s"
-    grace_period = "5s"
-    restart_limit = 0
-    method = "GET"
-    path = "/health"
-    protocol = "http"
-    tls_skip_verify = false
-    headers = {"User-Agent" = "Fly-HealthCheck"}
-
+    grace_period = "30s"

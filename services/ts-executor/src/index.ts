@@ -1,17 +1,6 @@
-import { ethers } from 'ethers';
+// Entry point for TS executor. This service listens for jobs, simulates routes
+// using the Rust engine, and executes transactions via the blockchain service.
 
-console.log('TypeScript Executor Service');
+// TODO: implement job consumption, simulation logic, and submission of signed transactions.
 
-async function main() {
-    console.log('Executing main function...');
-    // Example of using ethers
-    // const provider = new ethers.JsonRpcProvider('http://localhost:8545'); // Replace with your RPC provider
-    // const blockNumber = await provider.getBlockNumber();
-    // console.log(`Current block number: ${blockNumber}`);
-}
-
-main().catch(error => {
-    console.error('Error in executor service:', error);
-    process.exit(1);
-});
-
+console.log('TS Executor started');

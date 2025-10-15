@@ -1,25 +1,25 @@
-use axum::{routing::get, Router};
-use std::net::SocketAddr;
+use axum::{routing::get, Router, Json};
+use serde::Serialize;
+use rust_core::math;
 
-async fn solve() -> String {
-    "Solve endpoint reached!".to_string()
+#[derive(Serialize)]
+struct Health {
+    status: &'static str,
 }
 
-async fn score() -> String {
-    "Score endpoint reached!".to_string()
+async fn health() -> Json<Health> {
+    Json(Health { status: "ok" })
 }
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new()
-        .route("/solve", get(solve))
-        .route("/score", get(score));
-
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
-    println!("Listening on {}", addr);
+    let app = Router::new().route("/health", get(health));
+    let addr = std::net::SocketAddr::from(([0, 0, 0, 0], 4000));
+    println!("Engine listening on {}", addr);
+    // Example use of rust_core to show integration
+    let _ = math::sma(&[1.0, 2.0, 3.0]);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
         .unwrap();
 }
-

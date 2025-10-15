@@ -5,21 +5,13 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "amqplib": "^0.10.3",
-    "ethers": "^6.10.0",
-    "viem": "^1.21.4",
-    "dotenv": "^16.3.1"
+    "amqplib": "^0.10.3"
   },
   "devDependencies": {
     "typescript": "^5.4.0",
-    "@types/node": "^20.11.25",
-    "ts-node-dev": "^2.0.0"
+    "@types/node": "^20.11.25"
   }
 }
-

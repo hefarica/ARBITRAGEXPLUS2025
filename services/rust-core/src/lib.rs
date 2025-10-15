@@ -3,9 +3,5 @@ pub mod math;
 pub mod serde_utils;
 pub mod errors;
 
+// Re-export commonly used items
 pub use errors::CoreError;
-
-pub fn health_check() -> &'static str {
-    "rust-core is healthy!"
-}
-
