@@ -3,7 +3,7 @@ name: Deploy Google Apps Script
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   PROJECT_ID: 624000370261
