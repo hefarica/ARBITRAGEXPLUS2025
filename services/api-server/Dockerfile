@@ -39,6 +39,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:3000/health || exit 1
 
-# Start server with tsx for TypeScript support
-CMD ["dumb-init", "node", "--loader", "tsx", "src/server.ts"]
+# Start server with tsx for TypeScript support (using --import for Node 18.19+)
+CMD ["dumb-init", "node", "--import", "tsx/esm", "src/server.ts"]
 
