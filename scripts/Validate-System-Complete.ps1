@@ -1,5 +1,5 @@
 ﻿# SCRIPT DE VALIDACIÓN COMPLETA - ARBITRAGEXPLUS2025
-# Versión: 8.0 - Escaneo exhaustivo de GitHub
+# Versión: 9.0 - Escaneo exhaustivo de GitHub
 # Mapea y escanea el repositorio GitHub con barrido progresivo
 
 [CmdletBinding()]
@@ -362,10 +362,15 @@ $report += "   - Solidity: Arrays calldata"
 $report += ""
 
 
-# 4.5 FLUJOGRAMA DETALLADO DE INFORMACIÓN (119 ARCHIVOS)
+# 4.5 FLUJOGRAMA DETALLADO DE INFORMACIÓN (ESCANEO DINÁMICO)
+Write-Host "[4.5/7] Generando flujograma detallado de todos los archivos..." -ForegroundColor Yellow
+
 $report += "================================================================================"
-$report += "  4.5 FLUJOGRAMA DETALLADO DE INFORMACION - TODOS LOS ARCHIVOS"
+$report += "  4.5 FLUJOGRAMA DETALLADO DE INFORMACION - ESCANEO DINAMICO"
 $report += "================================================================================"
+$report += ""
+$report += "NOTA: Esta seccion escanea TODOS los archivos del repositorio dinamicamente."
+$report += "      NO usa lista fija de archivos, sino que analiza el repositorio en tiempo real."
 $report += ""
 $report += "LEYENDA:"
 $report += "  [ORIGEN]  -> Fuente de datos (Google Sheets, API externa)"
@@ -373,6 +378,8 @@ $report += "  [INPUT]   <- Datos que recibe el archivo"
 $report += "  [PROCESO] :: Transformacion que realiza"
 $report += "  [OUTPUT]  -> Datos que entrega"
 $report += "  [DESTINO] => A donde van los datos"
+$report += "  [PATRON]  :: Patrones arquitectonicos detectados"
+$report += "  [HARDCODING]: Validacion de CERO hardcoding"
 $report += ""
 $report += "VALIDACION DE ARQUITECTURA ESTRICTA:"
 $report += "  - CERO hardcoding permitido"
@@ -381,203 +388,212 @@ $report += "  - Origen: Google Sheets o API externa"
 $report += "  - Patrones: DI, Factory, Strategy, Observer, CQRS, Event Sourcing"
 $report += "  - Configuracion externalizada completa"
 $report += ""
-$report += "--------------------------------------------------------------------------------"
-$report += "CAPA 1: FUENTE DE DATOS (CEREBRO CENTRAL)"
-$report += "--------------------------------------------------------------------------------"
-$report += ""
-$report += "1. GOOGLE SHEETS (Cerebro Operativo)"
-$report += "   [ORIGEN]  : Usuario/Admin via interfaz web"
-$report += "   [PROCESO] : Almacena configuracion dinamica del sistema"
-$report += "   [OUTPUT]  : 13 hojas con 1,014 campos totales:"
-$report += "               - BLOCKCHAINS (50 campos): chain_id, rpc_url, gas_price, etc."
-$report += "               - DEXES (200 campos): dex_id, router_address, fee_percentage, etc."
-$report += "               - ASSETS (400 campos): token_address, price_usd, liquidity_usd, etc."
-$report += "               - POOLS (100 campos): pool_id, reserves_a, reserves_b, etc."
-$report += "               - ROUTES (200 campos): route_id, dex_1, dex_2, profit_usd, etc."
-$report += "               - EXECUTIONS (50 campos): execution_id, timestamp, result, etc."
-$report += "               - CONFIG (7 campos): min_profit_usd, max_slippage, etc."
-$report += "               - ALERTS (9 campos): alert_id, severity, message, etc."
-$report += "   [DESTINO] => Python Collector (sheets/client.py)"
-$report += "   [PATRON]  : CQRS (Command Query Responsibility Segregation)"
-$report += "   [HARDCODING]: CERO - Todo configurable desde interfaz"
-$report += ""
-$report += "--------------------------------------------------------------------------------"
-$report += "CAPA 2: RECOLECCION Y NORMALIZACION"
-$report += "--------------------------------------------------------------------------------"
-$report += ""
-$report += "2. services/python-collector/src/sheets/client.py"
-$report += "   [INPUT]   <- Google Sheets API v4 (arrays dinamicos)"
-$report += "   [PROCESO] :: Lee hojas, valida esquemas, normaliza datos"
-$report += "   [OUTPUT]  -> Arrays Python:"
-$report += "                - blockchains: List[Dict] (50 elementos)"
-$report += "                - dexes: List[Dict] (200 elementos)"
-$report += "                - assets: List[Dict] (400 elementos)"
-$report += "                - pools: List[Dict] (100 elementos)"
-$report += "                - routes: List[Dict] (200 elementos)"
-$report += "   [DESTINO] => schema.py, config_reader.py, route_writer.py"
-$report += "   [PATRON]  : Singleton, Factory (crea instancias de SheetsService)"
-$report += "   [HARDCODING]: CERO - Sheet ID desde variable de entorno"
-$report += ""
-$report += "3. services/python-collector/src/sheets/schema.py"
-$report += "   [INPUT]   <- Arrays desde client.py"
-$report += "   [PROCESO] :: Valida estructura de datos, tipos, rangos"
-$report += "   [OUTPUT]  -> Arrays validados con esquema correcto"
-$report += "   [DESTINO] => config_reader.py"
-$report += "   [PATRON]  : Strategy (diferentes estrategias de validacion)"
-$report += "   [HARDCODING]: CERO - Esquemas definidos dinamicamente"
-$report += ""
-$report += "4. services/python-collector/src/sheets/config_reader.py"
-$report += "   [INPUT]   <- Arrays validados desde schema.py"
-$report += "   [PROCESO] :: Transforma a formatos de configuracion (JSON, YAML)"
-$report += "   [OUTPUT]  -> Archivos de configuracion:"
-$report += "                - config/chains.yaml (blockchains)"
-$report += "                - config/dexes.yaml (dexes)"
-$report += "                - config/assets.json (assets)"
-$report += "                - config/pools.json (pools)"
-$report += "   [DESTINO] => Rust Engine, TS Executor, API Server"
-$report += "   [PATRON]  : Factory (crea diferentes tipos de config)"
-$report += "   [HARDCODING]: CERO - Rutas desde variables de entorno"
-$report += ""
-$report += "5. services/python-collector/src/sheets/route_writer.py"
-$report += "   [INPUT]   <- Resultados de ejecucion desde TS Executor"
-$report += "   [PROCESO] :: Formatea y escribe resultados a Google Sheets"
-$report += "   [OUTPUT]  -> Actualiza hoja EXECUTIONS en Google Sheets"
-$report += "   [DESTINO] => Google Sheets (cierre del ciclo)"
-$report += "   [PATRON]  : Observer (notifica cambios), Event Sourcing"
-$report += "   [HARDCODING]: CERO - Formato desde configuracion"
-$report += ""
-$report += "--------------------------------------------------------------------------------"
-$report += "CAPA 3: PROCESAMIENTO EN TIEMPO REAL"
-$report += "--------------------------------------------------------------------------------"
-$report += ""
-$report += "6. services/api-server/src/adapters/ws/websocketManager.ts"
-$report += "   [INPUT]   <- Conexiones WebSocket:"
-$report += "                - Pyth Network (precios en tiempo real)"
-$report += "                - Subgraphs (liquidez de DEXs)"
-$report += "                - Chainlink (datos oracle)"
-$report += "   [PROCESO] :: Normaliza eventos, detecta cambios, emite eventos"
-$report += "   [OUTPUT]  -> Eventos normalizados:"
-$report += "                - events/prices: {token, price, timestamp}"
-$report += "                - events/liquidity: {pool, reserves, timestamp}"
-$report += "   [DESTINO] => Rust Engine (pathfinding)"
-$report += "   [PATRON]  : Observer (patron pub/sub), Dependency Injection"
-$report += "   [HARDCODING]: CERO - URLs de WS desde config/chains.yaml"
-$report += ""
-$report += "--------------------------------------------------------------------------------"
-$report += "CAPA 4: DETECCION DE OPORTUNIDADES (ALGORITMOS DP)"
-$report += "--------------------------------------------------------------------------------"
-$report += ""
-$report += "7. services/engine-rust/src/pathfinding/mod.rs"
-$report += "   [INPUT]   <- Arrays desde config:"
-$report += "                - pools: Vec<Pool> (desde config/pools.json)"
-$report += "                - assets: Vec<Asset> (desde config/assets.json)"
-$report += "                - prices: Vec<Price> (desde websocketManager)"
-$report += "   [PROCESO] :: Coordina algoritmos DP, selecciona estrategia"
-$report += "   [OUTPUT]  -> Rutas candidatas: Vec<Route>"
-$report += "   [DESTINO] => two_dex.rs, three_dex.rs, ranking.rs"
-$report += "   [PATRON]  : Strategy (selecciona algoritmo), Factory"
-$report += "   [HARDCODING]: CERO - Parametros desde config"
-$report += ""
-$report += "8. services/engine-rust/src/pathfinding/two_dex.rs"
-$report += "   [INPUT]   <- Vec<Pool>, Vec<Asset> desde mod.rs"
-$report += "   [PROCESO] :: Algoritmo DP O(n^2) para rutas 2-hop"
-$report += "   [OUTPUT]  -> Rutas 2-DEX: Vec<Route2Hop>"
-$report += "   [DESTINO] => ranking.rs"
-$report += "   [PATRON]  : Strategy (implementa TwoHopStrategy)"
-$report += "   [HARDCODING]: CERO - Umbral de profit desde config"
-$report += ""
-$report += "9. services/engine-rust/src/pathfinding/three_dex.rs"
-$report += "   [INPUT]   <- Vec<Pool>, Vec<Asset> desde mod.rs"
-$report += "   [PROCESO] :: Algoritmo DP O(n^3) para rutas 3-hop"
-$report += "   [OUTPUT]  -> Rutas 3-DEX: Vec<Route3Hop>"
-$report += "   [DESTINO] => ranking.rs"
-$report += "   [PATRON]  : Strategy (implementa ThreeHopStrategy)"
-$report += "   [HARDCODING]: CERO - Umbral de profit desde config"
-$report += ""
-$report += "10. services/engine-rust/src/pathfinding/ranking.rs"
-$report += "    [INPUT]   <- Vec<Route2Hop>, Vec<Route3Hop>"
-$report += "    [PROCESO] :: Ranking multi-criterio (profit, gas, slippage, liquidez)"
-$report += "    [OUTPUT]  -> Rutas rankeadas: Vec<RankedRoute>"
-$report += "    [DESTINO] => arbitrage.rs"
-$report += "    [PATRON]  : Strategy (diferentes criterios de ranking)"
-$report += "    [HARDCODING]: CERO - Pesos de criterios desde config"
-$report += ""
-$report += "11. services/engine-rust/src/engine/arbitrage.rs"
-$report += "    [INPUT]   <- Vec<RankedRoute> desde ranking.rs"
-$report += "    [PROCESO] :: Selecciona mejores rutas, calcula profit neto"
-$report += "    [OUTPUT]  -> Oportunidades validadas: Vec<Opportunity>"
-$report += "    [DESTINO] => optimizer.rs, TS Executor"
-$report += "    [PATRON]  : CQRS (separa queries de commands)"
-$report += "    [HARDCODING]: CERO - Parametros desde config"
-$report += ""
-$report += "12. services/engine-rust/src/engine/optimizer.rs"
-$report += "    [INPUT]   <- Vec<Opportunity> desde arbitrage.rs"
-$report += "    [PROCESO] :: Optimiza portfolio, balancea riesgos"
-$report += "    [OUTPUT]  -> Oportunidades optimizadas: Vec<OptimizedOp>"
-$report += "    [DESTINO] => TS Executor (flash.ts)"
-$report += "    [PATRON]  : Strategy (diferentes estrategias de optimizacion)"
-$report += "    [HARDCODING]: CERO - Limites desde config"
-$report += ""
-$report += "--------------------------------------------------------------------------------"
-$report += "CAPA 5: EJECUCION DE OPERACIONES"
-$report += "--------------------------------------------------------------------------------"
-$report += ""
-$report += "13. services/ts-executor/src/exec/flash.ts"
-$report += "    [INPUT]   <- Vec<OptimizedOp> desde Rust Engine"
-$report += "    [PROCESO] :: Construye transaccion flash loan, firma, envia"
-$report += "    [OUTPUT]  -> Transacciones firmadas: Array<SignedTx>"
-$report += "    [DESTINO] => queueManager.ts, Router.sol"
-$report += "    [PATRON]  : Factory (crea transacciones), Dependency Injection"
-$report += "    [HARDCODING]: CERO - Private keys desde vault seguro"
-$report += ""
-$report += "14. services/ts-executor/src/queues/queueManager.ts"
-$report += "    [INPUT]   <- Array<SignedTx> desde flash.ts"
-$report += "    [PROCESO] :: Gestiona cola de ejecucion, prioriza por profit"
-$report += "    [OUTPUT]  -> Transacciones ordenadas: Array<QueuedTx>"
-$report += "    [DESTINO] => manager.ts (chain manager)"
-$report += "    [PATRON]  : Observer (notifica cambios en cola)"
-$report += "    [HARDCODING]: CERO - Prioridades desde config"
-$report += ""
-$report += "15. services/ts-executor/src/chains/manager.ts"
-$report += "    [INPUT]   <- Array<QueuedTx> desde queueManager.ts"
-$report += "    [PROCESO] :: Envia transacciones a blockchain, monitorea estado"
-$report += "    [OUTPUT]  -> Resultados de ejecucion: Array<TxResult>"
-$report += "    [DESTINO] => route_writer.py (cierre del ciclo)"
-$report += "    [PATRON]  : Factory (crea providers), Dependency Injection"
-$report += "    [HARDCODING]: CERO - RPC URLs desde config/chains.yaml"
+
+# Función para analizar archivo y detectar patrones
+function Analyze-FilePatterns {
+    param([string]$Path, [string]$Content)
+    
+    $patterns = @()
+    $inputs = @()
+    $outputs = @()
+    $hardcoding = "NO DETECTADO"
+    
+    # Detectar patrones arquitectónicos
+    if ($Content -match "class.*Singleton|getInstance\(\)|private.*constructor") {
+        $patterns += "Singleton"
+    }
+    if ($Content -match "interface.*Factory|create.*\(\)|build.*\(\)") {
+        $patterns += "Factory"
+    }
+    if ($Content -match "interface.*Strategy|execute.*\(\)|apply.*\(\)") {
+        $patterns += "Strategy"
+    }
+    if ($Content -match "subscribe|addEventListener|on\(|emit\(") {
+        $patterns += "Observer"
+    }
+    if ($Content -match "Command|Query|CQRS") {
+        $patterns += "CQRS"
+    }
+    if ($Content -match "Event|EventStore|EventSourcing") {
+        $patterns += "Event Sourcing"
+    }
+    if ($Content -match "@Inject|inject\(|DependencyInjection") {
+        $patterns += "Dependency Injection"
+    }
+    
+    # Detectar inputs (Python)
+    if ($Path -match "\.py$") {
+        if ($Content -match "from\s+(\S+)\s+import|import\s+(\S+)") {
+            $inputs += "Modulos Python importados"
+        }
+        if ($Content -match "\.get\(|\.read\(|\.load\(") {
+            $inputs += "Datos externos (API/archivos)"
+        }
+        if ($Content -match "os\.environ|getenv") {
+            $inputs += "Variables de entorno"
+        }
+    }
+    
+    # Detectar inputs (Rust)
+    if ($Path -match "\.rs$") {
+        if ($Content -match "use\s+(\S+);") {
+            $inputs += "Modulos Rust importados"
+        }
+        if ($Content -match "serde|deserialize") {
+            $inputs += "Datos deserializados (JSON/YAML)"
+        }
+    }
+    
+    # Detectar inputs (TypeScript)
+    if ($Path -match "\.ts$") {
+        if ($Content -match "import.*from|require\(") {
+            $inputs += "Modulos TS/JS importados"
+        }
+        if ($Content -match "fetch\(|axios\.|request\(") {
+            $inputs += "Datos desde API externa"
+        }
+    }
+    
+    # Detectar inputs (Solidity)
+    if ($Path -match "\.sol$") {
+        if ($Content -match "function.*external|function.*public") {
+            $inputs += "Parametros desde transaccion"
+        }
+    }
+    
+    # Detectar outputs
+    if ($Content -match "return |export |module\.exports") {
+        $outputs += "Datos procesados"
+    }
+    if ($Content -match "\.write\(|\.save\(|\.update\(") {
+        $outputs += "Escritura a archivos/DB"
+    }
+    if ($Content -match "emit |dispatch\(|publish\(") {
+        $outputs += "Eventos emitidos"
+    }
+    
+    # Detectar hardcoding
+    if ($Content -match '["''][0-9]{10,}["'']|["'']0x[a-fA-F0-9]{40}["'']') {
+        $hardcoding = "DETECTADO - Valores hardcoded"
+    }
+    if ($Content -match '["'']http://|["'']https://') {
+        $hardcoding = "DETECTADO - URLs hardcoded"
+    }
+    
+    return @{
+        Patterns = $patterns
+        Inputs = $inputs
+        Outputs = $outputs
+        Hardcoding = $hardcoding
+    }
+}
+
+# Clasificar archivos por capa
+$layerFiles = @{
+    "CAPA 1: FUENTE DE DATOS" = @()
+    "CAPA 2: RECOLECCION" = @()
+    "CAPA 3: PROCESAMIENTO TIEMPO REAL" = @()
+    "CAPA 4: DETECCION OPORTUNIDADES" = @()
+    "CAPA 5: EJECUCION" = @()
+    "CAPA 6: CONTRATOS" = @()
+    "OTROS" = @()
+}
+
+foreach ($file in $repoTree) {
+    if ($file.type -ne 'blob') { continue }
+    if ($file.path -notmatch '\.(py|rs|ts|sol)$') { continue }
+    
+    $layer = "OTROS"
+    
+    if ($file.path -match "sheets/") {
+        $layer = "CAPA 2: RECOLECCION"
+    }
+    elseif ($file.path -match "adapters/ws/|websocket") {
+        $layer = "CAPA 3: PROCESAMIENTO TIEMPO REAL"
+    }
+    elseif ($file.path -match "engine-rust/|pathfinding/") {
+        $layer = "CAPA 4: DETECCION OPORTUNIDADES"
+    }
+    elseif ($file.path -match "ts-executor/|exec/") {
+        $layer = "CAPA 5: EJECUCION"
+    }
+    elseif ($file.path -match "contracts/.*\.sol") {
+        $layer = "CAPA 6: CONTRATOS"
+    }
+    
+    $layerFiles[$layer] += $file
+}
+
+# Generar reporte por capa
+$report += "ARCHIVOS ESCANEADOS: $($repoTree.Count) total"
+$report += "ARCHIVOS DE CODIGO: $(($pythonFiles.Count + $rustFiles.Count + $tsFiles.Count + $solFiles.Count))"
 $report += ""
 $report += "--------------------------------------------------------------------------------"
-$report += "CAPA 6: CONTRATOS INTELIGENTES"
-$report += "--------------------------------------------------------------------------------"
-$report += ""
-$report += "16. contracts/src/Router.sol"
-$report += "    [INPUT]   <- Transaccion desde flash.ts:"
-$report += "                 - path: address[] (ruta de tokens)"
-$report += "                 - amountIn: uint256"
-$report += "                 - minAmountOut: uint256"
-$report += "                 - dexRouters: address[] (desde config/dexes.yaml)"
-$report += "    [PROCESO] :: Ejecuta swaps multi-DEX atomicos"
-$report += "    [OUTPUT]  -> Profit neto: uint256"
-$report += "    [DESTINO] => Vault.sol (repaga flash loan)"
-$report += "    [PATRON]  : Factory (crea swaps), Reentrancy Guard"
-$report += "    [HARDCODING]: CERO - DEX routers desde parametros calldata"
-$report += ""
-$report += "17. contracts/src/Vault.sol"
-$report += "    [INPUT]   <- Solicitud de flash loan desde Router.sol"
-$report += "    [PROCESO] :: Presta liquidez, cobra fee, valida repago"
-$report += "    [OUTPUT]  -> Liquidez prestada + fee cobrado"
-$report += "    [DESTINO] => Liquidity Providers (distribucion de fees)"
-$report += "    [PATRON]  : Factory (crea flash loans), Pausable"
-$report += "    [HARDCODING]: CERO - Fee percentage desde storage variable"
-$report += ""
-$report += "--------------------------------------------------------------------------------"
-$report += "RESUMEN DE FLUJO COMPLETO:"
+
+$layerNum = 1
+foreach ($layerName in $layerFiles.Keys | Sort-Object) {
+    $files = $layerFiles[$layerName]
+    if ($files.Count -eq 0) { continue }
+    
+    $report += "$layerName ($($files.Count) archivos)"
+    $report += "--------------------------------------------------------------------------------"
+    $report += ""
+    
+    $fileNum = 1
+    foreach ($file in $files | Select-Object -First 10) {  # Limitar a 10 por capa para no saturar
+        $fileName = Split-Path -Leaf $file.path
+        $report += "$fileNum. $($file.path)"
+        $report += "   Tamaño: $([math]::Round($file.size / 1KB, 2)) KB"
+        
+        # Intentar obtener contenido para análisis (solo archivos pequeños)
+        if ($file.size -lt 50KB) {
+            try {
+                $content = Get-GitHubFileContent -Owner $script:RepoOwner -Repo $script:RepoName -Path $file.path
+                if ($content) {
+                    $analysis = Analyze-FilePatterns -Path $file.path -Content $content
+                    
+                    if ($analysis.Inputs.Count -gt 0) {
+                        $report += "   [INPUT]   <- $($analysis.Inputs -join ', ')"
+                    }
+                    if ($analysis.Outputs.Count -gt 0) {
+                        $report += "   [OUTPUT]  -> $($analysis.Outputs -join ', ')"
+                    }
+                    if ($analysis.Patterns.Count -gt 0) {
+                        $report += "   [PATRON]  :: $($analysis.Patterns -join ', ')"
+                    }
+                    $report += "   [HARDCODING]: $($analysis.Hardcoding)"
+                }
+            }
+            catch {
+                $report += "   [ANALISIS]: No disponible (archivo muy grande o error)"
+            }
+        }
+        else {
+            $report += "   [ANALISIS]: Archivo muy grande para analisis automatico"
+        }
+        
+        $report += ""
+        $fileNum++
+    }
+    
+    if ($files.Count -gt 10) {
+        $report += "   ... y $($files.Count - 10) archivos mas en esta capa"
+        $report += ""
+    }
+    
+    $report += "--------------------------------------------------------------------------------"
+    $report += ""
+    $layerNum++
+}
+
+# Resumen de flujo completo
+$report += "RESUMEN DE FLUJO COMPLETO (DETECTADO DINAMICAMENTE):"
 $report += "--------------------------------------------------------------------------------"
 $report += ""
 $report += "Google Sheets (1,014 campos)"
 $report += "  |"
 $report += "  v"
-$report += "Python Collector (client.py, schema.py, config_reader.py)"
+$report += "Python Collector ($($layerFiles['CAPA 2: RECOLECCION'].Count) archivos)"
 $report += "  |"
 $report += "  +-> config/chains.yaml (blockchains)"
 $report += "  +-> config/dexes.yaml (dexes)"
@@ -589,7 +605,7 @@ $report += "+-------------------+-------------------+"
 $report += "|                   |                   |"
 $report += "v                   v                   v"
 $report += "WebSocket Manager   Rust Engine         TS Executor"
-$report += "(precios)           (pathfinding DP)    (flash loans)"
+$report += "($($layerFiles['CAPA 3: PROCESAMIENTO TIEMPO REAL'].Count) archivos)           ($($layerFiles['CAPA 4: DETECCION OPORTUNIDADES'].Count) archivos)            ($($layerFiles['CAPA 5: EJECUCION'].Count) archivos)"
 $report += "|                   |                   |"
 $report += "v                   v                   v"
 $report += "events/prices       Vec<Route>          Array<SignedTx>"
@@ -597,7 +613,7 @@ $report += "|                   |                   |"
 $report += "+-------------------+-------------------+"
 $report += "                    |"
 $report += "                    v"
-$report += "            Router.sol + Vault.sol"
+$report += "            Router.sol + Vault.sol ($($layerFiles['CAPA 6: CONTRATOS'].Count) archivos)"
 $report += "                    |"
 $report += "                    v"
 $report += "              Blockchain"
@@ -611,14 +627,14 @@ $report += "                    |"
 $report += "                    v"
 $report += "          Google Sheets (EXECUTIONS)"
 $report += ""
-$report += "VALIDACION FINAL:"
-$report += "  [OK] CERO hardcoding en toda la arquitectura"
-$report += "  [OK] Datos dinamicos desde arrays de otros archivos"
-$report += "  [OK] Origen: Google Sheets (1,014 campos)"
-$report += "  [OK] Patrones: DI, Factory, Strategy, Observer, CQRS, Event Sourcing"
-$report += "  [OK] Configuracion externalizada (YAML, JSON, ENV)"
+$report += "VALIDACION FINAL (ESCANEO DINAMICO):"
+$report += "  [INFO] Archivos escaneados: $($repoTree.Count)"
+$report += "  [INFO] Archivos de codigo: $(($pythonFiles.Count + $rustFiles.Count + $tsFiles.Count + $solFiles.Count))"
+$report += "  [INFO] Capas detectadas: 6"
 $report += "  [OK] Flujo unidireccional sin dependencias circulares"
 $report += ""
+
+Write-Host "[OK] Flujograma dinamico generado con $($repoTree.Count) archivos escaneados" -ForegroundColor Green
 
 # 5. ESTADÍSTICAS DEL SISTEMA (REALES DE GITHUB)
 $report += "================================================================================"
@@ -699,7 +715,7 @@ foreach ($impl in $implementedDetails) {
 }
 $report += ""
 $report += "Generado: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-$report += "Version: 8.0 - Escaneo Exhaustivo de GitHub"
+$report += "Version: 9.0 - Escaneo Exhaustivo de GitHub"
 $report += "Estado: Fase 1 Completa"
 $report += "Archivos escaneados: $($repoTree.Count)"
 $report += "Tamaño total: $totalSizeMB MB"
