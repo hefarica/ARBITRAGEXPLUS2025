@@ -36,5 +36,6 @@
     "blockchain"
   ],
   "author": "ARBITRAGEXPLUS2025 Core Team",
-  "license": "MIT"
+  "license": "MIT",
+  "main": "analyze-file-completeness.js"
 }
