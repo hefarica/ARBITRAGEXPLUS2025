@@ -1,35 +1,28 @@
 {
-  "name": "@arbitragexplus2025/scripts",
+  "name": "@arbitragex/validation-scripts",
   "version": "1.0.0",
-  "description": "Validation and automation scripts for ARBITRAGEXPLUS2025 system",
-  "type": "module",
-  "main": "index.js",
+  "description": "Scripts de validación críticos para ARBITRAGEXPLUS2025",
   "private": true,
+  "type": "commonjs",
   "scripts": {
     "verify": "node verify-structure.js",
     "scan": "node scan-dead-paths.js",
-    "check-fly": "node check_fly_config.js",
+    "check-fly": "node check-fly-config.js",
+    "validate-deploy": "node validate-deployment.js",
     "health": "node validate-local-health.js",
-    "deploy-validate": "node validate-deployment.js",
-    "schema": "node generate-schema.js",
-    "guard": "node guard-node-engines.js",
-    "validate-all": "npm run verify && npm run scan && npm run check-fly && npm run guard",
+    "validate-all": "npm run verify && npm run scan && npm run check-fly && npm run validate-deploy && npm run health",
     "pre-commit": "npm run validate-all",
-    "post-deploy": "node validate-deployment.js post",
-    "test": "node --test **/*.test.js",
-    "lint": "eslint *.js",
-    "format": "prettier --write *.js"
+    "pre-push": "npm run validate-all"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2",
-    "js-yaml": "^4.1.0",
-    "semver": "^7.5.4",
-    "glob": "^10.3.10"
+    "axios": "^1.6.0",
+    "glob": "^10.3.10",
+    "toml": "^3.0.0",
+    "chalk": "^4.1.2",
+    "joi": "^17.11.0"
   },
   "devDependencies": {
-    "eslint": "^8.56.0",
-    "prettier": "^3.2.4",
-    "@types/node": "^20.11.0"
+    "@types/node": "^20.0.0"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -40,67 +33,8 @@
     "defi",
     "validation",
     "scripts",
-    "automation",
-    "health-check",
-    "deployment"
+    "blockchain"
   ],
-  "author": {
-    "name": "MANU",
-    "email": "manu@arbitragexplus2025.com"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hefarica/ARBITRAGEXPLUS2025.git",
-    "directory": "scripts"
-  },
-  "config": {
-    "validation": {
-      "enabled": true,
-      "strictMode": true,
-      "autoFix": false
-    },
-    "healthCheck": {
-      "timeout": 30000,
-      "retries": 3,
-      "interval": 60
-    },
-    "deployment": {
-      "preValidation": true,
-      "postValidation": true,
-      "autoRollback": false
-    }
-  },
-  "arbitragexplus2025": {
-    "scriptCategories": {
-      "validation": [
-        "verify-structure.js",
-        "scan-dead-paths.js", 
-        "guard-node-engines.js"
-      ],
-      "deployment": [
-        "check_fly_config.js",
-        "validate-deployment.js"
-      ],
-      "health": [
-        "validate-local-health.js"
-      ],
-      "generation": [
-        "generate-schema.js"
-      ]
-    },
-    "executionOrder": [
-      "guard-node-engines.js",
-      "verify-structure.js",
-      "scan-dead-paths.js",
-      "generate-schema.js",
-      "check_fly_config.js",
-      "validate-local-health.js",
-      "validate-deployment.js"
-    ],
-    "criticalScripts": [
-      "verify-structure.js",
-      "guard-node-engines.js"
-    ]
-  }
+  "author": "ARBITRAGEXPLUS2025 Core Team",
+  "license": "MIT"
 }
