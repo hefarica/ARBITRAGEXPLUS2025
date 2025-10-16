@@ -1,4 +1,5 @@
-# OPCIÓN 2: Deployment Manual (IDEMPOTENTE v2.0)
+# OPCION 2: Deployment Manual (IDEMPOTENTE v2.0)
+# Compatible con Windows PowerShell
 
 param([string]$RepoPath, [switch]$Silent)
 $ErrorActionPreference = "Stop"
@@ -6,17 +7,18 @@ $ErrorActionPreference = "Stop"
 $APP_NAME = "arbitragexplus-api"
 $LOG_FILE = "$env:USERPROFILE\Desktop\fly_deployment.log"
 
-function Write-Log { param($Msg, $Level="INFO")
+function Write-Log { 
+    param($Msg, $Level="INFO")
     "$((Get-Date -Format 'yyyy-MM-dd HH:mm:ss')) [$Level] $Msg" | Out-File -Append $LOG_FILE
     switch($Level) {
-        "ERROR" { Write-Host "❌ $Msg" -ForegroundColor Red }
-        "SUCCESS" { Write-Host "✅ $Msg" -ForegroundColor Green }
-        "WARNING" { Write-Host "⚠️  $Msg" -ForegroundColor Yellow }
-        default { Write-Host "ℹ️  $Msg" -ForegroundColor Cyan }
+        "ERROR" { Write-Host "[ERROR] $Msg" -ForegroundColor Red }
+        "SUCCESS" { Write-Host "[OK] $Msg" -ForegroundColor Green }
+        "WARNING" { Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
+        default { Write-Host "[INFO] $Msg" -ForegroundColor Cyan }
     }
 }
 
-Write-Host "`n========== OPCIÓN 2: Deployment Manual ==========" -ForegroundColor Cyan
+Write-Host "`n========== OPCION 2: Deployment Manual ==========" -ForegroundColor Cyan
 Write-Log "Iniciando deployment manual"
 
 # Determinar ruta del repositorio
@@ -33,7 +35,7 @@ if (!$RepoPath) {
 if (!(Test-Path $RepoPath)) {
     Write-Log "Repositorio no encontrado en $RepoPath" "WARNING"
     if (!$Silent) {
-        Write-Host "¿Clonar repositorio? (S/N): " -NoNewline -ForegroundColor Yellow
+        Write-Host "Clonar repositorio? (S/N): " -NoNewline -ForegroundColor Yellow
         if ((Read-Host) -match "^[Ss]") {
             git clone https://github.com/hefarica/ARBITRAGEXPLUS2025.git $RepoPath
             if ($LASTEXITCODE -ne 0) {
@@ -57,7 +59,7 @@ if (!(Get-Command flyctl -ErrorAction SilentlyContinue)) {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
 
-# Autenticación
+# Autenticacion
 $auth = flyctl auth whoami 2>&1 | Out-String
 if (!($auth -match "Email")) {
     flyctl auth login
@@ -72,7 +74,7 @@ if (!($apps | Where-Object {$_.Name -eq $APP_NAME})) {
 }
 
 # Deployment
-Write-Host "`n🚀 Desplegando en Fly.io..." -ForegroundColor Yellow
+Write-Host "`nDesplegando en Fly.io..." -ForegroundColor Yellow
 flyctl deploy --config fly.toml --dockerfile services/api-server/Dockerfile --app $APP_NAME
 
 if ($LASTEXITCODE -eq 0) {

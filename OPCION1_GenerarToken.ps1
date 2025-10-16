@@ -1,5 +1,5 @@
-# OPCIÓN 1: Generar FLY_API_TOKEN (IDEMPOTENTE v2.0)
-# Garantiza idempotencia completa y manejo robusto de errores
+# OPCION 1: Generar FLY_API_TOKEN (IDEMPOTENTE v2.0)
+# Compatible con Windows PowerShell
 
 param([switch]$Force, [switch]$Silent)
 $ErrorActionPreference = "Stop"
@@ -9,19 +9,20 @@ $TOKEN_NAME = "MANU_DEPLOY_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
 $TOKEN_FILE = "$env:USERPROFILE\Desktop\FLY_API_TOKEN.txt"
 $LOG_FILE = "$env:USERPROFILE\Desktop\fly_deployment.log"
 
-function Write-Log { param($Msg, $Level="INFO")
+function Write-Log { 
+    param($Msg, $Level="INFO")
     $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     "$ts [$Level] $Msg" | Out-File -Append $LOG_FILE
     switch($Level) {
-        "ERROR" { Write-Host "❌ $Msg" -ForegroundColor Red }
-        "SUCCESS" { Write-Host "✅ $Msg" -ForegroundColor Green }
-        "WARNING" { Write-Host "⚠️  $Msg" -ForegroundColor Yellow }
-        default { Write-Host "ℹ️  $Msg" -ForegroundColor Cyan }
+        "ERROR" { Write-Host "[ERROR] $Msg" -ForegroundColor Red }
+        "SUCCESS" { Write-Host "[OK] $Msg" -ForegroundColor Green }
+        "WARNING" { Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
+        default { Write-Host "[INFO] $Msg" -ForegroundColor Cyan }
     }
 }
 
-Write-Host "`n========== OPCIÓN 1: Generar Token ==========" -ForegroundColor Cyan
-Write-Log "Iniciando generación de token"
+Write-Host "`n========== OPCION 1: Generar Token ==========" -ForegroundColor Cyan
+Write-Log "Iniciando generacion de token"
 
 # Paso 1: Verificar flyctl
 Write-Log "Verificando flyctl..."
@@ -31,7 +32,7 @@ if (!(Get-Command flyctl -ErrorAction SilentlyContinue)) {
         iwr https://fly.io/install.ps1 -useb | iex
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
         if (!(Get-Command flyctl -ErrorAction SilentlyContinue)) {
-            throw "flyctl no disponible después de instalación"
+            throw "flyctl no disponible despues de instalacion"
         }
         Write-Log "flyctl instalado" "SUCCESS"
     } catch {
@@ -44,8 +45,8 @@ if (!(Get-Command flyctl -ErrorAction SilentlyContinue)) {
     Write-Log "flyctl ya instalado" "SUCCESS"
 }
 
-# Paso 2: Autenticación
-Write-Log "Verificando autenticación..."
+# Paso 2: Autenticacion
+Write-Log "Verificando autenticacion..."
 $auth = flyctl auth whoami 2>&1 | Out-String
 if ($auth -match "Email:\s+(.+)") {
     Write-Log "Autenticado como: $($matches[1])" "SUCCESS"
@@ -53,11 +54,11 @@ if ($auth -match "Email:\s+(.+)") {
     Write-Log "Autenticando..." "WARNING"
     flyctl auth login
     if ($LASTEXITCODE -ne 0) {
-        Write-Log "Autenticación fallida" "ERROR"
+        Write-Log "Autenticacion fallida" "ERROR"
         if (!$Silent) { Read-Host "Presiona Enter" }
         exit 1
     }
-    Write-Log "Autenticación exitosa" "SUCCESS"
+    Write-Log "Autenticacion exitosa" "SUCCESS"
 }
 
 # Paso 3: Verificar/crear app

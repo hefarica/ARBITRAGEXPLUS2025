@@ -1,4 +1,5 @@
-# OPCIÓN 3: Configurar GitHub Actions (IDEMPOTENTE v2.0)
+# OPCION 3: Configurar GitHub Actions (IDEMPOTENTE v2.0)
+# Compatible con Windows PowerShell
 
 param([string]$RepoPath, [switch]$Silent)
 $ErrorActionPreference = "Stop"
@@ -8,17 +9,18 @@ $REPO_OWNER = "hefarica"
 $REPO_NAME = "ARBITRAGEXPLUS2025"
 $LOG_FILE = "$env:USERPROFILE\Desktop\fly_deployment.log"
 
-function Write-Log { param($Msg, $Level="INFO")
+function Write-Log { 
+    param($Msg, $Level="INFO")
     "$((Get-Date -Format 'yyyy-MM-dd HH:mm:ss')) [$Level] $Msg" | Out-File -Append $LOG_FILE
     switch($Level) {
-        "ERROR" { Write-Host "❌ $Msg" -ForegroundColor Red }
-        "SUCCESS" { Write-Host "✅ $Msg" -ForegroundColor Green }
-        "WARNING" { Write-Host "⚠️  $Msg" -ForegroundColor Yellow }
-        default { Write-Host "ℹ️  $Msg" -ForegroundColor Cyan }
+        "ERROR" { Write-Host "[ERROR] $Msg" -ForegroundColor Red }
+        "SUCCESS" { Write-Host "[OK] $Msg" -ForegroundColor Green }
+        "WARNING" { Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
+        default { Write-Host "[INFO] $Msg" -ForegroundColor Cyan }
     }
 }
 
-Write-Host "`n========== OPCIÓN 3: GitHub Actions ==========" -ForegroundColor Cyan
+Write-Host "`n========== OPCION 3: GitHub Actions ==========" -ForegroundColor Cyan
 Write-Log "Configurando GitHub Actions"
 
 # Verificar gh CLI
