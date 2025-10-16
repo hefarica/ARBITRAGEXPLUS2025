@@ -85,14 +85,9 @@ if exist "%REPORT_FILE%" (
     )
     echo.
     
-    REM Preguntar si desea abrir el reporte
-    echo Deseas abrir el reporte ahora? (S/N)
-    set /p "OPEN_REPORT="
-    
-    if /i "!OPEN_REPORT!"=="S" (
-        echo [INFO] Abriendo reporte...
-        start "" "%REPORT_FILE%"
-    )
+    REM Abrir el reporte automáticamente
+    echo [INFO] Abriendo reporte automaticamente...
+    start "" "%REPORT_FILE%"
     
     echo.
     echo [INFO] Tambien puedes encontrar el reporte en:
