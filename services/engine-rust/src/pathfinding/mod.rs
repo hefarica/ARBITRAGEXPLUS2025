@@ -1,7 +1,27 @@
 //! Pathfinding module for arbitrage route discovery
-//! Implements Bellman-Ford and Dijkstra algorithms for finding profitable paths
+//! 
+//! Implementa múltiples algoritmos de pathfinding:
+//! - Bellman-Ford para detección de ciclos negativos
+//! - DP 2-DEX para rutas de 2 exchanges
+//! - DP 3-DEX para rutas de 3 exchanges
+//! - Sistema de ranking multi-criterio
+//!
+//! Premisas:
+//! 1. Datos desde Google Sheets/APIs (no hardcoded)
+//! 2. Usa arrays dinámicos (Vec, HashMap, iteradores)
+//! 3. Consumido por el engine principal
 
 use std::collections::HashMap;
+
+// Módulos de algoritmos DP
+pub mod two_dex;
+pub mod three_dex;
+pub mod ranking;
+
+// Re-exports para facilitar uso
+pub use two_dex::{TwoDexPathfinder, TwoDexRoute};
+pub use three_dex::{ThreeDexPathfinder, ThreeDexRoute};
+pub use ranking::{RouteRanker, RankedRoute, RankingCriteria};
 
 pub struct PathFinder {
     pub graph: HashMap<String, Vec<Edge>>,
@@ -43,5 +63,11 @@ impl PathFinder {
     pub fn bellman_ford(&self, start: &str) -> Option<Route> {
         // Implementación del algoritmo Bellman-Ford
         None
+    }
+}
+
+impl Default for PathFinder {
+    fn default() -> Self {
+        Self::new()
     }
 }
