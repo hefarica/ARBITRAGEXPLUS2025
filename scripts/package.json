@@ -1,9 +1,106 @@
 {
-  "name": "arbitragexplus-scripts",
+  "name": "@arbitragexplus2025/scripts",
   "version": "1.0.0",
-  "type": "commonjs",
+  "description": "Validation and automation scripts for ARBITRAGEXPLUS2025 system",
+  "type": "module",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "verify": "node verify-structure.js",
+    "scan": "node scan-dead-paths.js",
+    "check-fly": "node check_fly_config.js",
+    "health": "node validate-local-health.js",
+    "deploy-validate": "node validate-deployment.js",
+    "schema": "node generate-schema.js",
+    "guard": "node guard-node-engines.js",
+    "validate-all": "npm run verify && npm run scan && npm run check-fly && npm run guard",
+    "pre-commit": "npm run validate-all",
+    "post-deploy": "node validate-deployment.js post",
+    "test": "node --test **/*.test.js",
+    "lint": "eslint *.js",
+    "format": "prettier --write *.js"
+  },
   "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "axios": "^1.6.0"
+    "node-fetch": "^3.3.2",
+    "js-yaml": "^4.1.0",
+    "semver": "^7.5.4",
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "@types/node": "^20.11.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "keywords": [
+    "arbitrage",
+    "defi",
+    "validation",
+    "scripts",
+    "automation",
+    "health-check",
+    "deployment"
+  ],
+  "author": {
+    "name": "MANU",
+    "email": "manu@arbitragexplus2025.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hefarica/ARBITRAGEXPLUS2025.git",
+    "directory": "scripts"
+  },
+  "config": {
+    "validation": {
+      "enabled": true,
+      "strictMode": true,
+      "autoFix": false
+    },
+    "healthCheck": {
+      "timeout": 30000,
+      "retries": 3,
+      "interval": 60
+    },
+    "deployment": {
+      "preValidation": true,
+      "postValidation": true,
+      "autoRollback": false
+    }
+  },
+  "arbitragexplus2025": {
+    "scriptCategories": {
+      "validation": [
+        "verify-structure.js",
+        "scan-dead-paths.js", 
+        "guard-node-engines.js"
+      ],
+      "deployment": [
+        "check_fly_config.js",
+        "validate-deployment.js"
+      ],
+      "health": [
+        "validate-local-health.js"
+      ],
+      "generation": [
+        "generate-schema.js"
+      ]
+    },
+    "executionOrder": [
+      "guard-node-engines.js",
+      "verify-structure.js",
+      "scan-dead-paths.js",
+      "generate-schema.js",
+      "check_fly_config.js",
+      "validate-local-health.js",
+      "validate-deployment.js"
+    ],
+    "criticalScripts": [
+      "verify-structure.js",
+      "guard-node-engines.js"
+    ]
   }
 }

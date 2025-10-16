@@ -1,3 +1,7 @@
-//! External connectors to interact with other services or languages.
+//! Connectors module for external data sources
 
-// For example, FFI bindings or gRPC clients to communicate with TS executors.
+pub mod pyth;
+pub mod defillama;
+
+pub use pyth::PythConnector;
+pub use defillama::DefiLlamaConnector;
