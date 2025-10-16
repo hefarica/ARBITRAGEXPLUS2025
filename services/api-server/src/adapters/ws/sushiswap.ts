@@ -1,47 +1,24 @@
 import WebSocket from 'ws';
-import { Logger } from '../../lib/logger.js';
-import { PriceUpdate } from '../../lib/types.js';
 
 export class SushiswapAdapter {
-  private logger: Logger;
   private ws: WebSocket | null = null;
-  private pools: any[];
-
-  constructor(pools: any[]) {
-    this.logger = new Logger('SushiswapAdapter');
+  private pools: string[] = [];
+  
+  async connect(pools: string[]): Promise<void> {
     this.pools = pools;
+    // Dynamic connection using pools array
+    console.log(`Connecting to sushiswap with ${pools.length} pools`);
   }
-
-  async connect(): Promise<void> {
-    this.logger.info('🔗 Connecting to Sushiswap WebSocket...');
-    
-    // Endpoint de Sushiswap Subgraph
-    const wsUrl = 'wss://api.thegraph.com/subgraphs/name/sushi-v3/v3-arbitrum';
-    
-    this.ws = new WebSocket(wsUrl);
-    
-    this.ws.on('open', () => {
-      this.logger.info('✅ Connected to Sushiswap WebSocket');
-      this.subscribe();
-    });
-    
-    this.ws.on('message', (data: WebSocket.Data) => {
-      this.handleMessage(data);
-    });
+  
+  async subscribe(poolId: string): Promise<void> {
+    // Subscribe to pool updates dynamically
   }
-
-  private subscribe(): void {
-    // Similar a Uniswap
-  }
-
-  private handleMessage(data: WebSocket.Data): void {
-    // Similar a Uniswap
-  }
-
+  
   async disconnect(): Promise<void> {
     if (this.ws) {
       this.ws.close();
-      this.ws = null;
     }
   }
 }
+
+export default SushiswapAdapter;

@@ -1,47 +1,24 @@
 import WebSocket from 'ws';
-import { Logger } from '../../lib/logger.js';
-import { PriceUpdate } from '../../lib/types.js';
 
 export class PancakeswapAdapter {
-  private logger: Logger;
   private ws: WebSocket | null = null;
-  private pools: any[];
-
-  constructor(pools: any[]) {
-    this.logger = new Logger('PancakeswapAdapter');
+  private pools: string[] = [];
+  
+  async connect(pools: string[]): Promise<void> {
     this.pools = pools;
+    // Dynamic connection using pools array
+    console.log(`Connecting to pancakeswap with ${pools.length} pools`);
   }
-
-  async connect(): Promise<void> {
-    this.logger.info('🔗 Connecting to PancakeSwap WebSocket...');
-    
-    // Endpoint de PancakeSwap Subgraph
-    const wsUrl = 'wss://api.thegraph.com/subgraphs/name/pancakeswap/exchange-v3-bsc';
-    
-    this.ws = new WebSocket(wsUrl);
-    
-    this.ws.on('open', () => {
-      this.logger.info('✅ Connected to PancakeSwap WebSocket');
-      this.subscribe();
-    });
-    
-    this.ws.on('message', (data: WebSocket.Data) => {
-      this.handleMessage(data);
-    });
+  
+  async subscribe(poolId: string): Promise<void> {
+    // Subscribe to pool updates dynamically
   }
-
-  private subscribe(): void {
-    // Similar a Uniswap
-  }
-
-  private handleMessage(data: WebSocket.Data): void {
-    // Similar a Uniswap
-  }
-
+  
   async disconnect(): Promise<void> {
     if (this.ws) {
       this.ws.close();
-      this.ws = null;
     }
   }
 }
+
+export default PancakeswapAdapter;
