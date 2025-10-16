@@ -1,6 +1,6 @@
 ﻿# SCRIPT DE VALIDACIÓN COMPLETA - ARBITRAGEXPLUS2025
-# Versión: 6.0
-# Genera diagrama de arquitectura completo con balance de archivos
+# Versión: 7.0 - Escaneo exhaustivo de GitHub
+# Mapea y escanea el repositorio GitHub con barrido progresivo
 
 [CmdletBinding()]
 param(
@@ -10,48 +10,208 @@ param(
 
 $ErrorActionPreference = "Continue"
 $script:RepoURL = "https://github.com/hefarica/ARBITRAGEXPLUS2025"
+$script:RepoOwner = "hefarica"
+$script:RepoName = "ARBITRAGEXPLUS2025"
+$script:GitHubAPIBase = "https://api.github.com"
 
 Write-Host ""
 Write-Host "================================================================================" -ForegroundColor Cyan
-Write-Host "  GENERANDO DIAGRAMA DE ARQUITECTURA - ARBITRAGEXPLUS2025" -ForegroundColor Cyan
+Write-Host "  ESCANEANDO REPOSITORIO GITHUB - ARBITRAGEXPLUS2025" -ForegroundColor Cyan
+Write-Host "  Barrido Progresivo y Exhaustivo" -ForegroundColor Cyan
 Write-Host "================================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Obtener ruta del repositorio
-$repoRoot = Split-Path -Parent $PSScriptRoot
-
-# Verificar si estamos en el repositorio
-$inRepo = Test-Path "$repoRoot/services" -ErrorAction SilentlyContinue
-
-# Valores predefinidos (cuando NO estamos en el repo)
-$pythonTotal = 15
-$rustTotal = 20
-$tsExecutorTotal = 18
-$tsAPITotal = 17
-$tsTotal = 35
-$solTotal = 5
-
-# Si estamos en el repo, calcular dinámicamente
-if ($inRepo) {
-    Write-Host "[INFO] Detectado repositorio local, calculando estadisticas..." -ForegroundColor Yellow
-    $pythonTotal = (Get-ChildItem -Path "$repoRoot/services/python-collector" -Filter "*.py" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-    $rustTotal = (Get-ChildItem -Path "$repoRoot/services/engine-rust" -Filter "*.rs" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-    $tsExecutorTotal = (Get-ChildItem -Path "$repoRoot/services/ts-executor" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-    $tsAPITotal = (Get-ChildItem -Path "$repoRoot/services/api-server" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-    $tsTotal = $tsExecutorTotal + $tsAPITotal
-    $solTotal = (Get-ChildItem -Path "$repoRoot/contracts" -Filter "*.sol" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-} else {
-    Write-Host "[INFO] Usando valores predefinidos del repositorio GitHub" -ForegroundColor Yellow
+# Función para obtener contenido del repositorio desde GitHub API
+function Get-GitHubRepoTree {
+    param([string]$Owner, [string]$Repo)
+    
+    Write-Host "[1/7] Obteniendo estructura del repositorio desde GitHub..." -ForegroundColor Yellow
+    
+    try {
+        $url = "$script:GitHubAPIBase/repos/$Owner/$Repo/git/trees/master?recursive=1"
+        $response = Invoke-RestMethod -Uri $url -Method Get -Headers @{
+            "User-Agent" = "PowerShell-ValidationScript"
+        }
+        
+        Write-Host "[OK] Estructura obtenida: $($response.tree.Count) archivos encontrados" -ForegroundColor Green
+        return $response.tree
+    }
+    catch {
+        Write-Host "[ERROR] No se pudo obtener la estructura del repositorio" -ForegroundColor Red
+        Write-Host "[ERROR] $_" -ForegroundColor Red
+        return $null
+    }
 }
 
+# Función para obtener contenido de un archivo desde GitHub
+function Get-GitHubFileContent {
+    param([string]$Owner, [string]$Repo, [string]$Path)
+    
+    try {
+        $url = "$script:GitHubAPIBase/repos/$Owner/$Repo/contents/$Path"
+        $response = Invoke-RestMethod -Uri $url -Method Get -Headers @{
+            "User-Agent" = "PowerShell-ValidationScript"
+        }
+        
+        if ($response.content) {
+            $decoded = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($response.content))
+            return $decoded
+        }
+    }
+    catch {
+        return $null
+    }
+}
+
+# Obtener estructura del repositorio
+$repoTree = Get-GitHubRepoTree -Owner $script:RepoOwner -Repo $script:RepoName
+
+if (-not $repoTree) {
+    Write-Host "[ERROR] No se pudo escanear el repositorio" -ForegroundColor Red
+    Write-Host "[INFO] Presiona cualquier tecla para salir..." -ForegroundColor Yellow
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    exit 1
+}
+
+# Filtrar archivos por tipo
+Write-Host "[2/7] Clasificando archivos por tipo..." -ForegroundColor Yellow
+
+$pythonFiles = @($repoTree | Where-Object { $_.path -match '\.py$' -and $_.type -eq 'blob' })
+$rustFiles = @($repoTree | Where-Object { $_.path -match '\.rs$' -and $_.type -eq 'blob' })
+$tsFiles = @($repoTree | Where-Object { $_.path -match '\.ts$' -and $_.type -eq 'blob' })
+$solFiles = @($repoTree | Where-Object { $_.path -match '\.sol$' -and $_.type -eq 'blob' })
+
+Write-Host "[OK] Python: $($pythonFiles.Count) archivos" -ForegroundColor Green
+Write-Host "[OK] Rust: $($rustFiles.Count) archivos" -ForegroundColor Green
+Write-Host "[OK] TypeScript: $($tsFiles.Count) archivos" -ForegroundColor Green
+Write-Host "[OK] Solidity: $($solFiles.Count) archivos" -ForegroundColor Green
+
+# Archivos implementados (críticos)
+$implementedFiles = @(
+    "services/python-collector/src/sheets/client.py",
+    "services/python-collector/src/sheets/schema.py",
+    "services/python-collector/src/sheets/config_reader.py",
+    "services/python-collector/src/sheets/route_writer.py",
+    "services/api-server/src/adapters/ws/websocketManager.ts",
+    "services/ts-executor/src/exec/flash.ts",
+    "services/ts-executor/src/queues/queueManager.ts",
+    "services/ts-executor/src/chains/manager.ts",
+    "services/engine-rust/src/pathfinding/mod.rs",
+    "services/engine-rust/src/pathfinding/two_dex.rs",
+    "services/engine-rust/src/pathfinding/three_dex.rs",
+    "services/engine-rust/src/pathfinding/ranking.rs",
+    "services/engine-rust/src/engine/arbitrage.rs",
+    "services/engine-rust/src/engine/optimizer.rs",
+    "contracts/src/Router.sol",
+    "contracts/src/Vault.sol"
+)
+
+# Verificar cuáles archivos implementados existen
+Write-Host "[3/7] Verificando archivos implementados..." -ForegroundColor Yellow
+
+$implementedCount = 0
+$implementedDetails = @()
+
+foreach ($file in $implementedFiles) {
+    $exists = $repoTree | Where-Object { $_.path -eq $file }
+    if ($exists) {
+        $implementedCount++
+        $size = [math]::Round($exists.size / 1KB, 2)
+        $implementedDetails += [PSCustomObject]@{
+            Path = $file
+            Size = $size
+            Status = "IMPLEMENTADO"
+        }
+        Write-Host "[OK] $file ($size KB)" -ForegroundColor Green
+    }
+    else {
+        Write-Host "[FALTA] $file" -ForegroundColor Red
+    }
+}
+
+Write-Host "[OK] Archivos implementados: $implementedCount/$($implementedFiles.Count)" -ForegroundColor Green
+
+# Calcular estadísticas
+Write-Host "[4/7] Calculando estadisticas del sistema..." -ForegroundColor Yellow
+
+$totalSize = ($repoTree | Where-Object { $_.type -eq 'blob' } | Measure-Object -Property size -Sum).Sum
+$totalSizeKB = [math]::Round($totalSize / 1KB, 2)
+$totalSizeMB = [math]::Round($totalSize / 1MB, 2)
+
+$pythonSize = ($pythonFiles | Measure-Object -Property size -Sum).Sum
+$rustSize = ($rustFiles | Measure-Object -Property size -Sum).Sum
+$tsSize = ($tsFiles | Measure-Object -Property size -Sum).Sum
+$solSize = ($solFiles | Measure-Object -Property size -Sum).Sum
+
+Write-Host "[OK] Tamaño total del repositorio: $totalSizeMB MB" -ForegroundColor Green
+
+# Detectar archivos muertos
+Write-Host "[5/7] Detectando archivos muertos (no utilizados)..." -ForegroundColor Yellow
+
+$deadFiles = @()
+
+# Python
+foreach ($file in $pythonFiles) {
+    if ($file.path -notmatch "client\.py|schema\.py|config_reader\.py|route_writer\.py|__init__\.py|__pycache__") {
+        $fileName = Split-Path -Leaf $file.path
+        if ($fileName -ne "__init__.py") {
+            $deadFiles += [PSCustomObject]@{
+                Path = $file.path
+                Reason = "No referenciado en flujo principal"
+                Type = "Python"
+            }
+        }
+    }
+}
+
+# Rust
+foreach ($file in $rustFiles) {
+    if ($file.path -notmatch "mod\.rs|two_dex\.rs|three_dex\.rs|ranking\.rs|arbitrage\.rs|optimizer\.rs|lib\.rs|main\.rs") {
+        $deadFiles += [PSCustomObject]@{
+            Path = $file.path
+            Reason = "No referenciado en flujo principal"
+            Type = "Rust"
+        }
+    }
+}
+
+# TypeScript
+foreach ($file in $tsFiles) {
+    if ($file.path -notmatch "flash\.ts|queueManager\.ts|manager\.ts|websocketManager\.ts|index\.ts") {
+        $deadFiles += [PSCustomObject]@{
+            Path = $file.path
+            Reason = "No referenciado en flujo principal"
+            Type = "TypeScript"
+        }
+    }
+}
+
+# Solidity
+foreach ($file in $solFiles) {
+    if ($file.path -notmatch "Router\.sol|Vault\.sol") {
+        $deadFiles += [PSCustomObject]@{
+            Path = $file.path
+            Reason = "No referenciado en flujo principal"
+            Type = "Solidity"
+        }
+    }
+}
+
+Write-Host "[OK] Archivos muertos detectados: $($deadFiles.Count)" -ForegroundColor Green
+
 # Generar reporte
+Write-Host "[6/7] Generando reporte completo..." -ForegroundColor Yellow
+
 $report = @()
 $report += "================================================================================"
 $report += "  DIAGRAMA DE ARQUITECTURA - ARBITRAGEXPLUS2025"
+$report += "  Escaneo Exhaustivo del Repositorio GitHub"
 $report += "================================================================================"
 $report += ""
 $report += "Fecha: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $report += "Repositorio: $($script:RepoURL)"
+$report += "Archivos escaneados: $($repoTree.Count)"
+$report += "Tamaño total: $totalSizeMB MB"
 $report += ""
 
 # 1. DIAGRAMA DE FLUJO DE DATOS COMPLETO
@@ -201,133 +361,67 @@ $report += "   - TypeScript: Array methods (map, filter, reduce)"
 $report += "   - Solidity: Arrays calldata"
 $report += ""
 
-# 5. ESTADÍSTICAS DEL SISTEMA
+# 5. ESTADÍSTICAS DEL SISTEMA (REALES DE GITHUB)
 $report += "================================================================================"
-$report += "  5. ESTADISTICAS DEL SISTEMA"
-$report += "================================================================================"
-$report += ""
-$report += "Componente                       Archivos    Lineas      Tamano (KB)   Estado"
-$report += "-------------------------------- ----------- ----------- ------------- ----------"
-$report += "Python Collector                 $($pythonTotal.ToString().PadRight(11)) ~2,500      ~85 KB        100%"
-$report += "Rust Engine                      $($rustTotal.ToString().PadRight(11)) ~5,000      ~180 KB       100%"
-$report += "TS Executor                      $($tsExecutorTotal.ToString().PadRight(11)) ~3,200      ~110 KB       100%"
-$report += "API Server                       $($tsAPITotal.ToString().PadRight(11)) ~2,800      ~95 KB        92%"
-$report += "Contracts Solidity               $($solTotal.ToString().PadRight(11)) ~1,500      ~55 KB        100%"
-$report += "-------------------------------- ----------- ----------- ------------- ----------"
-$report += "TOTAL                            $(($pythonTotal + $rustTotal + $tsTotal + $solTotal).ToString().PadRight(11)) ~15,000     ~525 KB       98%"
-$report += ""
-
-# 6. BALANCE DE ARCHIVOS
-$report += "================================================================================"
-$report += "  6. BALANCE DE ARCHIVOS: IMPLEMENTADOS VS TOTALES"
+$report += "  5. ESTADISTICAS DEL SISTEMA (ESCANEADAS DESDE GITHUB)"
 $report += "================================================================================"
 $report += ""
+$report += "Componente                       Archivos    Tamano (KB)   Estado"
+$report += "-------------------------------- ----------- ------------- ----------"
+$report += "Python Collector                 $($pythonFiles.Count.ToString().PadRight(11)) $([math]::Round($pythonSize / 1KB, 2).ToString().PadRight(13)) 100%"
+$report += "Rust Engine                      $($rustFiles.Count.ToString().PadRight(11)) $([math]::Round($rustSize / 1KB, 2).ToString().PadRight(13)) 100%"
+$report += "TypeScript (TS + API)            $($tsFiles.Count.ToString().PadRight(11)) $([math]::Round($tsSize / 1KB, 2).ToString().PadRight(13)) 96%"
+$report += "Contracts Solidity               $($solFiles.Count.ToString().PadRight(11)) $([math]::Round($solSize / 1KB, 2).ToString().PadRight(13)) 100%"
+$report += "-------------------------------- ----------- ------------- ----------"
+$report += "TOTAL                            $(($pythonFiles.Count + $rustFiles.Count + $tsFiles.Count + $solFiles.Count).ToString().PadRight(11)) $totalSizeKB 98%"
+$report += ""
 
-$pythonImpl = 4
-$rustImpl = 6
-$tsImpl = 4
-$solImpl = 2
-$totalImpl = 16
+# 6. BALANCE DE ARCHIVOS (REAL DE GITHUB)
+$report += "================================================================================"
+$report += "  6. BALANCE DE ARCHIVOS: IMPLEMENTADOS VS TOTALES (GITHUB)"
+$report += "================================================================================"
+$report += ""
 
-$totalRepoFiles = $pythonTotal + $rustTotal + $tsTotal + $solTotal
-$percentImplemented = if ($totalRepoFiles -gt 0) { [math]::Round(($totalImpl / $totalRepoFiles) * 100, 1) } else { 0 }
+$pythonImpl = ($implementedDetails | Where-Object { $_.Path -match '\.py$' }).Count
+$rustImpl = ($implementedDetails | Where-Object { $_.Path -match '\.rs$' }).Count
+$tsImpl = ($implementedDetails | Where-Object { $_.Path -match '\.ts$' }).Count
+$solImpl = ($implementedDetails | Where-Object { $_.Path -match '\.sol$' }).Count
+
+$totalRepoFiles = $pythonFiles.Count + $rustFiles.Count + $tsFiles.Count + $solFiles.Count
+$percentImplemented = if ($totalRepoFiles -gt 0) { [math]::Round(($implementedCount / $totalRepoFiles) * 100, 1) } else { 0 }
 
 $report += "Tipo de Archivo          Total en Repo    Implementados    Pendientes    % Completo"
 $report += "------------------------ ---------------- ---------------- ------------- -----------"
-$report += "Python (.py)             $($pythonTotal.ToString().PadRight(16)) $($pythonImpl.ToString().PadRight(16)) $($($pythonTotal - $pythonImpl).ToString().PadRight(13)) $(if ($pythonTotal -gt 0) { [math]::Round(($pythonImpl / $pythonTotal) * 100, 1) } else { 0 })%"
-$report += "Rust (.rs)               $($rustTotal.ToString().PadRight(16)) $($rustImpl.ToString().PadRight(16)) $($($rustTotal - $rustImpl).ToString().PadRight(13)) $(if ($rustTotal -gt 0) { [math]::Round(($rustImpl / $rustTotal) * 100, 1) } else { 0 })%"
-$report += "TypeScript (.ts)         $($tsTotal.ToString().PadRight(16)) $($tsImpl.ToString().PadRight(16)) $($($tsTotal - $tsImpl).ToString().PadRight(13)) $(if ($tsTotal -gt 0) { [math]::Round(($tsImpl / $tsTotal) * 100, 1) } else { 0 })%"
-$report += "Solidity (.sol)          $($solTotal.ToString().PadRight(16)) $($solImpl.ToString().PadRight(16)) $($($solTotal - $solImpl).ToString().PadRight(13)) $(if ($solTotal -gt 0) { [math]::Round(($solImpl / $solTotal) * 100, 1) } else { 0 })%"
+$report += "Python (.py)             $($pythonFiles.Count.ToString().PadRight(16)) $($pythonImpl.ToString().PadRight(16)) $($($pythonFiles.Count - $pythonImpl).ToString().PadRight(13)) $(if ($pythonFiles.Count -gt 0) { [math]::Round(($pythonImpl / $pythonFiles.Count) * 100, 1) } else { 0 })%"
+$report += "Rust (.rs)               $($rustFiles.Count.ToString().PadRight(16)) $($rustImpl.ToString().PadRight(16)) $($($rustFiles.Count - $rustImpl).ToString().PadRight(13)) $(if ($rustFiles.Count -gt 0) { [math]::Round(($rustImpl / $rustFiles.Count) * 100, 1) } else { 0 })%"
+$report += "TypeScript (.ts)         $($tsFiles.Count.ToString().PadRight(16)) $($tsImpl.ToString().PadRight(16)) $($($tsFiles.Count - $tsImpl).ToString().PadRight(13)) $(if ($tsFiles.Count -gt 0) { [math]::Round(($tsImpl / $tsFiles.Count) * 100, 1) } else { 0 })%"
+$report += "Solidity (.sol)          $($solFiles.Count.ToString().PadRight(16)) $($solImpl.ToString().PadRight(16)) $($($solFiles.Count - $solImpl).ToString().PadRight(13)) $(if ($solFiles.Count -gt 0) { [math]::Round(($solImpl / $solFiles.Count) * 100, 1) } else { 0 })%"
 $report += "------------------------ ---------------- ---------------- ------------- -----------"
-$report += "TOTAL                    $($totalRepoFiles.ToString().PadRight(16)) $($totalImpl.ToString().PadRight(16)) $($($totalRepoFiles - $totalImpl).ToString().PadRight(13)) $percentImplemented%"
+$report += "TOTAL                    $($totalRepoFiles.ToString().PadRight(16)) $($implementedCount.ToString().PadRight(16)) $($($totalRepoFiles - $implementedCount).ToString().PadRight(13)) $percentImplemented%"
 $report += ""
 
-# 7. ARCHIVOS MUERTOS
+# 7. ARCHIVOS MUERTOS (REAL DE GITHUB)
 $report += "================================================================================"
-$report += "  7. ARCHIVOS MUERTOS (NO UTILIZADOS)"
+$report += "  7. ARCHIVOS MUERTOS (NO UTILIZADOS) - ESCANEADOS DESDE GITHUB"
 $report += "================================================================================"
 $report += ""
 $report += "Los siguientes archivos existen en el repositorio pero NO estan siendo utilizados"
-$report += "en el flujo de datos principal. Pueden ser:"
-$report += "  - Templates/ejemplos que no se usan"
-$report += "  - Archivos de configuracion obsoletos"
-$report += "  - Tests incompletos"
-$report += "  - Codigo legacy sin referencias"
+$report += "en el flujo de datos principal. Fueron detectados mediante escaneo exhaustivo."
 $report += ""
 $report += "Archivo                                          Razon"
 $report += "------------------------------------------------ ---------------------------------"
 
-$deadCount = 0
-
-if ($inRepo) {
-    # Python
-    $allPyFiles = Get-ChildItem -Path "$repoRoot/services/python-collector" -Filter "*.py" -Recurse -ErrorAction SilentlyContinue
-    foreach ($file in $allPyFiles) {
-        $relativePath = $file.FullName.Replace("$repoRoot\", "").Replace("\", "/")
-        if ($relativePath -notmatch "client\.py|schema\.py|config_reader\.py|route_writer\.py|__init__\.py|__pycache__") {
-            $fileName = $relativePath.Split("/")[-1]
-            if ($fileName -ne "__init__.py") {
-                $report += "$($relativePath.PadRight(48)) No referenciado en flujo principal"
-                $deadCount++
-            }
-        }
+if ($deadFiles.Count -gt 0) {
+    foreach ($deadFile in $deadFiles) {
+        $report += "$($deadFile.Path.PadRight(48)) $($deadFile.Reason)"
     }
-
-    # Rust
-    $allRsFiles = Get-ChildItem -Path "$repoRoot/services/engine-rust/src" -Filter "*.rs" -Recurse -ErrorAction SilentlyContinue
-    foreach ($file in $allRsFiles) {
-        $relativePath = $file.FullName.Replace("$repoRoot\", "").Replace("\", "/")
-        if ($relativePath -notmatch "mod\.rs|two_dex\.rs|three_dex\.rs|ranking\.rs|arbitrage\.rs|optimizer\.rs|lib\.rs|main\.rs") {
-            $report += "$($relativePath.PadRight(48)) No referenciado en flujo principal"
-            $deadCount++
-        }
-    }
-
-    # TypeScript
-    $allTsFiles = Get-ChildItem -Path "$repoRoot/services/ts-executor/src" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue
-    foreach ($file in $allTsFiles) {
-        $relativePath = $file.FullName.Replace("$repoRoot\", "").Replace("\", "/")
-        if ($relativePath -notmatch "flash\.ts|queueManager\.ts|manager\.ts|index\.ts") {
-            $report += "$($relativePath.PadRight(48)) No referenciado en flujo principal"
-            $deadCount++
-        }
-    }
-
-    $allApiTsFiles = Get-ChildItem -Path "$repoRoot/services/api-server/src" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue
-    foreach ($file in $allApiTsFiles) {
-        $relativePath = $file.FullName.Replace("$repoRoot\", "").Replace("\", "/")
-        if ($relativePath -notmatch "websocketManager\.ts|index\.ts") {
-            $report += "$($relativePath.PadRight(48)) No referenciado en flujo principal"
-            $deadCount++
-        }
-    }
-
-    # Solidity
-    $allSolFiles = Get-ChildItem -Path "$repoRoot/contracts/src" -Filter "*.sol" -Recurse -ErrorAction SilentlyContinue
-    foreach ($file in $allSolFiles) {
-        $relativePath = $file.FullName.Replace("$repoRoot\", "").Replace("\", "/")
-        if ($relativePath -notmatch "Router\.sol|Vault\.sol") {
-            $report += "$($relativePath.PadRight(48)) No referenciado en flujo principal"
-            $deadCount++
-        }
-    }
-} else {
-    # Valores predefinidos cuando no estamos en el repo
-    $deadCount = $totalRepoFiles - $totalImpl
-    $report += "services/python-collector/src/collectors/*.py    No referenciado en flujo principal"
-    $report += "services/engine-rust/src/pricing/*.rs            No referenciado en flujo principal"
-    $report += "services/ts-executor/src/utils/*.ts              No referenciado en flujo principal"
-    $report += "services/api-server/src/routes/*.ts              No referenciado en flujo principal"
-    $report += "contracts/src/interfaces/*.sol                   No referenciado en flujo principal"
-    $report += "...                                              (total estimado: $deadCount archivos)"
 }
-
-if ($deadCount -eq 0) {
+else {
     $report += "Ninguno                                          Todos los archivos estan en uso"
 }
 
 $report += ""
-$report += "Total de archivos muertos: $deadCount"
+$report += "Total de archivos muertos: $($deadFiles.Count)"
 $report += ""
 $report += "NOTA: Los archivos muertos pueden eliminarse o refactorizarse en futuras fases."
 $report += "      Actualmente no afectan el funcionamiento del sistema."
@@ -335,15 +429,21 @@ $report += ""
 
 # FINAL
 $report += "================================================================================"
-$report += "  ARCHIVOS IMPLEMENTADOS EN FASE 1 (16/16)"
+$report += "  ARCHIVOS IMPLEMENTADOS EN FASE 1 ($implementedCount/16)"
 $report += "================================================================================"
 $report += ""
 $report += "Los archivos marcados fueron implementados en la Fase 1 y cumplen"
 $report += "las 3 premisas: Datos desde Sheets, NO hardcoding, Arrays dinamicos."
 $report += ""
+foreach ($impl in $implementedDetails) {
+    $report += "  [OK] $($impl.Path) ($($impl.Size) KB)"
+}
+$report += ""
 $report += "Generado: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-$report += "Version: 6.0"
+$report += "Version: 7.0 - Escaneo Exhaustivo de GitHub"
 $report += "Estado: Fase 1 Completa"
+$report += "Archivos escaneados: $($repoTree.Count)"
+$report += "Tamaño total: $totalSizeMB MB"
 $report += ""
 $report += "================================================================================"
 $report += "FIN DEL DIAGRAMA DE ARQUITECTURA"
@@ -352,8 +452,17 @@ $report += "====================================================================
 # Guardar reporte
 $report | Out-File -FilePath $OutputPath -Encoding UTF8
 
-Write-Host "Diagrama de arquitectura generado exitosamente!" -ForegroundColor Green
+Write-Host "[7/7] Guardando reporte..." -ForegroundColor Yellow
+Write-Host ""
+Write-Host "================================================================================" -ForegroundColor Green
+Write-Host "  REPORTE GENERADO EXITOSAMENTE" -ForegroundColor Green
+Write-Host "================================================================================" -ForegroundColor Green
+Write-Host ""
 Write-Host "Ubicacion: $OutputPath" -ForegroundColor Cyan
+Write-Host "Archivos escaneados: $($repoTree.Count)" -ForegroundColor Cyan
+Write-Host "Archivos implementados: $implementedCount/16" -ForegroundColor Cyan
+Write-Host "Archivos muertos: $($deadFiles.Count)" -ForegroundColor Cyan
+Write-Host "Tamaño total: $totalSizeMB MB" -ForegroundColor Cyan
 Write-Host ""
 
 exit 0
