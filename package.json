@@ -1,0 +1,42 @@
+{
+  "name": "arbitragexplus2025",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema autónomo de arbitraje DeFi con Google Sheets como cerebro operativo",
+  "author": "ARBITRAGEXPLUS Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "workspaces": [
+    "services/*",
+    "scripts",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "validate": "node scripts/verify-structure.js && node scripts/scan-dead-paths.js",
+    "validate:fly": "node scripts/check_fly_config.js",
+    "validate:health": "node scripts/validate-local-health.js",
+    "validate:deployment": "node scripts/validate-deployment.js",
+    "deploy": "fly deploy",
+    "logs": "fly logs",
+    "status": "fly status"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "prettier": "^3.1.1",
+    "eslint": "^8.56.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
+

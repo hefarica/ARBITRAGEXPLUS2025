@@ -1,0 +1,257 @@
+# Configuración de Monitoreo y Alertas
+# Sistema de monitoreo automático con Google Sheets
+# Hoja: ALERTS (9 campos)
+
+# Configuración de Logging
+logging:
+  level: "info"  # debug, info, warn, error
+  format: "json"
+  output:
+    console: true
+    file: true
+    google_sheets: true
+  
+  file_config:
+    path: "/var/log/arbitragexplus"
+    max_size_mb: 100
+    max_files: 10
+    rotation: "daily"
+  
+  sheets_config:
+    enabled: true
+    sheet_name: "ALERTS"
+    batch_size: 100
+    flush_interval_seconds: 60
+
+# Configuración de Métricas
+metrics:
+  enabled: true
+  collection_interval_seconds: 30
+  retention_days: 30
+  
+  # Métricas de sistema
+  system_metrics:
+    - cpu_usage_percent
+    - memory_usage_percent
+    - disk_usage_percent
+    - network_io_bytes
+  
+  # Métricas de aplicación
+  application_metrics:
+    - requests_per_second
+    - response_time_ms
+    - error_rate
+    - active_connections
+  
+  # Métricas de negocio
+  business_metrics:
+    - opportunities_detected_per_minute
+    - opportunities_executed_per_minute
+    - total_profit_usd
+    - average_profit_percent
+    - success_rate_percent
+    - total_gas_cost_usd
+
+# Configuración de Health Checks
+health_checks:
+  enabled: true
+  interval_seconds: 30
+  timeout_seconds: 10
+  
+  endpoints:
+    api_server:
+      url: "http://localhost:3000/health"
+      critical: true
+    
+    python_collector:
+      url: "http://localhost:8000/health"
+      critical: true
+    
+    rust_engine:
+      url: "http://localhost:8080/health"
+      critical: false
+  
+  external_services:
+    google_sheets:
+      enabled: true
+      check_interval_seconds: 60
+      critical: true
+    
+    pyth_network:
+      enabled: true
+      check_interval_seconds: 30
+      critical: true
+    
+    defillama:
+      enabled: true
+      check_interval_seconds: 120
+      critical: false
+
+# Configuración de Alertas
+alerts:
+  enabled: true
+  channels:
+    - google_sheets
+    - console
+    - webhook
+  
+  # Configuración de Google Sheets
+  google_sheets:
+    enabled: true
+    sheet_name: "ALERTS"
+    severity_colors:
+      critical: "#FF0000"
+      error: "#FF6B6B"
+      warning: "#FFA500"
+      info: "#4CAF50"
+  
+  # Configuración de Webhook
+  webhook:
+    enabled: false
+    url: "${ALERT_WEBHOOK_URL}"
+    method: "POST"
+    headers:
+      Content-Type: "application/json"
+    retry_attempts: 3
+  
+  # Reglas de alertas
+  rules:
+    # Alertas de sistema
+    high_cpu_usage:
+      enabled: true
+      severity: "warning"
+      threshold: 80
+      duration_seconds: 300
+      message: "CPU usage above 80% for 5 minutes"
+    
+    high_memory_usage:
+      enabled: true
+      severity: "warning"
+      threshold: 85
+      duration_seconds: 300
+      message: "Memory usage above 85% for 5 minutes"
+    
+    service_down:
+      enabled: true
+      severity: "critical"
+      threshold: 1
+      duration_seconds: 60
+      message: "Service is down for more than 1 minute"
+    
+    # Alertas de aplicación
+    high_error_rate:
+      enabled: true
+      severity: "error"
+      threshold: 5
+      duration_seconds: 180
+      message: "Error rate above 5% for 3 minutes"
+    
+    slow_response_time:
+      enabled: true
+      severity: "warning"
+      threshold: 1000
+      duration_seconds: 300
+      message: "Average response time above 1s for 5 minutes"
+    
+    # Alertas de negocio
+    low_profitability:
+      enabled: true
+      severity: "warning"
+      threshold: 0.3
+      duration_seconds: 600
+      message: "Average profit below 0.3% for 10 minutes"
+    
+    consecutive_failures:
+      enabled: true
+      severity: "error"
+      threshold: 5
+      duration_seconds: 300
+      message: "More than 5 consecutive execution failures"
+    
+    high_gas_costs:
+      enabled: true
+      severity: "warning"
+      threshold: 100
+      duration_seconds: 300
+      message: "Gas price above 100 gwei for 5 minutes"
+    
+    # Alertas de datos
+    stale_data:
+      enabled: true
+      severity: "warning"
+      threshold: 300
+      duration_seconds: 60
+      message: "Data not updated for more than 5 minutes"
+    
+    oracle_mismatch:
+      enabled: true
+      severity: "error"
+      threshold: 2
+      duration_seconds: 60
+      message: "Price mismatch between oracles above 2%"
+
+# Configuración de Dashboards
+dashboards:
+  google_sheets:
+    enabled: true
+    auto_refresh_seconds: 60
+    
+    widgets:
+      - type: "summary"
+        title: "System Overview"
+        metrics:
+          - total_opportunities_today
+          - total_profit_today_usd
+          - success_rate_today
+          - active_services
+      
+      - type: "chart"
+        title: "Profit Over Time"
+        metric: "profit_usd"
+        time_range: "24h"
+        chart_type: "line"
+      
+      - type: "table"
+        title: "Recent Executions"
+        source: "EXECUTIONS"
+        limit: 20
+        sort_by: "timestamp"
+        sort_order: "desc"
+      
+      - type: "alerts"
+        title: "Active Alerts"
+        source: "ALERTS"
+        filter: "status=active"
+        limit: 10
+
+# Configuración de Reportes
+reports:
+  enabled: true
+  schedule: "daily"
+  time: "00:00"
+  timezone: "UTC"
+  
+  daily_report:
+    enabled: true
+    recipients:
+      - google_sheets
+    
+    sections:
+      - summary
+      - performance_metrics
+      - top_opportunities
+      - errors_and_warnings
+      - system_health
+  
+  weekly_report:
+    enabled: true
+    day: "monday"
+    recipients:
+      - google_sheets
+    
+    sections:
+      - weekly_summary
+      - performance_trends
+      - profitability_analysis
+      - system_reliability
+

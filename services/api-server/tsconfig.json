@@ -1,16 +1,130 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    /* Language and Environment */
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
     "module": "ESNext",
     "moduleResolution": "Node",
-    "rootDir": "src",
-    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true,
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+
+    /* Bundler mode */
+    "moduleDetection": "auto",
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+    "downlevelIteration": true,
+
+    /* Paths */
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["src/*"],
+      "@config/*": ["src/config/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@services/*": ["src/services/*"],
+      "@lib/*": ["src/lib/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@routes/*": ["src/routes/*"],
+      "@adapters/*": ["src/adapters/*"],
+      "@oracles/*": ["src/oracles/*"],
+      "@exec/*": ["src/exec/*"],
+      "@types": ["src/lib/types"],
+      "@utils": ["src/lib/utils"],
+      "@logger": ["src/lib/logger"],
+      "@errors": ["src/lib/errors"]
+    },
+
+    /* Emit */
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "removeComments": false,
+    "noEmitOnError": true,
+    "preserveConstEnums": true,
+    "declarationDir": "./dist/types",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+
+    /* Type Checking */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+
+    /* Advanced */
+    "skipLibCheck": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    /* Additional Strict Checks for ARBITRAGEXPLUS2025 */
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+
+    /* Performance */
+    "assumeChangesOnlyAffectDirectDependencies": true,
+
+    /* Output Formatting */
+    "pretty": true,
+    "listEmittedFiles": false,
+    "listFiles": false
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  
+  "include": [
+    "src/**/*",
+    "src/**/*.json",
+    "test/**/*"
+  ],
+  
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/__tests__/**/*",
+    "**/__mocks__/**/*",
+    "jest.config.js",
+    "jest.integration.config.js"
+  ],
+
+  "ts-node": {
+    "esm": true,
+    "swc": false,
+    "experimentalSpecifierResolution": "node",
+    "compilerOptions": {
+      "module": "ESNext",
+      "target": "ES2022"
+    }
+  },
+
+  "references": [
+    {
+      "path": "../../scripts"
+    }
+  ]
 }

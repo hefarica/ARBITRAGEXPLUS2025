@@ -1,0 +1,74 @@
+# Configuración de Pools de Liquidez
+# Pools dinámicos cargados desde Google Sheets
+# Hoja: POOLS (100 campos)
+
+# Configuración de fuentes de datos
+data_sources:
+  google_sheets:
+    enabled: true
+    sheet_name: "POOLS"
+    range: "A2:Z1000"
+    refresh_interval_seconds: 60
+  
+  defillama:
+    enabled: true
+    api_url: "https://api.llama.fi/pools"
+    refresh_interval_seconds: 300
+  
+  thegraph:
+    enabled: true
+    endpoints:
+      uniswap_v3: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
+      sushiswap: "https://api.thegraph.com/subgraphs/name/sushi-v3/v3-arbitrum"
+      pancakeswap: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange-v3-bsc"
+
+# Configuración de validación
+validation:
+  min_tvl_usd: 10000
+  min_volume_24h_usd: 5000
+  max_age_seconds: 300
+  required_fields:
+    - pool_address
+    - dex_name
+    - chain_id
+    - token0_address
+    - token1_address
+    - fee_tier
+    - tvl_usd
+    - volume_24h_usd
+
+# Configuración de filtros
+filters:
+  enabled_chains:
+    - ethereum
+    - arbitrum
+    - base
+    - bsc
+    - polygon
+  
+  enabled_dexes:
+    - uniswap_v3
+    - sushiswap
+    - pancakeswap
+    - balancer
+    - curve
+  
+  min_liquidity_per_token_usd: 5000
+  max_price_impact_percent: 2.0
+  exclude_paused: true
+  exclude_deprecated: true
+
+# Configuración de caché
+cache:
+  enabled: true
+  ttl_seconds: 60
+  max_entries: 10000
+  eviction_policy: "lru"
+
+# Configuración de monitoreo
+monitoring:
+  track_pool_changes: true
+  alert_on_low_liquidity: true
+  alert_threshold_tvl_usd: 5000
+  log_pool_updates: true
+
