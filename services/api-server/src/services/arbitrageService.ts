@@ -835,5 +835,3 @@ export class ArbitrageService {
     });
   }
 }
-
-export { ArbitrageService };
