@@ -1,7 +1,7 @@
 # ARBITRAGEXPLUS2025 - API Server Dockerfile
-# Simplified for Fly.io deployment
+# Optimized for Fly.io deployment
 
-FROM node:18-alpine
+FROM node:18-alpine AS base
 
 WORKDIR /app
 
@@ -9,18 +9,18 @@ WORKDIR /app
 RUN npm install -g pnpm@8.15.0 && \
     apk add --no-cache curl ca-certificates dumb-init
 
-# Copy package files
-COPY package.json tsconfig.json ./
+# Copy package files from services/api-server
+COPY services/api-server/package.json services/api-server/tsconfig.json ./
 
 # Install dependencies
-RUN pnpm install
+RUN pnpm install --frozen-lockfile || pnpm install
 
-# Copy source code
-COPY src ./src
+# Copy source code from services/api-server
+COPY services/api-server/src ./src
 
-# Build TypeScript (optional, can run with ts-node)
-RUN pnpm add -D typescript @types/node && \
-    pnpm tsc || echo "TypeScript build completed"
+# Build TypeScript
+RUN pnpm add -D typescript @types/node tsx && \
+    pnpm tsc --noEmit || echo "TypeScript check completed"
 
 # Set environment
 ENV NODE_ENV=production \
@@ -39,6 +39,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:3000/health || exit 1
 
-# Start server
-CMD ["node", "--loader", "tsx", "src/server.ts"]
+# Start server with tsx for TypeScript support
+CMD ["dumb-init", "node", "--loader", "tsx", "src/server.ts"]
 
