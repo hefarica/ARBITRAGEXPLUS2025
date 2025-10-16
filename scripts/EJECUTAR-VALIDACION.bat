@@ -85,9 +85,9 @@ if exist "%REPORT_FILE%" (
     )
     echo.
     
-    REM Abrir el reporte automáticamente
-    echo [INFO] Abriendo reporte automaticamente...
-    start "" "%REPORT_FILE%"
+    REM Abrir el reporte automáticamente en Notepad
+    echo [INFO] Abriendo reporte en Bloc de Notas...
+    start notepad.exe "%REPORT_FILE%"
     
     echo.
     echo [INFO] Tambien puedes encontrar el reporte en:
