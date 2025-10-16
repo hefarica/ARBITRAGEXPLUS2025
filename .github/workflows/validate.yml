@@ -1,0 +1,40 @@
+name: Validate Structure
+
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: |
+          pnpm install
+          cd scripts && pnpm install
+      
+      - name: Verify structure
+        run: node scripts/verify-structure.js
+      
+      - name: Scan dead paths
+        run: node scripts/scan-dead-paths.js
+      
+      - name: Check Fly.io config
+        run: node scripts/check_fly_config.js
+      
+      - name: Build all packages
+        run: pnpm -r build
