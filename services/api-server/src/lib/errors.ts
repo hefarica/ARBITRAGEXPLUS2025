@@ -4,6 +4,11 @@
  * Sistema centralizado de manejo de errores con clasificación,
  * logging automático, recovery strategies y métricas de errores
  * para operaciones críticas de arbitraje DeFi.
+ * 
+ * SECURITY NOTE: Este archivo NO contiene credenciales hardcodeadas.
+ * Todas las referencias a "TOKEN", "KEY", "SECRET" son nombres de
+ * tipos de error, no valores reales. Todas las credenciales deben
+ * gestionarse exclusivamente a través de variables de entorno.
  */
 
 import { logger } from './logger';

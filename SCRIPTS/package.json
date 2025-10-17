@@ -15,11 +15,12 @@
     "pre-push": "npm run validate-all"
   },
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "axios": "^1.6.0",
-    "glob": "^10.3.10",
-    "toml": "^3.0.0",
     "chalk": "^4.1.2",
-    "joi": "^17.11.0"
+    "glob": "^10.3.10",
+    "joi": "^17.11.0",
+    "toml": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

@@ -9,8 +9,11 @@ importers:
   .:
     dependencies:
       dotenv:
-        specifier: ^16.3.1
+        specifier: ^16.6.1
         version: 16.6.1
+      googleapis:
+        specifier: ^128.0.0
+        version: 128.0.0
     devDependencies:
       '@types/node':
         specifier: ^20.10.0

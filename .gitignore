@@ -11,3 +11,4 @@ artifacts/
 cache/
 # Environment
 .env
+services/engine-rust/target/

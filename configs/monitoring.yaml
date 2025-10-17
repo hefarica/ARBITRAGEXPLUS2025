@@ -10,18 +10,18 @@ health_checks:
   # Usar variables de entorno en producción con HTTPS
   endpoints:
     api_server:
-      url: "${API_SERVER_URL:-http://localhost:3000}/health"
+      url: "${API_SERVER_URL:-https://localhost:3000}/health"
       critical: true
       # NOTA: HTTP solo para desarrollo local
       allow_insecure_localhost: true
     
     python_collector:
-      url: "${PYTHON_COLLECTOR_URL:-http://localhost:8000}/health"
+      url: "${PYTHON_COLLECTOR_URL:-https://localhost:8000}/health"
       critical: true
       allow_insecure_localhost: true
     
     rust_engine:
-      url: "${RUST_ENGINE_URL:-http://localhost:8080}/health"
+      url: "${RUST_ENGINE_URL:-https://localhost:8080}/health"
       critical: false
       allow_insecure_localhost: true
 
