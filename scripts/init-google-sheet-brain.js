@@ -303,16 +303,31 @@ async function initializeGoogleSheetBrain() {
     try {
       const protections = await sheets.spreadsheets.get({
         spreadsheetId: SPREADSHEET_ID,
-        fields: 'sheets.protectedRanges',
+        fields: 'sheets(properties,protectedRanges)',
       });
       
       const removeProtectionRequests = [];
       
       if (protections.data.sheets) {
         protections.data.sheets.forEach(sheet => {
+          // Quitar protección de la hoja completa
+          if (sheet.properties && sheet.properties.sheetId !== undefined) {
+            console.log(`   Intentando desproteger hoja: ${sheet.properties.title} (ID: ${sheet.properties.sheetId})`);
+            // Actualizar propiedades de la hoja para quitar protección
+            removeProtectionRequests.push({
+              updateSheetProperties: {
+                properties: {
+                  sheetId: sheet.properties.sheetId,
+                },
+                fields: 'title', // Solo actualizar el título para forzar el cambio
+              },
+            });
+          }
+          
+          // Quitar protecciones de rangos
           if (sheet.protectedRanges) {
             sheet.protectedRanges.forEach(protection => {
-              console.log(`   Quitando protección ID: ${protection.protectedRangeId}`);
+              console.log(`   Quitando protección de rango ID: ${protection.protectedRangeId}`);
               removeProtectionRequests.push({
                 deleteProtectedRange: {
                   protectedRangeId: protection.protectedRangeId,
@@ -324,17 +339,51 @@ async function initializeGoogleSheetBrain() {
       }
       
       if (removeProtectionRequests.length > 0) {
-        console.log(`   Eliminando ${removeProtectionRequests.length} protecciones...`);
-        await sheets.spreadsheets.batchUpdate({
-          spreadsheetId: SPREADSHEET_ID,
-          requestBody: { requests: removeProtectionRequests },
-        });
-        console.log('✅ Protecciones eliminadas\n');
+        console.log(`   Procesando ${removeProtectionRequests.length} operaciones de desproteccion...`);
+        try {
+          await sheets.spreadsheets.batchUpdate({
+            spreadsheetId: SPREADSHEET_ID,
+            requestBody: { requests: removeProtectionRequests },
+          });
+          console.log('✅ Protecciones procesadas\n');
+        } catch (batchError) {
+          console.log('⚠️  Algunas protecciones no se pudieron quitar');
+          console.log('   Intentando eliminar protecciones de rangos individualmente...\n');
+          
+          // Intentar solo eliminar protecciones de rangos
+          const rangeProtections = await sheets.spreadsheets.get({
+            spreadsheetId: SPREADSHEET_ID,
+            fields: 'sheets.protectedRanges',
+          });
+          
+          const rangeRequests = [];
+          if (rangeProtections.data.sheets) {
+            rangeProtections.data.sheets.forEach(sheet => {
+              if (sheet.protectedRanges) {
+                sheet.protectedRanges.forEach(protection => {
+                  rangeRequests.push({
+                    deleteProtectedRange: {
+                      protectedRangeId: protection.protectedRangeId,
+                    },
+                  });
+                });
+              }
+            });
+          }
+          
+          if (rangeRequests.length > 0) {
+            await sheets.spreadsheets.batchUpdate({
+              spreadsheetId: SPREADSHEET_ID,
+              requestBody: { requests: rangeRequests },
+            });
+            console.log('✅ Protecciones de rangos eliminadas\n');
+          }
+        }
       } else {
         console.log('   No se encontraron protecciones\n');
       }
     } catch (error) {
-      console.log('⚠️  Advertencia: No se pudieron quitar las protecciones:', error.message);
+      console.log('⚠️  Advertencia: No se pudieron quitar todas las protecciones:', error.message);
       console.log('   Continuando de todas formas...\n');
     }
     
