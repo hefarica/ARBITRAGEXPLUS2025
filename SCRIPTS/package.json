@@ -1,0 +1,41 @@
+{
+  "name": "@arbitragex/validation-scripts",
+  "version": "1.0.0",
+  "description": "Scripts de validación críticos para ARBITRAGEXPLUS2025",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "verify": "node verify-structure.js",
+    "scan": "node scan-dead-paths.js",
+    "check-fly": "node check-fly-config.js",
+    "validate-deploy": "node validate-deployment.js",
+    "health": "node validate-local-health.js",
+    "validate-all": "npm run verify && npm run scan && npm run check-fly && npm run validate-deploy && npm run health",
+    "pre-commit": "npm run validate-all",
+    "pre-push": "npm run validate-all"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "glob": "^10.3.10",
+    "toml": "^3.0.0",
+    "chalk": "^4.1.2",
+    "joi": "^17.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "keywords": [
+    "arbitrage",
+    "defi",
+    "validation",
+    "scripts",
+    "blockchain"
+  ],
+  "author": "ARBITRAGEXPLUS2025 Core Team",
+  "license": "MIT",
+  "main": "analyze-file-completeness.js"
+}
