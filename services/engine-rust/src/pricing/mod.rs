@@ -1,5 +1,15 @@
 //! Pricing module for calculating optimal execution prices
 
+pub mod dex_pricing;
+
+pub use dex_pricing::{
+    DexPricingEngine,
+    DexType,
+    PoolConfig,
+    PricingResult,
+    PoolStats,
+};
+
 pub struct PricingEngine {
     pub slippage_tolerance: f64,
 }
