@@ -43,6 +43,23 @@ export class HealthController {
     this.version = process.env.npm_package_version || '1.0.0';
   }
 
+  /**
+   * Helper para obtener URLs de servicios con protocolo correcto según entorno
+   */
+  private getServiceUrl(service: 'rust' | 'python'): string {
+    const urls = {
+      rust: process.env.RUST_ENGINE_URL || 
+        (process.env.NODE_ENV === 'production' 
+          ? 'https://rust-engine:8002' 
+          : 'http://localhost:8002'),
+      python: process.env.PYTHON_COLLECTOR_URL || 
+        (process.env.NODE_ENV === 'production' 
+          ? 'https://python-collector:8001' 
+          : 'http://localhost:8001')
+    };
+    return urls[service];
+  }
+
   // ================================================================================
   // BASIC HEALTH ENDPOINTS
   // ================================================================================
@@ -395,7 +412,7 @@ export class HealthController {
   private async checkRustEngine(): Promise<ServiceStatus> {
     try {
       // Check if Rust engine is responsive via HTTP or IPC
-      const response = await fetch('http://localhost:8002/health', {
+      const response = await fetch(`${this.getServiceUrl('rust')}/health`, {
         method: 'GET',
         timeout: 5000
       });
@@ -434,7 +451,7 @@ export class HealthController {
   private async checkPythonCollector(): Promise<ServiceStatus> {
     try {
       // Check if Python collector is responsive
-      const response = await fetch('http://localhost:8001/health', {
+      const response = await fetch(`${this.getServiceUrl('python')}/health`, {
         method: 'GET',
         timeout: 8000
       });

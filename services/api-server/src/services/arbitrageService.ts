@@ -83,8 +83,16 @@ export class ArbitrageService {
   private isInitialized = false;
 
   constructor() {
-    this.rustEngineUrl = process.env.RUST_ENGINE_URL || 'http://localhost:8002';
-    this.pythonCollectorUrl = process.env.PYTHON_COLLECTOR_URL || 'http://localhost:8001';
+    // URLs configurables por entorno (HTTPS en producción, HTTP en desarrollo)
+    this.rustEngineUrl = process.env.RUST_ENGINE_URL || 
+      (process.env.NODE_ENV === 'production' 
+        ? 'https://rust-engine:8002' 
+        : 'http://localhost:8002');
+        
+    this.pythonCollectorUrl = process.env.PYTHON_COLLECTOR_URL || 
+      (process.env.NODE_ENV === 'production' 
+        ? 'https://python-collector:8001' 
+        : 'http://localhost:8001');
   }
 
   // ================================================================================

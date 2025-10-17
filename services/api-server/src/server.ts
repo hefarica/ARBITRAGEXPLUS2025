@@ -596,10 +596,13 @@ class ArbitrageApiServer {
       
       await this.app.listen({ port, host });
       
+      const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+      const wsProtocol = process.env.NODE_ENV === 'production' ? 'wss' : 'ws';
+      
       this.logger.info(`🚀 ARBITRAGEXPLUS2025 API Server listening on ${host}:${port}`);
       this.logger.info(`📊 Configuración cargada desde Google Sheets`);
-      this.logger.info(`🔗 WebSocket disponible en ws://${host}:${port}/prices/stream`);
-      this.logger.info(`🏥 Health check: http://${host}:${port}/health`);
+      this.logger.info(`🔗 WebSocket disponible en ${wsProtocol}://${host}:${port}/prices/stream`);
+      this.logger.info(`🏥 Health check: ${protocol}://${host}:${port}/health`);
       
     } catch (error) {
       this.logger.error('❌ Error starting server:', error);
