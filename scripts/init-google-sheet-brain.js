@@ -297,7 +297,48 @@ async function initializeGoogleSheetBrain() {
     });
     console.log(`✅ Spreadsheet encontrado: "${spreadsheet.data.properties.title}"\n`);
     
-    // 4. ELIMINAR TODAS LAS HOJAS EXISTENTES (excepto una temporal)
+    // 4. QUITAR TODAS LAS PROTECCIONES
+    console.log('🔓 Quitando protecciones de hojas y rangos...\n');
+    
+    try {
+      const protections = await sheets.spreadsheets.get({
+        spreadsheetId: SPREADSHEET_ID,
+        fields: 'sheets.protectedRanges',
+      });
+      
+      const removeProtectionRequests = [];
+      
+      if (protections.data.sheets) {
+        protections.data.sheets.forEach(sheet => {
+          if (sheet.protectedRanges) {
+            sheet.protectedRanges.forEach(protection => {
+              console.log(`   Quitando protección ID: ${protection.protectedRangeId}`);
+              removeProtectionRequests.push({
+                deleteProtectedRange: {
+                  protectedRangeId: protection.protectedRangeId,
+                },
+              });
+            });
+          }
+        });
+      }
+      
+      if (removeProtectionRequests.length > 0) {
+        console.log(`   Eliminando ${removeProtectionRequests.length} protecciones...`);
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId: SPREADSHEET_ID,
+          requestBody: { requests: removeProtectionRequests },
+        });
+        console.log('✅ Protecciones eliminadas\n');
+      } else {
+        console.log('   No se encontraron protecciones\n');
+      }
+    } catch (error) {
+      console.log('⚠️  Advertencia: No se pudieron quitar las protecciones:', error.message);
+      console.log('   Continuando de todas formas...\n');
+    }
+    
+    // 5. ELIMINAR TODAS LAS HOJAS EXISTENTES (excepto una temporal)
     console.log('🗑️  Eliminando hojas existentes...\n');
     
     const existingSheets = spreadsheet.data.sheets;
@@ -344,7 +385,7 @@ async function initializeGoogleSheetBrain() {
       console.log('✅ Hojas existentes eliminadas\n');
     }
     
-    // 5. Crear las 13 hojas maestras
+    // 6. Crear las 13 hojas maestras
     console.log('📋 Creando 13 hojas maestras...\n');
     
     const createRequests = [];
