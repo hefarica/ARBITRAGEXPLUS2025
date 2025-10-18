@@ -1,0 +1,49 @@
+{
+  "name": "@arbitragexplus/e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for ARBITRAGEXPLUS2025",
+  "scripts": {
+    "test": "mocha --require ts-node/register --require dotenv/config 'e2e/**/*.test.ts'",
+    "test:full-flow": "mocha --require ts-node/register --require dotenv/config 'e2e/full-flow.test.ts'",
+    "test:parallel": "mocha --require ts-node/register --require dotenv/config 'e2e/parallel-execution.test.ts'",
+    "test:watch": "mocha --require ts-node/register --require dotenv/config --watch 'e2e/**/*.test.ts'",
+    "test:coverage": "nyc npm test"
+  },
+  "keywords": [
+    "arbitrage",
+    "e2e",
+    "testing"
+  ],
+  "author": "ARBITRAGEXPLUS2025",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "ethers": "^5.7.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2",
+    "nyc": "^15.1.0"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/*.test.ts"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "lcov"
+    ],
+    "all": true
+  }
+}
+

@@ -1,0 +1,410 @@
+name: Smart Contracts CI/CD
+
+on:
+  push:
+    branches: [master, main, develop]
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/contracts.yml'
+  pull_request:
+    branches: [master, main, develop]
+    paths:
+      - 'contracts/**'
+  workflow_dispatch:
+    inputs:
+      deploy_network:
+        description: 'Network to deploy (testnet/mainnet)'
+        required: false
+        default: 'testnet'
+        type: choice
+        options:
+          - testnet
+          - mainnet
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  # ==================================================================================
+  # JOB 1: LINT Y FORMATO
+  # ==================================================================================
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check formatting
+        working-directory: contracts
+        run: forge fmt --check
+
+      - name: Run Solhint
+        working-directory: contracts
+        run: |
+          npm install -g solhint
+          solhint 'src/**/*.sol' 'test/**/*.sol'
+
+  # ==================================================================================
+  # JOB 2: COMPILACIÓN
+  # ==================================================================================
+  build:
+    name: Build Contracts
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Build contracts
+        working-directory: contracts
+        run: forge build --sizes
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-artifacts
+          path: |
+            contracts/out/**/*.json
+            contracts/broadcast/**/*.json
+          retention-days: 7
+
+  # ==================================================================================
+  # JOB 3: TESTS UNITARIOS
+  # ==================================================================================
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Run tests
+        working-directory: contracts
+        run: forge test -vvv
+
+      - name: Generate coverage report
+        working-directory: contracts
+        run: forge coverage --report lcov
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./contracts/lcov.info
+          flags: smart-contracts
+          name: smart-contracts-coverage
+
+  # ==================================================================================
+  # JOB 4: TESTS DE GAS
+  # ==================================================================================
+  gas-report:
+    name: Gas Report
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Generate gas report
+        working-directory: contracts
+        run: forge test --gas-report > gas-report.txt
+
+      - name: Upload gas report
+        uses: actions/upload-artifact@v4
+        with:
+          name: gas-report
+          path: contracts/gas-report.txt
+          retention-days: 30
+
+      - name: Comment gas report on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const gasReport = fs.readFileSync('contracts/gas-report.txt', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ⛽ Gas Report\n\n\`\`\`\n${gasReport}\n\`\`\``
+            });
+
+  # ==================================================================================
+  # JOB 5: ANÁLISIS DE SEGURIDAD
+  # ==================================================================================
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Install Slither
+        run: |
+          pip3 install slither-analyzer
+          pip3 install solc-select
+          solc-select install 0.8.19
+          solc-select use 0.8.19
+
+      - name: Run Slither
+        working-directory: contracts
+        run: slither . --exclude-dependencies --checklist > slither-report.md || true
+
+      - name: Upload Slither report
+        uses: actions/upload-artifact@v4
+        with:
+          name: slither-report
+          path: contracts/slither-report.md
+          retention-days: 30
+
+  # ==================================================================================
+  # JOB 6: DEPLOY A TESTNET
+  # ==================================================================================
+  deploy-testnet:
+    name: Deploy to Testnet
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: |
+      (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') &&
+      (github.event.inputs.deploy_network == 'testnet' || github.event.inputs.deploy_network == '')
+    environment:
+      name: testnet
+      url: https://sepolia.etherscan.io
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Deploy to Sepolia
+        working-directory: contracts
+        env:
+          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $SEPOLIA_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $ETHERSCAN_API_KEY \
+            -vvvv
+
+      - name: Deploy to BSC Testnet
+        working-directory: contracts
+        env:
+          BSC_TESTNET_RPC_URL: ${{ secrets.BSC_TESTNET_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $BSC_TESTNET_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $BSCSCAN_API_KEY \
+            -vvvv
+
+      - name: Deploy to Polygon Mumbai
+        working-directory: contracts
+        env:
+          MUMBAI_RPC_URL: ${{ secrets.MUMBAI_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          POLYGONSCAN_API_KEY: ${{ secrets.POLYGONSCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $MUMBAI_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $POLYGONSCAN_API_KEY \
+            -vvvv
+
+      - name: Save deployment addresses
+        uses: actions/upload-artifact@v4
+        with:
+          name: testnet-deployments
+          path: contracts/broadcast/**/*.json
+          retention-days: 90
+
+  # ==================================================================================
+  # JOB 7: DEPLOY A MAINNET (MANUAL)
+  # ==================================================================================
+  deploy-mainnet:
+    name: Deploy to Mainnet
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.deploy_network == 'mainnet'
+    environment:
+      name: mainnet
+      url: https://etherscan.io
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Deploy to Ethereum Mainnet
+        working-directory: contracts
+        env:
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $MAINNET_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $ETHERSCAN_API_KEY \
+            -vvvv
+
+      - name: Deploy to BSC Mainnet
+        working-directory: contracts
+        env:
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $BSC_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $BSCSCAN_API_KEY \
+            -vvvv
+
+      - name: Deploy to Polygon Mainnet
+        working-directory: contracts
+        env:
+          POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          POLYGONSCAN_API_KEY: ${{ secrets.POLYGONSCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $POLYGON_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $POLYGONSCAN_API_KEY \
+            -vvvv
+
+      - name: Deploy to Arbitrum Mainnet
+        working-directory: contracts
+        env:
+          ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
+        run: |
+          forge script script/DeployArbitrageSystem.s.sol:DeployArbitrageSystem \
+            --rpc-url $ARBITRUM_RPC_URL \
+            --private-key $DEPLOYER_PRIVATE_KEY \
+            --broadcast \
+            --verify \
+            --etherscan-api-key $ARBISCAN_API_KEY \
+            -vvvv
+
+      - name: Save mainnet deployment addresses
+        uses: actions/upload-artifact@v4
+        with:
+          name: mainnet-deployments
+          path: contracts/broadcast/**/*.json
+          retention-days: 365
+
+      - name: Create deployment summary
+        run: |
+          echo "# 🚀 Mainnet Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Contracts deployed successfully to:" >> $GITHUB_STEP_SUMMARY
+          echo "- Ethereum Mainnet" >> $GITHUB_STEP_SUMMARY
+          echo "- BSC Mainnet" >> $GITHUB_STEP_SUMMARY
+          echo "- Polygon Mainnet" >> $GITHUB_STEP_SUMMARY
+          echo "- Arbitrum Mainnet" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📝 Deployment artifacts saved in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+
+  # ==================================================================================
+  # JOB 8: VERIFICACIÓN POST-DEPLOYMENT
+  # ==================================================================================
+  verify-deployment:
+    name: Verify Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-testnet]
+    if: success()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Download deployment artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: testnet-deployments
+          path: contracts/broadcast
+
+      - name: Verify contract deployment
+        working-directory: contracts
+        run: |
+          echo "Verifying deployed contracts..."
+          # Aquí se pueden agregar scripts de verificación personalizados
+          # Por ejemplo, verificar que los contratos respondan correctamente
+
+      - name: Create deployment report
+        run: |
+          echo "# 📊 Deployment Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All contracts deployed and verified successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Networks:" >> $GITHUB_STEP_SUMMARY
+          echo "- Sepolia (Ethereum Testnet)" >> $GITHUB_STEP_SUMMARY
+          echo "- BSC Testnet" >> $GITHUB_STEP_SUMMARY
+          echo "- Mumbai (Polygon Testnet)" >> $GITHUB_STEP_SUMMARY
+

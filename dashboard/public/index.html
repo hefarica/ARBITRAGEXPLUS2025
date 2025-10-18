@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARBITRAGEXPLUS2025 - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">ARBITRAGEXPLUS2025</h1>
+      <div class="header-stats">
+        <div class="stat">
+          <span class="stat-label">Status</span>
+          <span class="stat-value" id="system-status">●</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Active Chains</span>
+          <span class="stat-value" id="active-chains">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Last Update</span>
+          <span class="stat-value" id="last-update">--:--:--</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+      
+      <!-- Summary Cards -->
+      <section class="summary-cards">
+        <div class="card">
+          <div class="card-header">
+            <h3>Total Batches</h3>
+            <span class="card-icon">📦</span>
+          </div>
+          <div class="card-body">
+            <div class="card-value" id="total-batches">0</div>
+            <div class="card-change positive" id="batches-change">+0 today</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Total Operations</h3>
+            <span class="card-icon">⚡</span>
+          </div>
+          <div class="card-body">
+            <div class="card-value" id="total-operations">0</div>
+            <div class="card-change positive" id="operations-change">+0 today</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Total Profit</h3>
+            <span class="card-icon">💰</span>
+          </div>
+          <div class="card-body">
+            <div class="card-value" id="total-profit">0.00 ETH</div>
+            <div class="card-change positive" id="profit-change">+0.00 ETH today</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Success Rate</h3>
+            <span class="card-icon">✅</span>
+          </div>
+          <div class="card-body">
+            <div class="card-value" id="success-rate">0%</div>
+            <div class="card-change" id="success-rate-change">--</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Row 1 -->
+      <section class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Profit Over Time</h3>
+            <select id="profit-timeframe" class="timeframe-select">
+              <option value="1h">Last Hour</option>
+              <option value="24h" selected>Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+            </select>
+          </div>
+          <div class="chart-body">
+            <canvas id="profit-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Operations by Chain</h3>
+          </div>
+          <div class="chart-body">
+            <canvas id="chain-distribution-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Row 2 -->
+      <section class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Gas Usage</h3>
+          </div>
+          <div class="chart-body">
+            <canvas id="gas-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Success vs Failed Operations</h3>
+          </div>
+          <div class="chart-body">
+            <canvas id="success-failed-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section class="activity-section">
+        <div class="activity-header">
+          <h3>Recent Activity</h3>
+          <button id="refresh-activity" class="btn-refresh">Refresh</button>
+        </div>
+        <div class="activity-table-container">
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Chain</th>
+                <th>Batch ID</th>
+                <th>Operations</th>
+                <th>Profit</th>
+                <th>Gas Used</th>
+                <th>Status</th>
+                <th>TX Hash</th>
+              </tr>
+            </thead>
+            <tbody id="activity-tbody">
+              <!-- Populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Active Chains -->
+      <section class="chains-section">
+        <h3>Active Chains</h3>
+        <div class="chains-grid" id="chains-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Alerts -->
+      <section class="alerts-section">
+        <div class="alerts-header">
+          <h3>Recent Alerts</h3>
+          <div class="alert-filters">
+            <button class="filter-btn active" data-severity="all">All</button>
+            <button class="filter-btn" data-severity="critical">Critical</button>
+            <button class="filter-btn" data-severity="error">Error</button>
+            <button class="filter-btn" data-severity="warning">Warning</button>
+            <button class="filter-btn" data-severity="info">Info</button>
+          </div>
+        </div>
+        <div class="alerts-list" id="alerts-list">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 ARBITRAGEXPLUS2025. All rights reserved.</p>
+      <p>Dashboard v1.0.0 | Data updates every 10 seconds</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
+
