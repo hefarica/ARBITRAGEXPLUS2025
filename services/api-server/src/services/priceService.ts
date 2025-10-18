@@ -182,46 +182,227 @@ class PythOracleSource implements OracleSource {
 }
 
 /**
- * Chainlink Oracle Source (preparado para implementación)
+ * Chainlink Oracle Source
+ * Consulta price feeds on-chain de Chainlink
  */
 class ChainlinkOracleSource implements OracleSource {
   name = 'chainlink';
   priority = 2;
+  private providers: Map<string, any> = new Map(); // ethers.providers por blockchain
+  private aggregatorABI = [
+    'function latestRoundData() external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)',
+    'function decimals() external view returns (uint8)',
+  ];
+
+  constructor() {
+    // Inicializar providers para cada blockchain
+    this.initializeProviders();
+  }
+
+  private initializeProviders() {
+    try {
+      // Lazy import de ethers
+      const ethers = require('ethers');
+      
+      // Configurar providers para cada blockchain
+      const rpcEndpoints: Record<string, string> = {
+        ethereum: process.env.ETHEREUM_RPC_URL || 'https://eth.llamarpc.com',
+        polygon: process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com',
+        bsc: process.env.BSC_RPC_URL || 'https://bsc-dataseed.binance.org',
+        avalanche: process.env.AVALANCHE_RPC_URL || 'https://api.avax.network/ext/bc/C/rpc',
+        arbitrum: process.env.ARBITRUM_RPC_URL || 'https://arb1.arbitrum.io/rpc',
+        optimism: process.env.OPTIMISM_RPC_URL || 'https://mainnet.optimism.io',
+      };
+
+      for (const [blockchain, rpcUrl] of Object.entries(rpcEndpoints)) {
+        try {
+          const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+          this.providers.set(blockchain, provider);
+          logger.debug(`Chainlink provider initialized for ${blockchain}`);
+        } catch (error) {
+          logger.warn(`Failed to initialize Chainlink provider for ${blockchain}`, error);
+        }
+      }
+    } catch (error) {
+      logger.error('Failed to initialize Chainlink providers', error);
+    }
+  }
 
   async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
-    // TODO: Implementar consulta a Chainlink on-chain
-    if (!config.chainlinkAddress) {
+    try {
+      if (!config.chainlinkAddress) {
+        logger.debug(`No Chainlink address for ${symbol} on ${blockchain}`);
+        return null;
+      }
+
+      const provider = this.providers.get(blockchain);
+      if (!provider) {
+        logger.warn(`No provider available for ${blockchain}`);
+        return null;
+      }
+
+      // Lazy import de ethers
+      const ethers = require('ethers');
+      
+      // Crear contrato del price feed
+      const aggregator = new ethers.Contract(
+        config.chainlinkAddress,
+        this.aggregatorABI,
+        provider
+      );
+
+      // Consultar datos del último round
+      const [roundData, decimals] = await Promise.all([
+        aggregator.latestRoundData(),
+        aggregator.decimals(),
+      ]);
+
+      // Extraer precio
+      const price = parseFloat(ethers.utils.formatUnits(roundData.answer, decimals));
+      
+      // Calcular confianza basada en la edad de la actualización
+      const updatedAt = roundData.updatedAt.toNumber() * 1000; // Convertir a ms
+      const age = Date.now() - updatedAt;
+      const maxAge = 3600000; // 1 hora
+      const confidence = Math.max(0, 1 - (age / maxAge));
+
+      // Validar que el precio sea reciente (< 1 hora)
+      if (age > maxAge) {
+        logger.warn(`Chainlink price for ${symbol} is stale (${age}ms old)`);
+        return null;
+      }
+
+      return {
+        source: 'chainlink',
+        price,
+        timestamp: new Date(updatedAt),
+        confidence: Math.max(0, Math.min(1, confidence)),
+      };
+    } catch (error) {
+      logger.error(`Chainlink query failed for ${symbol} on ${blockchain}`, sanitizeError(error));
       return null;
     }
-    
-    logger.debug(`Chainlink oracle not yet implemented for ${symbol}`);
-    return null;
   }
 
   isAvailable(): boolean {
-    return false; // Aún no implementado
+    // Disponible si hay al menos un provider inicializado
+    return this.providers.size > 0;
   }
 }
 
 /**
- * Uniswap V3 TWAP Oracle Source (preparado para implementación)
+ * Uniswap V3 TWAP Oracle Source
+ * Consulta Time-Weighted Average Price de pools de Uniswap V3
  */
 class UniswapOracleSource implements OracleSource {
   name = 'uniswap';
   priority = 3;
+  private providers: Map<string, any> = new Map(); // ethers.providers por blockchain
+  private poolABI = [
+    'function observe(uint32[] secondsAgos) external view returns (int56[] tickCumulatives, uint160[] secondsPerLiquidityCumulativeX128s)',
+    'function slot0() external view returns (uint160 sqrtPriceX96, int24 tick, uint16 observationIndex, uint16 observationCardinality, uint16 observationCardinalityNext, uint8 feeProtocol, bool unlocked)',
+    'function token0() external view returns (address)',
+    'function token1() external view returns (address)',
+  ];
+  private twapPeriod: number = 1800; // 30 minutos por defecto
+
+  constructor(twapPeriod?: number) {
+    if (twapPeriod) {
+      this.twapPeriod = twapPeriod;
+    }
+    this.initializeProviders();
+  }
+
+  private initializeProviders() {
+    try {
+      const ethers = require('ethers');
+      
+      const rpcEndpoints: Record<string, string> = {
+        ethereum: process.env.ETHEREUM_RPC_URL || 'https://eth.llamarpc.com',
+        polygon: process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com',
+        bsc: process.env.BSC_RPC_URL || 'https://bsc-dataseed.binance.org',
+        avalanche: process.env.AVALANCHE_RPC_URL || 'https://api.avax.network/ext/bc/C/rpc',
+        arbitrum: process.env.ARBITRUM_RPC_URL || 'https://arb1.arbitrum.io/rpc',
+        optimism: process.env.OPTIMISM_RPC_URL || 'https://mainnet.optimism.io',
+      };
+
+      for (const [blockchain, rpcUrl] of Object.entries(rpcEndpoints)) {
+        try {
+          const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+          this.providers.set(blockchain, provider);
+          logger.debug(`Uniswap provider initialized for ${blockchain}`);
+        } catch (error) {
+          logger.warn(`Failed to initialize Uniswap provider for ${blockchain}`, error);
+        }
+      }
+    } catch (error) {
+      logger.error('Failed to initialize Uniswap providers', error);
+    }
+  }
 
   async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
-    // TODO: Implementar consulta a Uniswap V3 TWAP
-    if (!config.uniswapPoolAddress) {
+    try {
+      if (!config.uniswapPoolAddress) {
+        logger.debug(`No Uniswap pool address for ${symbol} on ${blockchain}`);
+        return null;
+      }
+
+      const provider = this.providers.get(blockchain);
+      if (!provider) {
+        logger.warn(`No provider available for ${blockchain}`);
+        return null;
+      }
+
+      const ethers = require('ethers');
+      
+      // Crear contrato del pool
+      const pool = new ethers.Contract(
+        config.uniswapPoolAddress,
+        this.poolABI,
+        provider
+      );
+
+      // Obtener TWAP
+      const secondsAgos = [this.twapPeriod, 0]; // [periodo atrás, ahora]
+      const [tickCumulatives] = await pool.observe(secondsAgos);
+      
+      // Calcular tick promedio
+      const tickCumulativeDelta = tickCumulatives[1].sub(tickCumulatives[0]);
+      const timeWeightedAverageTick = tickCumulativeDelta.div(this.twapPeriod);
+      
+      // Convertir tick a precio
+      // price = 1.0001^tick
+      const price = Math.pow(1.0001, timeWeightedAverageTick.toNumber());
+      
+      // Obtener slot0 para verificar liquidez
+      const slot0 = await pool.slot0();
+      const currentTick = slot0.tick;
+      
+      // Calcular confianza basada en la diferencia entre TWAP y precio spot
+      const spotPrice = Math.pow(1.0001, currentTick);
+      const deviation = Math.abs(price - spotPrice) / spotPrice;
+      const confidence = Math.max(0, 1 - (deviation * 10)); // Penalizar desviaciones grandes
+      
+      // Validar que la desviación no sea demasiado grande (> 5%)
+      if (deviation > 0.05) {
+        logger.warn(`Uniswap TWAP for ${symbol} has high deviation: ${(deviation * 100).toFixed(2)}%`);
+        return null;
+      }
+
+      return {
+        source: 'uniswap',
+        price,
+        timestamp: new Date(),
+        confidence: Math.max(0, Math.min(1, confidence)),
+      };
+    } catch (error) {
+      logger.error(`Uniswap query failed for ${symbol} on ${blockchain}`, sanitizeError(error));
       return null;
     }
-    
-    logger.debug(`Uniswap oracle not yet implemented for ${symbol}`);
-    return null;
   }
 
   isAvailable(): boolean {
-    return false; // Aún no implementado
+    return this.providers.size > 0;
   }
 }
 
