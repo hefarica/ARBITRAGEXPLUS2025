@@ -18,6 +18,17 @@
  *   - ./logger
  * 
  * ============================================================================
+
+ * 
+ * 🧬 PROGRAMACIÓN DINÁMICA APLICADA:
+ *   1. ❌ NO handlers hardcodeados → ✅ Array dinámico de ErrorHandler
+ *   2. ❌ NO configuración fija → ✅ Map de configuraciones desde Sheets
+ *   3. ✅ Interface ErrorHandler permite agregar handlers sin modificar código
+ *   4. ✅ registerHandler() agrega handlers en runtime
+ *   5. ✅ loadErrorConfig() carga configuración desde Google Sheets
+ *   6. ✅ Polimorfismo: Cualquier clase que implemente ErrorHandler puede ser registrada
+ *   7. ✅ Descubrimiento dinámico de configuraciones de manejo de errores
+ * 
  */
 
 /**
@@ -1255,5 +1266,320 @@ export {
   initializeErrorSystem,
   getErrorLogger,
   getCircuitBreaker,
+};
+
+
+
+
+// ==================================================================================
+// DYNAMIC ERROR HANDLER SYSTEM - PROGRAMACIÓN DINÁMICA
+// ==================================================================================
+
+/**
+ * Interface para handlers de errores dinámicos
+ * Permite agregar nuevos handlers sin modificar código (polimorfismo)
+ */
+export interface ErrorHandler {
+  name: string;
+  priority: number;
+  canHandle(error: Error): boolean;
+  handle(error: Error): Promise<void> | void;
+}
+
+/**
+ * Configuración de manejo de errores desde Google Sheets
+ */
+export interface ErrorHandlingConfig {
+  errorCode: string;
+  shouldLog: boolean;
+  shouldAlert: boolean;
+  shouldRetry: boolean;
+  maxRetries: number;
+  retryDelay: number;
+  customHandlers: string[]; // Nombres de handlers a ejecutar
+  notes?: string;
+}
+
+/**
+ * Sistema dinámico de manejo de errores
+ * Programación Dinámica: Array de handlers, configuración desde Sheets
+ */
+export class DynamicErrorSystem {
+  // Array dinámico de handlers (polimorfismo)
+  private handlers: ErrorHandler[] = [];
+  
+  // Map de configuraciones cargadas desde Sheets
+  private config: Map<string, ErrorHandlingConfig> = new Map();
+  
+  // Servicio de Google Sheets
+  private sheetsService: any;
+  
+  // Interval para refresh de configuración
+  private configRefreshInterval?: NodeJS.Timeout;
+  private readonly CONFIG_REFRESH_INTERVAL = 300000; // 5 minutos
+
+  constructor(sheetsService?: any) {
+    this.sheetsService = sheetsService;
+  }
+
+  /**
+   * Inicializa el sistema dinámico de errores
+   */
+  async init(): Promise<void> {
+    logger.info('Initializing DynamicErrorSystem...');
+
+    // Cargar configuración desde Sheets
+    await this.loadErrorConfig();
+
+    // Registrar handlers por defecto
+    this.registerDefaultHandlers();
+
+    // Iniciar refresh de configuración
+    this.configRefreshInterval = setInterval(() => {
+      this.loadErrorConfig().catch((error) => {
+        logger.error('Failed to refresh error config', sanitizeError(error));
+      });
+    }, this.CONFIG_REFRESH_INTERVAL);
+
+    logger.info('DynamicErrorSystem initialized', {
+      handlers: this.handlers.length,
+      configs: this.config.size,
+    });
+  }
+
+  /**
+   * Carga configuración de manejo de errores desde Google Sheets
+   * Programación Dinámica: Descubrimiento dinámico de configuraciones
+   */
+  async loadErrorConfig(): Promise<void> {
+    try {
+      if (!this.sheetsService) {
+        logger.warn('No sheets service configured for error config');
+        return;
+      }
+
+      logger.info('Loading error handling configuration from Google Sheets...');
+
+      // Leer hoja ERROR_HANDLING_CONFIG
+      const rows = await this.sheetsService.readSheet('ERROR_HANDLING_CONFIG');
+
+      if (!rows || rows.length === 0) {
+        logger.warn('No error handling config found in Sheets');
+        return;
+      }
+
+      // Limpiar configuración anterior
+      this.config.clear();
+
+      // Construir Map dinámicamente
+      for (const row of rows) {
+        try {
+          const config: ErrorHandlingConfig = {
+            errorCode: row.ERROR_CODE || '',
+            shouldLog: row.SHOULD_LOG === 'TRUE' || row.SHOULD_LOG === true,
+            shouldAlert: row.SHOULD_ALERT === 'TRUE' || row.SHOULD_ALERT === true,
+            shouldRetry: row.SHOULD_RETRY === 'TRUE' || row.SHOULD_RETRY === true,
+            maxRetries: parseInt(row.MAX_RETRIES) || 3,
+            retryDelay: parseInt(row.RETRY_DELAY) || 1000,
+            customHandlers: row.CUSTOM_HANDLERS ? row.CUSTOM_HANDLERS.split(',').map((h: string) => h.trim()) : [],
+            notes: row.NOTES || '',
+          };
+
+          if (!config.errorCode) {
+            continue;
+          }
+
+          this.config.set(config.errorCode, config);
+          logger.debug(`Loaded error config: ${config.errorCode}`, { config });
+        } catch (error) {
+          logger.error('Failed to parse error config row', { row, error: sanitizeError(error) });
+        }
+      }
+
+      logger.info('Error handling configuration loaded', {
+        totalConfigs: this.config.size,
+      });
+    } catch (error) {
+      logger.error('Failed to load error config', sanitizeError(error));
+    }
+  }
+
+  /**
+   * Registra un handler dinámicamente
+   * Programación Dinámica: Agregar handlers sin modificar código
+   */
+  registerHandler(handler: ErrorHandler): void {
+    // Verificar que no exista ya
+    const existing = this.handlers.find(h => h.name === handler.name);
+    if (existing) {
+      logger.warn(`Handler ${handler.name} already registered, replacing...`);
+      this.handlers = this.handlers.filter(h => h.name !== handler.name);
+    }
+
+    this.handlers.push(handler);
+    
+    // Ordenar por prioridad
+    this.handlers.sort((a, b) => a.priority - b.priority);
+
+    logger.info(`Handler registered: ${handler.name}`, {
+      priority: handler.priority,
+      totalHandlers: this.handlers.length,
+    });
+  }
+
+  /**
+   * Registra handlers por defecto
+   */
+  private registerDefaultHandlers(): void {
+    // Handler para errores de Sheets
+    this.registerHandler({
+      name: 'sheets_error_handler',
+      priority: 1,
+      canHandle: (error: Error) => {
+        return error.message.includes('Sheets') || error.message.includes('Google');
+      },
+      handle: async (error: Error) => {
+        logger.error('Sheets error detected', sanitizeError(error));
+        // Aquí se podría implementar lógica de reconexión
+      },
+    });
+
+    // Handler para errores de blockchain
+    this.registerHandler({
+      name: 'blockchain_error_handler',
+      priority: 2,
+      canHandle: (error: Error) => {
+        return error.message.includes('RPC') || 
+               error.message.includes('transaction') ||
+               error.message.includes('gas');
+      },
+      handle: async (error: Error) => {
+        logger.error('Blockchain error detected', sanitizeError(error));
+        // Aquí se podría implementar lógica de retry con RPC alternativo
+      },
+    });
+
+    // Handler genérico
+    this.registerHandler({
+      name: 'generic_error_handler',
+      priority: 999,
+      canHandle: () => true,
+      handle: async (error: Error) => {
+        logger.error('Generic error', sanitizeError(error));
+      },
+    });
+  }
+
+  /**
+   * Maneja un error dinámicamente
+   * Programación Dinámica: Itera sobre handlers, aplica configuración
+   */
+  async handleError(error: Error): Promise<void> {
+    try {
+      // Obtener código de error
+      const errorCode = (error as BaseError).code || 'UNKNOWN';
+
+      // Obtener configuración
+      const config = this.config.get(errorCode);
+
+      // Aplicar configuración
+      if (config) {
+        if (!config.shouldLog) {
+          logger.debug(`Skipping logging for ${errorCode} (config)`);
+          return;
+        }
+
+        if (config.shouldAlert) {
+          logger.alert(`Alert for ${errorCode}`, {
+            severity: 'high',
+            component: 'dynamic_error_system',
+            error: sanitizeError(error),
+          });
+        }
+
+        // Ejecutar custom handlers si están configurados
+        if (config.customHandlers.length > 0) {
+          for (const handlerName of config.customHandlers) {
+            const handler = this.handlers.find(h => h.name === handlerName);
+            if (handler && handler.canHandle(error)) {
+              await handler.handle(error);
+            }
+          }
+        }
+      }
+
+      // Ejecutar handlers que puedan manejar el error
+      for (const handler of this.handlers) {
+        if (handler.canHandle(error)) {
+          logger.debug(`Executing handler: ${handler.name}`);
+          await handler.handle(error);
+          break; // Solo ejecutar el primer handler que pueda manejarlo
+        }
+      }
+    } catch (handlerError) {
+      logger.error('Error in error handler', sanitizeError(handlerError));
+    }
+  }
+
+  /**
+   * Obtiene estadísticas del sistema
+   */
+  getStats(): any {
+    return {
+      registeredHandlers: this.handlers.length,
+      handlers: this.handlers.map(h => ({ name: h.name, priority: h.priority })),
+      configuredErrors: this.config.size,
+      configs: Array.from(this.config.entries()).map(([code, config]) => ({
+        errorCode: code,
+        shouldLog: config.shouldLog,
+        shouldAlert: config.shouldAlert,
+        shouldRetry: config.shouldRetry,
+      })),
+    };
+  }
+
+  /**
+   * Cierra el sistema
+   */
+  async close(): Promise<void> {
+    if (this.configRefreshInterval) {
+      clearInterval(this.configRefreshInterval);
+    }
+    logger.info('DynamicErrorSystem closed');
+  }
+}
+
+// ==================================================================================
+// GLOBAL DYNAMIC ERROR SYSTEM
+// ==================================================================================
+
+let dynamicErrorSystem: DynamicErrorSystem | null = null;
+
+/**
+ * Inicializa el sistema dinámico de errores
+ */
+export async function initDynamicErrorSystem(sheetsService: any): Promise<DynamicErrorSystem> {
+  if (dynamicErrorSystem) {
+    logger.warn('DynamicErrorSystem already initialized');
+    return dynamicErrorSystem;
+  }
+
+  dynamicErrorSystem = new DynamicErrorSystem(sheetsService);
+  await dynamicErrorSystem.init();
+  return dynamicErrorSystem;
+}
+
+/**
+ * Obtiene el sistema dinámico de errores
+ */
+export function getDynamicErrorSystem(): DynamicErrorSystem | null {
+  return dynamicErrorSystem;
+}
+
+// Export del sistema dinámico
+export {
+  DynamicErrorSystem,
+  ErrorHandler,
+  ErrorHandlingConfig,
 };
 

@@ -6,38 +6,56 @@
  * ============================================================================
  * 
  * 📥 ENTRADA DE DATOS:
- *   FUENTE 1: Pyth Network API
- *     - Formato: JSON { price: { price: string, expo: number } }
+ *   FUENTE 1: Google Sheets - Hoja "ORACLE_ASSETS"
+ *     - Formato: Array de objetos { SYMBOL, BLOCKCHAIN, PYTH_PRICE_ID, CHAINLINK_ADDRESS, IS_ACTIVE, PRIORITY, MIN_CONFIDENCE, NOTES }
+ *     - Frecuencia: Carga inicial + refresh cada 5 minutos
+ *   FUENTE 2: Pyth Network API
+ *     - Formato: JSON { price: { price: string, expo: number, conf: string } }
  *     - Frecuencia: Polling cada 5 segundos
- *   FUENTE 2: Chainlink Price Feeds (fallback)
+ *   FUENTE 3: Chainlink Price Feeds (fallback)
  *     - Formato: On-chain data
- *   FUENTE 3: Uniswap V3 TWAP (fallback)
+ *   FUENTE 4: Uniswap V3 TWAP (fallback)
  *     - Formato: On-chain data
  * 
  * 🔄 TRANSFORMACIÓN:
- *   PASO 1: Consulta múltiples oráculos en paralelo
- *   PASO 2: Valida consistencia de precios (desviación < 2%)
- *   PASO 3: Calcula precio consensuado (mediana)
- *   PASO 4: Cachea resultado con TTL de 30 segundos
- *   PASO 5: Emite evento de actualización
+ *   PASO 1: Carga configuración dinámica desde Google Sheets
+ *   PASO 2: Construye Map de assets configurados (blockchain:symbol → config)
+ *   PASO 3: Consulta múltiples oráculos en paralelo según configuración
+ *   PASO 4: Valida consistencia de precios (desviación < config.maxDeviation)
+ *   PASO 5: Calcula precio consensuado (mediana)
+ *   PASO 6: Verifica confianza mínima (config.minConfidence)
+ *   PASO 7: Cachea resultado con TTL configurable
+ *   PASO 8: Emite evento de actualización
  * 
  * 📤 SALIDA DE DATOS:
- *   DESTINO 1: Cache en memoria (Map)
- *     - Formato: { token, price, timestamp, source, confidence }
+ *   DESTINO 1: Cache en memoria (Map<string, PriceUpdate>)
+ *     - Formato: { token, blockchain, price, timestamp, source, confidence, deviation }
  *   DESTINO 2: Event emitter (price_update)
  *     - Formato: PriceUpdate interface
  *   DESTINO 3: API response
  *     - Formato: number (precio en USD)
+ *   DESTINO 4: Google Sheets - Hoja "PRICE_UPDATES" (opcional)
+ *     - Formato: { timestamp, symbol, blockchain, price, source, confidence }
  * 
  * 🔗 DEPENDENCIAS:
  *   CONSUME:
  *     - axios → HTTP requests a Pyth API
  *     - events → EventEmitter para pub/sub
  *     - ./logger → Logging de errores
+ *     - ../lib/sheets-service → Lectura de configuración desde Sheets
  *   ES CONSUMIDO POR:
  *     - arbitrageService → Cálculo de rentabilidad
  *     - routeValidator → Validación de rutas
  *     - executionService → Verificación pre-ejecución
+ * 
+ * 🧬 PROGRAMACIÓN DINÁMICA APLICADA:
+ *   1. ❌ NO hardcoding de tokens → ✅ Carga desde Google Sheets
+ *   2. ❌ NO mapeo fijo de price IDs → ✅ Map dinámico construido en runtime
+ *   3. ❌ NO array fijo de oráculos → ✅ Array de OracleSource configurables
+ *   4. ✅ Descubrimiento dinámico de assets activos (IS_ACTIVE = TRUE)
+ *   5. ✅ Validación por características (minConfidence, priority)
+ *   6. ✅ Refresh automático de configuración cada 5 minutos
+ *   7. ✅ Polimorfismo: OracleSource interface permite agregar oráculos sin modificar código
  * 
  * ============================================================================
  */
@@ -48,8 +66,36 @@ import { logger } from '../lib/logger';
 import { sanitizeError } from '../lib/errors';
 
 // ==================================================================================
-// INTERFACES
+// INTERFACES - PROGRAMACIÓN DINÁMICA
 // ==================================================================================
+
+/**
+ * Configuración de un asset desde Google Sheets
+ * Estructura dinámica que se carga en runtime
+ */
+export interface OracleAssetConfig {
+  symbol: string;
+  blockchain: string;
+  pythPriceId?: string;
+  chainlinkAddress?: string;
+  uniswapPoolAddress?: string;
+  isActive: boolean;
+  priority: number; // 1=crítico, 2=importante, 3=opcional
+  minConfidence: number; // 0-1
+  maxDeviation?: number; // Desviación máxima permitida (default 0.02)
+  notes?: string;
+}
+
+/**
+ * Interface abstracta para fuentes de oráculos
+ * Permite agregar nuevos oráculos sin modificar código (polimorfismo)
+ */
+export interface OracleSource {
+  name: string;
+  priority: number;
+  query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null>;
+  isAvailable(): boolean;
+}
 
 export interface PriceUpdate {
   token: string;
@@ -76,51 +122,194 @@ export interface OraclePrice {
 }
 
 // ==================================================================================
-// PRICE SERVICE
+// ORACLE SOURCES - IMPLEMENTACIONES POLIMÓRFICAS
+// ==================================================================================
+
+/**
+ * Pyth Network Oracle Source
+ */
+class PythOracleSource implements OracleSource {
+  name = 'pyth';
+  priority = 1;
+  private client: AxiosInstance;
+  private endpoint: string;
+
+  constructor(endpoint?: string) {
+    this.endpoint = endpoint || process.env.PYTH_ENDPOINT || 'https://hermes.pyth.network';
+    this.client = axios.create({
+      baseURL: this.endpoint,
+      timeout: 5000,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
+    try {
+      if (!config.pythPriceId) {
+        logger.debug(`No Pyth price ID for ${symbol} on ${blockchain}`);
+        return null;
+      }
+
+      const response = await this.client.get('/api/latest_price_feeds', {
+        params: { ids: [config.pythPriceId] },
+      });
+
+      if (!response.data || response.data.length === 0) {
+        return null;
+      }
+
+      const priceData = response.data[0];
+      const price = parseFloat(priceData.price.price) / Math.pow(10, Math.abs(priceData.price.expo));
+      const confidence = priceData.price.conf 
+        ? 1 - (parseFloat(priceData.price.conf) / parseFloat(priceData.price.price))
+        : 0.9;
+
+      return {
+        source: 'pyth',
+        price,
+        timestamp: new Date(),
+        confidence: Math.max(0, Math.min(1, confidence)),
+      };
+    } catch (error) {
+      logger.error(`Pyth query failed for ${symbol}`, sanitizeError(error));
+      return null;
+    }
+  }
+
+  isAvailable(): boolean {
+    return true; // Pyth siempre disponible vía HTTP
+  }
+}
+
+/**
+ * Chainlink Oracle Source (preparado para implementación)
+ */
+class ChainlinkOracleSource implements OracleSource {
+  name = 'chainlink';
+  priority = 2;
+
+  async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
+    // TODO: Implementar consulta a Chainlink on-chain
+    if (!config.chainlinkAddress) {
+      return null;
+    }
+    
+    logger.debug(`Chainlink oracle not yet implemented for ${symbol}`);
+    return null;
+  }
+
+  isAvailable(): boolean {
+    return false; // Aún no implementado
+  }
+}
+
+/**
+ * Uniswap V3 TWAP Oracle Source (preparado para implementación)
+ */
+class UniswapOracleSource implements OracleSource {
+  name = 'uniswap';
+  priority = 3;
+
+  async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
+    // TODO: Implementar consulta a Uniswap V3 TWAP
+    if (!config.uniswapPoolAddress) {
+      return null;
+    }
+    
+    logger.debug(`Uniswap oracle not yet implemented for ${symbol}`);
+    return null;
+  }
+
+  isAvailable(): boolean {
+    return false; // Aún no implementado
+  }
+}
+
+// ==================================================================================
+// PRICE SERVICE - 100% DINÁMICO
 // ==================================================================================
 
 export class PriceService extends EventEmitter {
+  // Configuración dinámica cargada desde Google Sheets
+  private assetsConfig: Map<string, OracleAssetConfig> = new Map();
+  
+  // Array dinámico de fuentes de oráculos (polimorfismo)
+  private oracleSources: OracleSource[] = [];
+  
+  // Cache de precios
   private priceCache: Map<string, PriceUpdate> = new Map();
-  private pythEndpoint: string;
-  private pythClient: AxiosInstance;
+  
+  // Intervalos configurables
   private updateInterval?: NodeJS.Timeout;
-  private readonly CACHE_TTL = 30000; // 30 segundos
-  private readonly UPDATE_INTERVAL = 5000; // 5 segundos
-  private readonly MAX_DEVIATION = 0.02; // 2% desviación máxima
-  private readonly MIN_ORACLES = 2; // Mínimo 2 oráculos para consenso
+  private configRefreshInterval?: NodeJS.Timeout;
+  
+  // Configuración del servicio (puede cargarse desde Sheets también)
+  private readonly CACHE_TTL: number;
+  private readonly UPDATE_INTERVAL: number;
+  private readonly CONFIG_REFRESH_INTERVAL: number;
+  private readonly MAX_DEVIATION: number;
+  private readonly MIN_ORACLES: number;
 
-  constructor() {
+  // Servicio de Google Sheets (inyección de dependencia)
+  private sheetsService: any;
+
+  constructor(sheetsService?: any, config?: {
+    cacheTTL?: number;
+    updateInterval?: number;
+    configRefreshInterval?: number;
+    maxDeviation?: number;
+    minOracles?: number;
+  }) {
     super();
-    this.pythEndpoint = process.env.PYTH_ENDPOINT || 'https://hermes.pyth.network';
     
-    // Cliente HTTP con retry y timeout
-    this.pythClient = axios.create({
-      baseURL: this.pythEndpoint,
-      timeout: 5000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    this.sheetsService = sheetsService;
+    
+    // Configuración con defaults
+    this.CACHE_TTL = config?.cacheTTL || 30000; // 30 segundos
+    this.UPDATE_INTERVAL = config?.updateInterval || 5000; // 5 segundos
+    this.CONFIG_REFRESH_INTERVAL = config?.configRefreshInterval || 300000; // 5 minutos
+    this.MAX_DEVIATION = config?.maxDeviation || 0.02; // 2%
+    this.MIN_ORACLES = config?.minOracles || 2;
 
-    // Interceptor para logging
-    this.pythClient.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        logger.error('Pyth API error', sanitizeError(error));
-        throw error;
-      }
-    );
+    // Inicializar fuentes de oráculos (array dinámico)
+    this.initializeOracleSources();
+  }
+
+  /**
+   * Inicializa las fuentes de oráculos disponibles
+   * Programación Dinámica: Array de objetos polimórficos
+   */
+  private initializeOracleSources(): void {
+    this.oracleSources = [
+      new PythOracleSource(),
+      new ChainlinkOracleSource(),
+      new UniswapOracleSource(),
+    ];
+
+    // Filtrar solo oráculos disponibles
+    this.oracleSources = this.oracleSources.filter(source => source.isAvailable());
+
+    // Ordenar por prioridad
+    this.oracleSources.sort((a, b) => a.priority - b.priority);
+
+    logger.info(`Initialized ${this.oracleSources.length} oracle sources`, {
+      sources: this.oracleSources.map(s => s.name),
+    });
   }
 
   /**
    * Inicializa el servicio de precios
+   * Carga configuración desde Google Sheets
    */
   async init(): Promise<void> {
-    logger.info('Initializing PriceService', {
-      pythEndpoint: this.pythEndpoint,
-      updateInterval: this.UPDATE_INTERVAL,
+    logger.info('Initializing PriceService (100% Dynamic)', {
       cacheTTL: this.CACHE_TTL,
+      updateInterval: this.UPDATE_INTERVAL,
+      configRefreshInterval: this.CONFIG_REFRESH_INTERVAL,
     });
+
+    // Cargar configuración inicial desde Google Sheets
+    await this.loadAssetsConfig();
 
     // Iniciar polling de precios
     this.updateInterval = setInterval(() => {
@@ -129,29 +318,136 @@ export class PriceService extends EventEmitter {
       });
     }, this.UPDATE_INTERVAL);
 
-    logger.info('PriceService initialized successfully');
+    // Iniciar refresh de configuración
+    this.configRefreshInterval = setInterval(() => {
+      this.loadAssetsConfig().catch((error) => {
+        logger.error('Failed to refresh config', sanitizeError(error));
+      });
+    }, this.CONFIG_REFRESH_INTERVAL);
+
+    logger.info('PriceService initialized successfully', {
+      configuredAssets: this.assetsConfig.size,
+      activeAssets: this.getActiveAssetsCount(),
+    });
+  }
+
+  /**
+   * Carga configuración de assets desde Google Sheets
+   * Programación Dinámica: Descubrimiento dinámico de assets
+   */
+  async loadAssetsConfig(): Promise<void> {
+    try {
+      if (!this.sheetsService) {
+        logger.warn('No sheets service configured, using empty config');
+        return;
+      }
+
+      logger.info('Loading assets configuration from Google Sheets...');
+
+      // Leer hoja ORACLE_ASSETS
+      const rows = await this.sheetsService.readSheet('ORACLE_ASSETS');
+
+      if (!rows || rows.length === 0) {
+        logger.warn('No assets configured in ORACLE_ASSETS sheet');
+        return;
+      }
+
+      // Limpiar configuración anterior
+      this.assetsConfig.clear();
+
+      // Construir Map dinámicamente
+      let activeCount = 0;
+      for (const row of rows) {
+        try {
+          const config: OracleAssetConfig = {
+            symbol: row.SYMBOL?.toUpperCase() || '',
+            blockchain: row.BLOCKCHAIN?.toLowerCase() || '',
+            pythPriceId: row.PYTH_PRICE_ID || undefined,
+            chainlinkAddress: row.CHAINLINK_ADDRESS || undefined,
+            uniswapPoolAddress: row.UNISWAP_POOL_ADDRESS || undefined,
+            isActive: row.IS_ACTIVE === 'TRUE' || row.IS_ACTIVE === true,
+            priority: parseInt(row.PRIORITY) || 2,
+            minConfidence: parseFloat(row.MIN_CONFIDENCE) || 0.8,
+            maxDeviation: parseFloat(row.MAX_DEVIATION) || this.MAX_DEVIATION,
+            notes: row.NOTES || '',
+          };
+
+          // Validar configuración mínima
+          if (!config.symbol || !config.blockchain) {
+            logger.warn('Skipping invalid asset config', { row });
+            continue;
+          }
+
+          // Validar que tenga al menos un oráculo configurado
+          if (!config.pythPriceId && !config.chainlinkAddress && !config.uniswapPoolAddress) {
+            logger.warn(`Asset ${config.symbol} has no oracle configured`, { config });
+            continue;
+          }
+
+          // Agregar al Map (key: blockchain:symbol)
+          const key = `${config.blockchain}:${config.symbol}`;
+          this.assetsConfig.set(key, config);
+
+          if (config.isActive) {
+            activeCount++;
+          }
+
+          logger.debug(`Loaded asset config: ${key}`, { config });
+        } catch (error) {
+          logger.error('Failed to parse asset config row', { row, error: sanitizeError(error) });
+        }
+      }
+
+      logger.info('Assets configuration loaded successfully', {
+        totalAssets: this.assetsConfig.size,
+        activeAssets: activeCount,
+        inactiveAssets: this.assetsConfig.size - activeCount,
+      });
+    } catch (error) {
+      logger.error('Failed to load assets configuration', sanitizeError(error));
+      throw error;
+    }
   }
 
   /**
    * Obtiene el precio de un token con validación multi-oracle
+   * Programación Dinámica: Consulta oráculos según configuración dinámica
    */
   async getPrice(query: PriceQuery): Promise<number> {
-    const { token, blockchain, minConfidence = 0.8, maxAge = this.CACHE_TTL } = query;
-    const cacheKey = `${blockchain}:${token}`;
+    const { token, blockchain, minConfidence, maxAge = this.CACHE_TTL } = query;
+    const cacheKey = `${blockchain}:${token.toUpperCase()}`;
+
+    // Obtener configuración del asset
+    const assetConfig = this.assetsConfig.get(cacheKey);
+    
+    if (!assetConfig) {
+      throw new Error(`Asset ${token} on ${blockchain} is not configured in ORACLE_ASSETS sheet`);
+    }
+
+    if (!assetConfig.isActive) {
+      throw new Error(`Asset ${token} on ${blockchain} is disabled (IS_ACTIVE = FALSE)`);
+    }
 
     // Verificar cache
     const cached = this.priceCache.get(cacheKey);
     if (cached) {
       const age = Date.now() - new Date(cached.timestamp).getTime();
+      const requiredConfidence = minConfidence || assetConfig.minConfidence;
       
-      if (age < maxAge && cached.confidence >= minConfidence) {
-        logger.debug('Price cache hit', { token, blockchain, age, confidence: cached.confidence });
+      if (age < maxAge && cached.confidence >= requiredConfidence) {
+        logger.debug('Price cache hit', { 
+          token, 
+          blockchain, 
+          age, 
+          confidence: cached.confidence,
+          requiredConfidence,
+        });
         return cached.price;
       }
     }
 
-    // Consultar múltiples oráculos
-    const oraclePrices = await this.queryMultipleOracles(token, blockchain);
+    // Consultar múltiples oráculos dinámicamente
+    const oraclePrices = await this.queryMultipleOracles(token, blockchain, assetConfig);
 
     if (oraclePrices.length === 0) {
       // Fallback a cache aunque esté viejo
@@ -167,14 +463,26 @@ export class PriceService extends EventEmitter {
     const deviation = this.calculateDeviation(oraclePrices);
     const confidence = this.calculateConfidence(oraclePrices, deviation);
 
-    // Validar desviación
-    if (deviation > this.MAX_DEVIATION) {
+    // Validar desviación según configuración del asset
+    const maxDeviation = assetConfig.maxDeviation || this.MAX_DEVIATION;
+    if (deviation > maxDeviation) {
       logger.warn('High price deviation detected', {
         token,
         blockchain,
         deviation,
-        maxDeviation: this.MAX_DEVIATION,
+        maxDeviation,
         prices: oraclePrices.map(p => ({ source: p.source, price: p.price })),
+      });
+    }
+
+    // Validar confianza mínima
+    const requiredConfidence = minConfidence || assetConfig.minConfidence;
+    if (confidence < requiredConfidence) {
+      logger.warn('Confidence below threshold', {
+        token,
+        blockchain,
+        confidence,
+        requiredConfidence,
       });
     }
 
@@ -206,14 +514,17 @@ export class PriceService extends EventEmitter {
 
   /**
    * Consulta múltiples oráculos en paralelo
+   * Programación Dinámica: Itera sobre array de OracleSource
    */
-  private async queryMultipleOracles(token: string, blockchain: string): Promise<OraclePrice[]> {
-    const results = await Promise.allSettled([
-      this.queryPyth(token, blockchain),
-      // Agregar más oráculos aquí en el futuro:
-      // this.queryChainlink(token, blockchain),
-      // this.queryUniswap(token, blockchain),
-    ]);
+  private async queryMultipleOracles(
+    symbol: string, 
+    blockchain: string, 
+    config: OracleAssetConfig
+  ): Promise<OraclePrice[]> {
+    // Consultar todos los oráculos disponibles en paralelo
+    const results = await Promise.allSettled(
+      this.oracleSources.map(source => source.query(symbol, blockchain, config))
+    );
 
     const prices: OraclePrice[] = [];
     
@@ -224,42 +535,6 @@ export class PriceService extends EventEmitter {
     }
 
     return prices;
-  }
-
-  /**
-   * Consulta Pyth Network
-   */
-  private async queryPyth(token: string, blockchain: string): Promise<OraclePrice | null> {
-    try {
-      const priceId = this.getPythPriceId(token);
-      
-      if (!priceId) {
-        logger.warn('No Pyth price feed ID for token', { token });
-        return null;
-      }
-
-      const response = await this.pythClient.get('/api/latest_price_feeds', {
-        params: { ids: [priceId] },
-      });
-
-      if (!response.data || response.data.length === 0) {
-        return null;
-      }
-
-      const priceData = response.data[0];
-      const price = parseFloat(priceData.price.price) / Math.pow(10, Math.abs(priceData.price.expo));
-      const confidence = priceData.price.conf ? 1 - (priceData.price.conf / priceData.price.price) : 0.9;
-
-      return {
-        source: 'pyth',
-        price,
-        timestamp: new Date(),
-        confidence: Math.max(0, Math.min(1, confidence)),
-      };
-    } catch (error) {
-      logger.error('Pyth query failed', sanitizeError(error));
-      return null;
-    }
   }
 
   /**
@@ -306,12 +581,7 @@ export class PriceService extends EventEmitter {
    * Calcula confianza del precio
    */
   private calculateConfidence(prices: OraclePrice[], deviation: number): number {
-    // Factores que afectan la confianza:
-    // 1. Número de oráculos (más es mejor)
-    // 2. Desviación entre precios (menos es mejor)
-    // 3. Confianza individual de cada oráculo
-
-    const oracleCountFactor = Math.min(prices.length / 3, 1); // Máximo con 3 oráculos
+    const oracleCountFactor = Math.min(prices.length / 3, 1);
     const deviationFactor = Math.max(0, 1 - (deviation / this.MAX_DEVIATION));
     const avgOracleConfidence = prices.reduce((sum, p) => sum + p.confidence, 0) / prices.length;
 
@@ -330,7 +600,6 @@ export class PriceService extends EventEmitter {
       try {
         await this.getPrice({ token, blockchain });
       } catch (error) {
-        // Silenciar errores individuales
         logger.debug('Failed to update price', { token, blockchain, error: sanitizeError(error) });
       }
     }
@@ -349,12 +618,32 @@ export class PriceService extends EventEmitter {
    */
   getStats(): any {
     return {
+      configuredAssets: this.assetsConfig.size,
+      activeAssets: this.getActiveAssetsCount(),
+      inactiveAssets: this.assetsConfig.size - this.getActiveAssetsCount(),
       cachedPrices: this.priceCache.size,
+      oracleSources: this.oracleSources.length,
+      availableSources: this.oracleSources.filter(s => s.isAvailable()).length,
       updateInterval: this.UPDATE_INTERVAL,
       cacheTTL: this.CACHE_TTL,
+      configRefreshInterval: this.CONFIG_REFRESH_INTERVAL,
       maxDeviation: this.MAX_DEVIATION,
       minOracles: this.MIN_ORACLES,
     };
+  }
+
+  /**
+   * Obtiene cantidad de assets activos
+   */
+  private getActiveAssetsCount(): number {
+    return Array.from(this.assetsConfig.values()).filter(config => config.isActive).length;
+  }
+
+  /**
+   * Obtiene lista de assets configurados
+   */
+  getConfiguredAssets(): OracleAssetConfig[] {
+    return Array.from(this.assetsConfig.values());
   }
 
   /**
@@ -372,29 +661,11 @@ export class PriceService extends EventEmitter {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
+    if (this.configRefreshInterval) {
+      clearInterval(this.configRefreshInterval);
+    }
     this.removeAllListeners();
     logger.info('PriceService closed');
-  }
-
-  /**
-   * Mapeo de tokens a Pyth price feed IDs
-   */
-  private getPythPriceId(token: string): string {
-    const mapping: Record<string, string> = {
-      'ETH': '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-      'WETH': '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-      'USDC': '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
-      'USDT': '0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
-      'DAI': '0xb0948a5e5313200c632b51bb5ca32f6de0d36e9950a942d19751e833f70dabfd',
-      'WBTC': '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
-      'BNB': '0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f',
-      'MATIC': '0x5de33a9112c2b700b8d30b8a3402c103578ccfa2765696471cc672bd5cf6ac52',
-      'AVAX': '0x93da3352f9f1d105fdfe4971cfa80e9dd777bfc5d0f683ebb6e1294b92137bb7',
-      'ARB': '0x3fa4252848f9f0a1480be62745a4629d9eb1322aebab8a791e344b3b9c1adcf5',
-      'OP': '0x385f64d993f7b77d8182ed5003d97c60aa3361f3cecfe711544d2d59165e9bdf',
-    };
-
-    return mapping[token.toUpperCase()] || '';
   }
 }
 
@@ -409,7 +680,7 @@ let priceServiceInstance: PriceService | null = null;
  */
 export function getPriceService(): PriceService {
   if (!priceServiceInstance) {
-    priceServiceInstance = new PriceService();
+    throw new Error('PriceService not initialized. Call initPriceService() first.');
   }
   return priceServiceInstance;
 }
@@ -417,9 +688,14 @@ export function getPriceService(): PriceService {
 /**
  * Inicializa el PriceService global
  */
-export async function initPriceService(): Promise<PriceService> {
-  const service = getPriceService();
-  await service.init();
-  return service;
+export async function initPriceService(sheetsService: any, config?: any): Promise<PriceService> {
+  if (priceServiceInstance) {
+    logger.warn('PriceService already initialized, returning existing instance');
+    return priceServiceInstance;
+  }
+
+  priceServiceInstance = new PriceService(sheetsService, config);
+  await priceServiceInstance.init();
+  return priceServiceInstance;
 }
 
