@@ -485,3 +485,182 @@ mod tests {
     }
 }
 
+
+
+
+// ==================================================================================
+// PROMPT SUPREMO DEFINITIVO - TAREA 3.1
+// Funciones específicas requeridas por el Prompt Supremo
+// ==================================================================================
+
+impl SheetsConnector {
+    /// Lee DEXES desde Sheets - 200 campos dinámicos
+    /// 
+    /// Rango: DEXES!A2:GR (200 columnas)
+    /// 
+    /// Esta función es requerida por el Prompt Supremo Definitivo (Tarea 3.1)
+    pub async fn get_dexes_array(&mut self) -> Result<Vec<HashMap<String, String>>> {
+        let data = self.get_sheet_data("DEXES").await?;
+        
+        if data.is_empty() {
+            return Ok(Vec::new());
+        }
+        
+        // Primera fila son los headers
+        let headers = &data[0];
+        
+        // Convertir cada fila a HashMap
+        let mut dexes = Vec::new();
+        for row in data.iter().skip(1) {
+            let mut dex_map = HashMap::new();
+            for (i, value) in row.iter().enumerate() {
+                if i < headers.len() {
+                    dex_map.insert(headers[i].clone(), value.clone());
+                }
+            }
+            dexes.push(dex_map);
+        }
+        
+        log::info!("✅ Leídos {} DEXes desde Sheets (200 campos dinámicos)", dexes.len());
+        Ok(dexes)
+    }
+    
+    /// Lee ASSETS desde Sheets - 400 campos dinámicos
+    /// 
+    /// Rango: ASSETS!A2:OL (400 columnas)
+    /// 
+    /// Esta función es requerida por el Prompt Supremo Definitivo (Tarea 3.1)
+    pub async fn get_assets_array(&mut self) -> Result<Vec<HashMap<String, String>>> {
+        let data = self.get_sheet_data("ASSETS").await?;
+        
+        if data.is_empty() {
+            return Ok(Vec::new());
+        }
+        
+        let headers = &data[0];
+        
+        let mut assets = Vec::new();
+        for row in data.iter().skip(1) {
+            let mut asset_map = HashMap::new();
+            for (i, value) in row.iter().enumerate() {
+                if i < headers.len() {
+                    asset_map.insert(headers[i].clone(), value.clone());
+                }
+            }
+            assets.push(asset_map);
+        }
+        
+        log::info!("✅ Leídos {} assets desde Sheets (400 campos dinámicos)", assets.len());
+        Ok(assets)
+    }
+    
+    /// Lee POOLS desde Sheets - 100 campos dinámicos
+    /// 
+    /// Rango: POOLS!A2:CV (100 columnas)
+    /// 
+    /// Esta función es requerida por el Prompt Supremo Definitivo (Tarea 3.1)
+    pub async fn get_pools_array(&mut self) -> Result<Vec<HashMap<String, String>>> {
+        let data = self.get_sheet_data("POOLS").await?;
+        
+        if data.is_empty() {
+            return Ok(Vec::new());
+        }
+        
+        let headers = &data[0];
+        
+        let mut pools = Vec::new();
+        for row in data.iter().skip(1) {
+            let mut pool_map = HashMap::new();
+            for (i, value) in row.iter().enumerate() {
+                if i < headers.len() {
+                    pool_map.insert(headers[i].clone(), value.clone());
+                }
+            }
+            pools.push(pool_map);
+        }
+        
+        log::info!("✅ Leídos {} pools desde Sheets (100 campos dinámicos)", pools.len());
+        Ok(pools)
+    }
+    
+    /// Lee BLOCKCHAINS desde Sheets - 50 campos dinámicos
+    /// 
+    /// Rango: BLOCKCHAINS!A2:AX (50 columnas)
+    /// 
+    /// Esta función es requerida por el Prompt Supremo Definitivo (Tarea 3.1)
+    pub async fn get_blockchains_array(&mut self) -> Result<Vec<HashMap<String, String>>> {
+        let data = self.get_sheet_data("BLOCKCHAINS").await?;
+        
+        if data.is_empty() {
+            return Ok(Vec::new());
+        }
+        
+        let headers = &data[0];
+        
+        let mut blockchains = Vec::new();
+        for row in data.iter().skip(1) {
+            let mut blockchain_map = HashMap::new();
+            for (i, value) in row.iter().enumerate() {
+                if i < headers.len() {
+                    blockchain_map.insert(headers[i].clone(), value.clone());
+                }
+            }
+            blockchains.push(blockchain_map);
+        }
+        
+        log::info!("✅ Leídas {} blockchains desde Sheets (50 campos dinámicos)", blockchains.len());
+        Ok(blockchains)
+    }
+    
+    /// Lee ROUTES desde Sheets - 200 campos dinámicos
+    /// 
+    /// Rango: ROUTES!A2:GR (200 columnas)
+    /// 
+    /// Esta función es requerida por el Prompt Supremo Definitivo (Tarea 3.1)
+    pub async fn get_routes_array(&mut self) -> Result<Vec<HashMap<String, String>>> {
+        let data = self.get_sheet_data("ROUTES").await?;
+        
+        if data.is_empty() {
+            return Ok(Vec::new());
+        }
+        
+        let headers = &data[0];
+        
+        let mut routes = Vec::new();
+        for row in data.iter().skip(1) {
+            let mut route_map = HashMap::new();
+            for (i, value) in row.iter().enumerate() {
+                if i < headers.len() {
+                    route_map.insert(headers[i].clone(), value.clone());
+                }
+            }
+            routes.push(route_map);
+        }
+        
+        log::info!("✅ Leídas {} rutas desde Sheets (200 campos dinámicos)", routes.len());
+        Ok(routes)
+    }
+}
+
+// ==================================================================================
+// TESTS
+// ==================================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[tokio::test]
+    async fn test_sheets_connector_creation() {
+        let config = SheetsConfig {
+            spreadsheet_id: "test_id".to_string(),
+            api_key: Some("test_key".to_string()),
+            service_account_json: None,
+            cache_ttl_seconds: 300,
+        };
+        
+        let connector = SheetsConnector::new(config);
+        assert!(connector.is_ok());
+    }
+}
+

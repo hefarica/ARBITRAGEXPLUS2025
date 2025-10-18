@@ -131,12 +131,37 @@ contract ArbitrageExecutor is ReentrancyGuard, Ownable, IFlashLoanReceiver {
     // ==================================================================================
     
     /**
+     * TAREA 5.1 - PROMPT SUPREMO DEFINITIVO
+     * 
+     * @dev Función principal para ejecutar arbitraje (requerida por Prompt Supremo)
+     * @param params Parámetros del arbitraje incluyendo tokens, cantidades y exchanges
+     * 
+     * Esta función es un alias de executeFlashArbitrage() para cumplir con el
+     * nombre exacto requerido por el Prompt Supremo Definitivo.
+     */
+    function executeArbitrage(
+        ArbitrageParams calldata params
+    ) external nonReentrant {
+        _executeFlashArbitrageInternal(params);
+    }
+    
+    /**
      * @dev Función principal para ejecutar arbitraje con flash loan
      * @param params Parámetros del arbitraje incluyendo tokens, cantidades y exchanges
      */
     function executeFlashArbitrage(
         ArbitrageParams calldata params
     ) external nonReentrant {
+        _executeFlashArbitrageInternal(params);
+    }
+    
+    /**
+     * @dev Lógica interna de ejecución de flash arbitrage
+     * @param params Parámetros del arbitraje
+     */
+    function _executeFlashArbitrageInternal(
+        ArbitrageParams calldata params
+    ) internal {
         require(params.tokens.length >= 2, "Need at least 2 tokens");
         require(params.amounts.length >= 1, "Need at least 1 amount");
         require(params.exchanges.length >= 1, "Need at least 1 exchange");

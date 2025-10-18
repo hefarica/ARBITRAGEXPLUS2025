@@ -33,6 +33,7 @@ use serde::{Deserialize, Serialize};
 pub mod two_dex;
 pub mod three_dex; 
 pub mod ranking;
+pub mod twodex; // Prompt Supremo Definitivo - Tarea 3.2
 
 // Reexportar tipos principales para uso externo
 pub use two_dex::{TwoHopPathfinder, TwoHopResult};
