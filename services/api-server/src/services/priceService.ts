@@ -406,6 +406,365 @@ class UniswapOracleSource implements OracleSource {
   }
 }
 
+/**
+ * Binance API Oracle Source
+ * Consulta precios de CEX (Centralized Exchange) vía API pública
+ */
+class BinanceOracleSource implements OracleSource {
+  name = 'binance';
+  priority = 4;
+  private client: AxiosInstance;
+  private endpoint: string;
+
+  constructor(endpoint?: string) {
+    this.endpoint = endpoint || process.env.BINANCE_API_ENDPOINT || 'https://api.binance.com';
+    this.client = axios.create({
+      baseURL: this.endpoint,
+      timeout: 5000,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
+    try {
+      // Binance usa pares como BTCUSDT, ETHUSDT, etc.
+      // Normalizar símbolo: ETH -> ETHUSDT, BTC -> BTCUSDT
+      const normalizedSymbol = this.normalizeBinanceSymbol(symbol);
+      if (!normalizedSymbol) {
+        logger.debug(`Cannot normalize symbol ${symbol} for Binance`);
+        return null;
+      }
+
+      // Consultar precio actual
+      const response = await this.client.get('/api/v3/ticker/price', {
+        params: { symbol: normalizedSymbol },
+      });
+
+      if (!response.data || !response.data.price) {
+        return null;
+      }
+
+      const price = parseFloat(response.data.price);
+
+      // Obtener 24h stats para calcular confianza basada en volumen
+      let confidence = 0.8; // Confianza base para Binance
+      try {
+        const statsResponse = await this.client.get('/api/v3/ticker/24hr', {
+          params: { symbol: normalizedSymbol },
+        });
+        
+        if (statsResponse.data) {
+          const volume = parseFloat(statsResponse.data.volume);
+          const quoteVolume = parseFloat(statsResponse.data.quoteVolume);
+          
+          // Mayor volumen = mayor confianza
+          // Volumen > $10M = alta confianza
+          if (quoteVolume > 10000000) {
+            confidence = 0.95;
+          } else if (quoteVolume > 1000000) {
+            confidence = 0.9;
+          } else if (quoteVolume > 100000) {
+            confidence = 0.85;
+          }
+        }
+      } catch (error) {
+        // Si falla obtener stats, usar confianza base
+        logger.debug(`Failed to get Binance stats for ${symbol}`);
+      }
+
+      return {
+        source: 'binance',
+        price,
+        timestamp: new Date(),
+        confidence: Math.max(0, Math.min(1, confidence)),
+      };
+    } catch (error) {
+      logger.error(`Binance query failed for ${symbol}`, sanitizeError(error));
+      return null;
+    }
+  }
+
+  /**
+   * Normaliza símbolos para Binance
+   * ETH, WETH -> ETHUSDT
+   * BTC, WBTC -> BTCUSDT
+   */
+  private normalizeBinanceSymbol(symbol: string): string | null {
+    const normalized = symbol.toUpperCase()
+      .replace('W', '') // WETH -> ETH, WBTC -> BTC
+      .replace('USDC', '')
+      .replace('USDT', '')
+      .replace('DAI', '');
+    
+    // Mapeo de símbolos conocidos
+    const symbolMap: Record<string, string> = {
+      'ETH': 'ETHUSDT',
+      'BTC': 'BTCUSDT',
+      'BNB': 'BNBUSDT',
+      'MATIC': 'MATICUSDT',
+      'AVAX': 'AVAXUSDT',
+      'SOL': 'SOLUSDT',
+      'LINK': 'LINKUSDT',
+      'UNI': 'UNIUSDT',
+      'AAVE': 'AAVEUSDT',
+      'SHIB': 'SHIBUSDT',
+      'PEPE': 'PEPEUSDT',
+      'ARB': 'ARBUSDT',
+      'OP': 'OPUSDT',
+      'ATOM': 'ATOMUSDT',
+      'DOT': 'DOTUSDT',
+      'ADA': 'ADAUSDT',
+      'XRP': 'XRPUSDT',
+      'DOGE': 'DOGEUSDT',
+    };
+
+    return symbolMap[normalized] || null;
+  }
+
+  isAvailable(): boolean {
+    return true; // Binance API siempre disponible
+  }
+}
+
+/**
+ * CoinGecko API Oracle Source
+ * Consulta precios agregados de múltiples exchanges
+ */
+class CoinGeckoOracleSource implements OracleSource {
+  name = 'coingecko';
+  priority = 5;
+  private client: AxiosInstance;
+  private endpoint: string;
+  private apiKey?: string;
+
+  constructor(endpoint?: string, apiKey?: string) {
+    this.endpoint = endpoint || process.env.COINGECKO_API_ENDPOINT || 'https://api.coingecko.com/api/v3';
+    this.apiKey = apiKey || process.env.COINGECKO_API_KEY;
+    
+    const headers: any = { 'Content-Type': 'application/json' };
+    if (this.apiKey) {
+      headers['x-cg-pro-api-key'] = this.apiKey;
+    }
+
+    this.client = axios.create({
+      baseURL: this.endpoint,
+      timeout: 10000, // CoinGecko puede ser más lento
+      headers,
+    });
+  }
+
+  async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
+    try {
+      // CoinGecko usa IDs como 'ethereum', 'bitcoin', etc.
+      const coinId = this.getCoinGeckoId(symbol);
+      if (!coinId) {
+        logger.debug(`Cannot map symbol ${symbol} to CoinGecko ID`);
+        return null;
+      }
+
+      // Consultar precio simple
+      const response = await this.client.get('/simple/price', {
+        params: {
+          ids: coinId,
+          vs_currencies: 'usd',
+          include_24hr_vol: 'true',
+          include_last_updated_at: 'true',
+        },
+      });
+
+      if (!response.data || !response.data[coinId]) {
+        return null;
+      }
+
+      const data = response.data[coinId];
+      const price = data.usd;
+      const lastUpdated = data.last_updated_at * 1000; // Convertir a ms
+      const volume24h = data.usd_24h_vol || 0;
+
+      // Calcular confianza basada en volumen y edad
+      const age = Date.now() - lastUpdated;
+      const maxAge = 300000; // 5 minutos
+      const ageConfidence = Math.max(0, 1 - (age / maxAge));
+      
+      // Volumen > $100M = alta confianza
+      let volumeConfidence = 0.7;
+      if (volume24h > 100000000) {
+        volumeConfidence = 0.95;
+      } else if (volume24h > 10000000) {
+        volumeConfidence = 0.9;
+      } else if (volume24h > 1000000) {
+        volumeConfidence = 0.85;
+      }
+
+      const confidence = (ageConfidence + volumeConfidence) / 2;
+
+      // Rechazar si muy viejo (> 5 min)
+      if (age > maxAge) {
+        logger.warn(`CoinGecko price for ${symbol} is stale (${age}ms old)`);
+        return null;
+      }
+
+      return {
+        source: 'coingecko',
+        price,
+        timestamp: new Date(lastUpdated),
+        confidence: Math.max(0, Math.min(1, confidence)),
+      };
+    } catch (error) {
+      logger.error(`CoinGecko query failed for ${symbol}`, sanitizeError(error));
+      return null;
+    }
+  }
+
+  /**
+   * Mapea símbolos a IDs de CoinGecko
+   */
+  private getCoinGeckoId(symbol: string): string | null {
+    const normalized = symbol.toUpperCase().replace('W', '');
+    
+    const idMap: Record<string, string> = {
+      'ETH': 'ethereum',
+      'BTC': 'bitcoin',
+      'BNB': 'binancecoin',
+      'MATIC': 'matic-network',
+      'AVAX': 'avalanche-2',
+      'SOL': 'solana',
+      'LINK': 'chainlink',
+      'UNI': 'uniswap',
+      'AAVE': 'aave',
+      'SHIB': 'shiba-inu',
+      'PEPE': 'pepe',
+      'ARB': 'arbitrum',
+      'OP': 'optimism',
+      'ATOM': 'cosmos',
+      'DOT': 'polkadot',
+      'ADA': 'cardano',
+      'XRP': 'ripple',
+      'DOGE': 'dogecoin',
+      'USDC': 'usd-coin',
+      'USDT': 'tether',
+      'DAI': 'dai',
+    };
+
+    return idMap[normalized] || null;
+  }
+
+  isAvailable(): boolean {
+    return true; // CoinGecko API siempre disponible
+  }
+}
+
+/**
+ * Band Protocol Oracle Source
+ * Consulta precios on-chain de Band Protocol
+ */
+class BandOracleSource implements OracleSource {
+  name = 'band';
+  priority = 6;
+  private providers: Map<string, any> = new Map();
+  private aggregatorABI = [
+    'function getReferenceData(string base, string quote) external view returns (uint256 rate, uint256 lastUpdatedBase, uint256 lastUpdatedQuote)',
+  ];
+  // Band Protocol StdReference contracts por chain
+  private contractAddresses: Record<string, string> = {
+    ethereum: '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
+    polygon: '0x56E2898E0ceFF0D1222827759B56B28Ad812f92F',
+    bsc: '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
+    avalanche: '0x7c7C1D1E4c7C1C6C5C5C5C5C5C5C5C5C5C5C5C5C', // Placeholder
+  };
+
+  constructor() {
+    this.initializeProviders();
+  }
+
+  private initializeProviders() {
+    try {
+      const ethers = require('ethers');
+      
+      const rpcEndpoints: Record<string, string> = {
+        ethereum: process.env.ETHEREUM_RPC_URL || 'https://eth.llamarpc.com',
+        polygon: process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com',
+        bsc: process.env.BSC_RPC_URL || 'https://bsc-dataseed.binance.org',
+        avalanche: process.env.AVALANCHE_RPC_URL || 'https://api.avax.network/ext/bc/C/rpc',
+      };
+
+      for (const [blockchain, rpcUrl] of Object.entries(rpcEndpoints)) {
+        if (this.contractAddresses[blockchain]) {
+          try {
+            const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+            this.providers.set(blockchain, provider);
+            logger.debug(`Band provider initialized for ${blockchain}`);
+          } catch (error) {
+            logger.warn(`Failed to initialize Band provider for ${blockchain}`, error);
+          }
+        }
+      }
+    } catch (error) {
+      logger.error('Failed to initialize Band providers', error);
+    }
+  }
+
+  async query(symbol: string, blockchain: string, config: OracleAssetConfig): Promise<OraclePrice | null> {
+    try {
+      const contractAddress = this.contractAddresses[blockchain];
+      if (!contractAddress) {
+        logger.debug(`No Band contract for ${blockchain}`);
+        return null;
+      }
+
+      const provider = this.providers.get(blockchain);
+      if (!provider) {
+        logger.warn(`No provider available for ${blockchain}`);
+        return null;
+      }
+
+      const ethers = require('ethers');
+      
+      // Crear contrato
+      const aggregator = new ethers.Contract(
+        contractAddress,
+        this.aggregatorABI,
+        provider
+      );
+
+      // Normalizar símbolo para Band (ETH, BTC, etc.)
+      const normalizedSymbol = symbol.toUpperCase().replace('W', '');
+
+      // Consultar precio vs USD
+      const result = await aggregator.getReferenceData(normalizedSymbol, 'USD');
+      
+      // Band retorna precio con 18 decimales
+      const price = parseFloat(ethers.utils.formatUnits(result.rate, 18));
+      const lastUpdatedBase = result.lastUpdatedBase.toNumber() * 1000;
+      
+      // Calcular confianza basada en edad
+      const age = Date.now() - lastUpdatedBase;
+      const maxAge = 3600000; // 1 hora
+      const confidence = Math.max(0, 1 - (age / maxAge));
+
+      // Rechazar si muy viejo
+      if (age > maxAge) {
+        logger.warn(`Band price for ${symbol} is stale (${age}ms old)`);
+        return null;
+      }
+
+      return {
+        source: 'band',
+        price,
+        timestamp: new Date(lastUpdatedBase),
+        confidence: Math.max(0, Math.min(1, confidence)),
+      };
+    } catch (error) {
+      logger.error(`Band query failed for ${symbol} on ${blockchain}`, sanitizeError(error));
+      return null;
+    }
+  }
+
+  isAvailable(): boolean {
+    return this.providers.size > 0;
+  }
+}
+
 // ==================================================================================
 // PRICE SERVICE - 100% DINÁMICO
 // ==================================================================================
