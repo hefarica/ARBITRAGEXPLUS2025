@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./SCRIPTS/validate-e2e-flow.js
+ * SERVICIO: validate-e2e-flow.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: validateTSExecutor, main, validateEnvironment
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

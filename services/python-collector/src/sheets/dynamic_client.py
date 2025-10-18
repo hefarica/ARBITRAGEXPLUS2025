@@ -1,4 +1,25 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/sheets/dynamic_client.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: DynamicSheetsClient
+  FUNCIONES: get_dexes_array, write_routes_array, get_pools_array
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - google.oauth2
+  - service_account
+  - logging
+
+============================================================================
+"""
+
+"""
 dynamic_client.py
 
 Cliente de Google Sheets con arrays dinámicos completos según Prompt Supremo Definitivo.

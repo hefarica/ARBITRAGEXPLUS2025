@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/lib/errors.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ./logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: SystemError, DatabaseError, SlippageTooHighError
+ *   FUNCIONES: isBaseError, handleError
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: SystemError, DatabaseError, SlippageTooHighError
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ./logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Error Handling System
  * 
  * Sistema centralizado de manejo de errores con clasificación,
@@ -868,3 +890,370 @@ export {
   ArbitrageError,
   NoProfitableRoutesError
 };
+
+
+// ==================================================================================
+// SANITIZATION & SECURITY
+// ==================================================================================
+
+/**
+ * Sanitiza datos sensibles antes de logging
+ * Remueve: API keys, tokens, private keys, passwords, secrets
+ */
+export function sanitizeError(error: any): any {
+  if (!error) return error;
+  
+  const sensitivePatterns = [
+    /api[_-]?key/i,
+    /secret/i,
+    /token/i,
+    /password/i,
+    /private[_-]?key/i,
+    /auth/i,
+    /bearer/i,
+    /credential/i,
+  ];
+  
+  const sanitize = (obj: any): any => {
+    if (typeof obj === 'string') {
+      // Redactar valores sensibles
+      for (const pattern of sensitivePatterns) {
+        if (pattern.test(obj)) {
+          return '[REDACTED]';
+        }
+      }
+      // Redactar valores que parecen keys (hex strings largos)
+      if (/^0x[a-fA-F0-9]{40,}$/.test(obj)) {
+        return '[REDACTED_KEY]';
+      }
+      return obj;
+    }
+    
+    if (Array.isArray(obj)) {
+      return obj.map(sanitize);
+    }
+    
+    if (obj && typeof obj === 'object') {
+      const sanitized: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        // Redactar campos sensibles por nombre
+        if (sensitivePatterns.some(pattern => pattern.test(key))) {
+          sanitized[key] = '[REDACTED]';
+        } else {
+          sanitized[key] = sanitize(value);
+        }
+      }
+      return sanitized;
+    }
+    
+    return obj;
+  };
+  
+  return sanitize(error);
+}
+
+// ==================================================================================
+// GOOGLE SHEETS ERROR LOGGER
+// ==================================================================================
+
+export class ErrorLogger {
+  private sheetsService: any;
+  private sheetName: string = 'LOGERRORESEVENTOS';
+  private batchQueue: any[] = [];
+  private batchSize: number = 10;
+  private flushInterval: number = 5000; // 5 segundos
+  private flushTimer?: NodeJS.Timeout;
+  
+  constructor(sheetsService: any) {
+    this.sheetsService = sheetsService;
+  }
+  
+  async init(): Promise<void> {
+    // Iniciar flush automático
+    this.flushTimer = setInterval(() => {
+      this.flush().catch(err => {
+        logger.error('Failed to flush error logs to Sheets', { error: err });
+      });
+    }, this.flushInterval);
+    
+    logger.info('ErrorLogger initialized', { sheetName: this.sheetName });
+  }
+  
+  /**
+   * Registra un error en Google Sheets
+   */
+  async logError(error: BaseError | Error): Promise<void> {
+    try {
+      const sanitized = sanitizeError(error);
+      
+      const logEntry = {
+        timestamp: new Date().toISOString(),
+        errorName: error.name,
+        errorMessage: sanitized.message || String(error),
+        errorCode: (error as BaseError).code || 'UNKNOWN',
+        category: (error as BaseError).category || 'unknown',
+        severity: (error as BaseError).severity || 'medium',
+        statusCode: (error as BaseError).statusCode || 500,
+        recoverable: (error as BaseError).recoverable || false,
+        retryable: (error as BaseError).retryable || false,
+        userId: (error as BaseError).userId || null,
+        requestId: (error as BaseError).requestId || null,
+        context: JSON.stringify(sanitized.context || {}),
+        stack: sanitized.stack ? sanitized.stack.substring(0, 500) : null,
+      };
+      
+      // Agregar a batch queue
+      this.batchQueue.push(logEntry);
+      
+      // Flush si alcanzamos el tamaño del batch
+      if (this.batchQueue.length >= this.batchSize) {
+        await this.flush();
+      }
+    } catch (err) {
+      logger.error('Failed to log error to Sheets', { error: err });
+    }
+  }
+  
+  /**
+   * Escribe todos los errores pendientes a Sheets
+   */
+  private async flush(): Promise<void> {
+    if (this.batchQueue.length === 0) return;
+    
+    const entries = [...this.batchQueue];
+    this.batchQueue = [];
+    
+    try {
+      await this.sheetsService.appendRows(this.sheetName, entries);
+      logger.info(`Flushed ${entries.length} error logs to Sheets`);
+    } catch (err) {
+      // Re-agregar a la cola si falla
+      this.batchQueue.unshift(...entries);
+      throw err;
+    }
+  }
+  
+  /**
+   * Cierra el logger y hace flush final
+   */
+  async close(): Promise<void> {
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
+    }
+    await this.flush();
+    logger.info('ErrorLogger closed');
+  }
+}
+
+// ==================================================================================
+// CIRCUIT BREAKER FOR ERROR HANDLING
+// ==================================================================================
+
+interface CircuitBreakerOptions {
+  failureThreshold: number;
+  resetTimeout: number;
+  monitoringPeriod: number;
+}
+
+enum CircuitState {
+  CLOSED = 'CLOSED',
+  OPEN = 'OPEN',
+  HALF_OPEN = 'HALF_OPEN',
+}
+
+export class CircuitBreaker {
+  private state: CircuitState = CircuitState.CLOSED;
+  private failures: number = 0;
+  private lastFailureTime?: Date;
+  private options: CircuitBreakerOptions;
+  private failuresByEndpoint: Map<string, number> = new Map();
+  
+  constructor(options?: Partial<CircuitBreakerOptions>) {
+    this.options = {
+      failureThreshold: options?.failureThreshold || 5,
+      resetTimeout: options?.resetTimeout || 60000, // 1 minuto
+      monitoringPeriod: options?.monitoringPeriod || 180000, // 3 minutos
+    };
+  }
+  
+  /**
+   * Registra un fallo
+   */
+  recordFailure(endpoint?: string): void {
+    this.failures++;
+    this.lastFailureTime = new Date();
+    
+    if (endpoint) {
+      const count = this.failuresByEndpoint.get(endpoint) || 0;
+      this.failuresByEndpoint.set(endpoint, count + 1);
+    }
+    
+    // Verificar si debemos abrir el circuito
+    if (this.failures >= this.options.failureThreshold) {
+      this.open();
+    }
+    
+    logger.warn('Circuit breaker recorded failure', {
+      failures: this.failures,
+      threshold: this.options.failureThreshold,
+      state: this.state,
+      endpoint,
+    });
+  }
+  
+  /**
+   * Registra un éxito
+   */
+  recordSuccess(): void {
+    if (this.state === CircuitState.HALF_OPEN) {
+      this.close();
+    }
+    this.failures = 0;
+  }
+  
+  /**
+   * Abre el circuito (bloquea nuevas ejecuciones)
+   */
+  private open(): void {
+    this.state = CircuitState.OPEN;
+    logger.alert('Circuit breaker OPENED', {
+      severity: 'critical',
+      component: 'circuit_breaker',
+      failures: this.failures,
+      threshold: this.options.failureThreshold,
+    });
+    
+    // Programar reset automático
+    setTimeout(() => {
+      this.halfOpen();
+    }, this.options.resetTimeout);
+  }
+  
+  /**
+   * Cierra el circuito (permite ejecuciones)
+   */
+  private close(): void {
+    this.state = CircuitState.CLOSED;
+    this.failures = 0;
+    this.failuresByEndpoint.clear();
+    logger.info('Circuit breaker CLOSED');
+  }
+  
+  /**
+   * Pone el circuito en half-open (permite pruebas)
+   */
+  private halfOpen(): void {
+    this.state = CircuitState.HALF_OPEN;
+    logger.info('Circuit breaker HALF_OPEN - testing recovery');
+  }
+  
+  /**
+   * Verifica si se puede ejecutar una operación
+   */
+  canExecute(): boolean {
+    if (this.state === CircuitState.OPEN) {
+      return false;
+    }
+    return true;
+  }
+  
+  /**
+   * Obtiene el estado actual
+   */
+  getState(): CircuitState {
+    return this.state;
+  }
+  
+  /**
+   * Obtiene estadísticas
+   */
+  getStats(): any {
+    return {
+      state: this.state,
+      failures: this.failures,
+      lastFailureTime: this.lastFailureTime,
+      failuresByEndpoint: Object.fromEntries(this.failuresByEndpoint),
+    };
+  }
+}
+
+// ==================================================================================
+// ERROR HANDLER MIDDLEWARE
+// ==================================================================================
+
+/**
+ * Crea un error handler para Express/Fastify
+ */
+export function createErrorHandler(errorLogger?: ErrorLogger) {
+  return async (error: Error, request: any, reply: any) => {
+    // Sanitizar error
+    const sanitized = sanitizeError(error);
+    
+    // Convertir a BaseError si no lo es
+    const baseError = isBaseError(error) 
+      ? error 
+      : ErrorFactory.fromError(error);
+    
+    // Log a Sheets si está disponible
+    if (errorLogger) {
+      await errorLogger.logError(baseError);
+    }
+    
+    // Responder al cliente
+    const statusCode = baseError.statusCode || 500;
+    const response = baseError.toJSON();
+    
+    // No enviar stack trace en producción
+    if (process.env.NODE_ENV === 'production') {
+      delete response.error.stack;
+    }
+    
+    reply.status(statusCode).send(response);
+  };
+}
+
+// ==================================================================================
+// GLOBAL ERROR HANDLER
+// ==================================================================================
+
+let globalErrorLogger: ErrorLogger | null = null;
+let globalCircuitBreaker: CircuitBreaker | null = null;
+
+/**
+ * Inicializa el sistema global de manejo de errores
+ */
+export function initializeErrorSystem(sheetsService: any): void {
+  globalErrorLogger = new ErrorLogger(sheetsService);
+  globalErrorLogger.init();
+  
+  globalCircuitBreaker = new CircuitBreaker();
+  
+  logger.info('Global error system initialized');
+}
+
+/**
+ * Obtiene el error logger global
+ */
+export function getErrorLogger(): ErrorLogger | null {
+  return globalErrorLogger;
+}
+
+/**
+ * Obtiene el circuit breaker global
+ */
+export function getCircuitBreaker(): CircuitBreaker | null {
+  return globalCircuitBreaker;
+}
+
+// Export nuevas funciones
+export {
+  sanitizeError,
+  ErrorLogger,
+  CircuitBreaker,
+  CircuitState,
+  createErrorHandler,
+  initializeErrorSystem,
+  getErrorLogger,
+  getCircuitBreaker,
+};
+

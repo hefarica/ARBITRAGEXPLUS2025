@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/lib/sheets_client.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: GoogleSheetsClient
+  FUNCIONES: write_values, ensure_sheet_exists, _authenticate
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - google.oauth2
+  - service_account
+  - a
+
+============================================================================
+"""
+
 import gspread
 from google.oauth2 import service_account
 import os

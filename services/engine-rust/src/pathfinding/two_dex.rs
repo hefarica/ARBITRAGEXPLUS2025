@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/two_dex.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: TwoDexPathfinder, TwoDexRoute, DexInfo
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: find_triangular_route, calculate_route_profit, calculate_confidence
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: TwoDexPathfinder
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! Two-DEX Arbitrage Algorithm
 //! 
 //! Implementa el algoritmo de programación dinámica para encontrar

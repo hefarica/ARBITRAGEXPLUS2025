@@ -1,3 +1,23 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/test_dex_price_collector.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  FUNCIONES: main
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - .env
+  - dex_prices
+  - sheets_client
+
+============================================================================
+"""
+
 import os
 import sys
 import asyncio

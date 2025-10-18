@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/validate-deployment.js
+ * SERVICIO: validate-deployment.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: url, node-fetch, child_process
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: DeploymentValidator
+ *   FUNCIONES: logHeader, logWarning, main
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - url
+ *   - node-fetch
+ *   - child_process
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

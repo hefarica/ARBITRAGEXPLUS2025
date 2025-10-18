@@ -1,3 +1,20 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/scripts/scan-dead-paths.js
+ * SERVICIO: scripts
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * Recursively scan TypeScript and JavaScript files under services/ for broken relative imports.

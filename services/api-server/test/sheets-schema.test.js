@@ -1,4 +1,21 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/test/sheets-schema.test.js
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * Tests de validación del esquema de Google Sheets
  * Valida la estructura de las 13 hojas y 104 campos totales
  */

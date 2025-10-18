@@ -1,3 +1,27 @@
+/**
+ * ============================================================================
+ * CONTRATO: ArbitrageRouter
+ * ARCHIVO: ./contracts/src/Router.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: configureDEX, setPaused, swapExactTokensForTokens
+ * 
+ * 🔄 LÓGICA:
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: EmergencyWithdraw, ArbitrageExecuted, FeeCollected
+ * 
+ * 🔒 SEGURIDAD:
+ *   MODIFIERS: mevProtection, validDeadline, validPath
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 

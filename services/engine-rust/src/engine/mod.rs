@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/engine/mod.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: ArbitrageEngine
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: find_opportunities, execute_arbitrage, new
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: ArbitrageEngine
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 //! Main engine module for orchestrating arbitrage operations
 
 use crate::pathfinding::PathFinder;

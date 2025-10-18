@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/twodex.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: ArbitrageOpportunity, DPMemoState
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: get_cache_hit_rate, calculate_direct_arbitrage, find_arbitrage_opportunities_twodex
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: ArbitrageOpportunity
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! twodex.rs - Algoritmo de pathfinding para rutas 2-DEX
 //! 
 //! TAREA 3.2 del Prompt Supremo Definitivo

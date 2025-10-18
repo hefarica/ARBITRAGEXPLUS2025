@@ -1,3 +1,23 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/utils/config.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: Config
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - os
+  - load_dotenv
+  - dotenv
+
+============================================================================
+"""
+
 import os
 from dotenv import load_dotenv
 

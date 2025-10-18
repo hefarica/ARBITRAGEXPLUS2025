@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * CONTRATO: BandOracleTest
+ * ARCHIVO: ./contracts/test/oracles/BandOracle.t.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: testGetPriceUnsafe, getReferenceDataBulk, setUp
+ * 
+ * 🔄 LÓGICA:
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

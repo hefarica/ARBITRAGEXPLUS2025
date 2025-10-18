@@ -1,3 +1,28 @@
+/**
+ * ============================================================================
+ * CONTRATO: FlashLoanArbitrage
+ * ARCHIVO: ./contracts/src/FlashLoanArbitrage.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: flash, _executeSwaps, _executeUniswapV3FlashLoan
+ * 
+ * 🔄 LÓGICA:
+ *   - Flash loans
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: CircuitBreakerTriggered, ArbitrageExecuted, ArbitrageFailed
+ * 
+ * 🔒 SEGURIDAD:
+ *   MODIFIERS: validRoute, onlyAuthorizedExecutor, circuitBreakerCheck
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/execution/src/oracle-validator.ts
+ * SERVICIO: execution
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, ./logger, axios
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: OracleValidator
+ *   INTERFACES: OracleValidatorConfig, PriceValidationResult, OraclePrice
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: OracleValidator, OracleValidatorConfig, PriceValidationResult
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - ./logger
+ *   - axios
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file oracle-validator.ts
  * @description Validador de precios con múltiples oráculos (Pyth, Chainlink, Band)
  * 

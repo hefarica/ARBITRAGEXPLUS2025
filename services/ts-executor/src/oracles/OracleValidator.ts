@@ -1,4 +1,27 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/oracles/OracleValidator.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: OracleValidator
+ *   FUNCIONES: latestRoundData, decimals, getPriceUnsafe
+ *   INTERFACES: ValidationResult, PriceData
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ValidationResult, PriceData, OracleValidator
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * OracleValidator.ts
  * 
  * Validación de precios usando oráculos Pyth y Chainlink

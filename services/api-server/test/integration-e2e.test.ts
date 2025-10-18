@@ -1,4 +1,25 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/test/integration-e2e.test.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @jest/globals, ../src/services/arbitrageIntegration, events
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @jest/globals
+ *   - ../src/services/arbitrageIntegration
+ *   - events
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Integration E2E Tests
  * 
  * Suite de tests de integración End-to-End que valida el flujo completo

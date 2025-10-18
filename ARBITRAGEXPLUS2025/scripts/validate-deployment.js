@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/scripts/validate-deployment.js
+ * SERVICIO: scripts
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: check
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * Validate production deployment by checking the public health endpoint with retries.

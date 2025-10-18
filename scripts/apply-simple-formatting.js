@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/apply-simple-formatting.js
+ * SERVICIO: apply-simple-formatting.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - BLOCKCHAINS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: applyFormatting
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 const { google } = require('googleapis');
 const fs = require('fs');
 

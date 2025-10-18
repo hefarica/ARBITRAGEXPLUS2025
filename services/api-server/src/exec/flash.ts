@@ -1,3 +1,28 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/exec/flash.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, ../lib/errors, ../lib/logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: FlashExecutor
+ *   FUNCIONES: getMinimumAmountOut, executeFlashArbitrage, estimateProfit
+ *   INTERFACES: ChainConfig, ExecutionResult, FlashExecutionParams
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: FlashExecutor
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - ../lib/errors
+ *   - ../lib/logger
+ * 
+ * ============================================================================
+ */
+
 import { ethers, Contract, Wallet, JsonRpcProvider } from 'ethers';
 import { Logger } from '../lib/logger';
 import { ApiError } from '../lib/errors';

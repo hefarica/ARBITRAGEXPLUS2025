@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * CONTRATO: BandOracle
+ * ARCHIVO: ./contracts/src/Oracles/BandOracle.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: getTokenConfig, removeToken, getPrices
+ * 
+ * 🔄 LÓGICA:
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: TokenConfigured, TokenRemoved, StalePrice
+ * 
+ * 🔒 SEGURIDAD:
+ *   MODIFIERS: onlyOwner
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

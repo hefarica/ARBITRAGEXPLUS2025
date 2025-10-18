@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/services/arbitrageService.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @config/database, @logger, @config/redis
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ArbitrageService
+ *   INTERFACES: ExecutionOptions, RouteDiscoveryOptions, RouteFilters
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ArbitrageService
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @config/database
+ *   - @logger
+ *   - @config/redis
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Arbitrage Service
  * 
  * Servicio principal para operaciones de arbitraje DeFi.

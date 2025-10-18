@@ -1,4 +1,28 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/sheets/dynamic_client_v2.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+  FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+    - Formato: Dict[str, Any]
+
+🔄 TRANSFORMACIÓN:
+  CLASES: DynamicSheetsClient
+  FUNCIONES: get_dexes_array, write_routes_array, get_config_array
+
+📤 SALIDA DE DATOS:
+  DESTINO: Google Sheets
+
+🔗 DEPENDENCIAS:
+  - google.oauth2.service_account
+  - logging
+  - HttpError
+
+============================================================================
+"""
+
+"""
 dynamic_client_v2.py
 
 Cliente de Google Sheets con arrays dinámicos exactos según Prompt Supremo Definitivo.

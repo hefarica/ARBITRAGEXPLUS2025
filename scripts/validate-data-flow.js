@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/validate-data-flow.js
+ * SERVICIO: validate-data-flow.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: path, glob, fs
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: analyzeDataFlow, main, findConsumers
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: relativePath
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - path
+ *   - glob
+ *   - fs
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

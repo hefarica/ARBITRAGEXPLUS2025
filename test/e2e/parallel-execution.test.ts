@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./test/e2e/parallel-execution.test.ts
+ * SERVICIO: e2e
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, chai, ../../services/execution/src/parallel-executor
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: sleep, createMockOpportunity
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - chai
+ *   - ../../services/execution/src/parallel-executor
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file parallel-execution.test.ts
  * @description Test E2E para ejecución paralela de hasta 40 operaciones simultáneas
  * 

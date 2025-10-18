@@ -1,4 +1,27 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/sheets/GoogleSheetsClient.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: googleapis, google-auth-library
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: GoogleSheetsClient
+ *   INTERFACES: RouteData, ConfigData, ExecutionData
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: RouteData, ConfigData, ExecutionData
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - googleapis
+ *   - google-auth-library
+ * 
+ * ============================================================================
+ */
+
+/**
  * GoogleSheetsClient.ts
  * 
  * Cliente para interactuar con Google Sheets Brain

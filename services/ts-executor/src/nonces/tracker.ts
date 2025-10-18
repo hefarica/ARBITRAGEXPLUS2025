@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/nonces/tracker.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: NonceTracker
+ *   INTERFACES: NonceState
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: NonceState, nonceTracker, NonceTracker
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * Nonce Tracker - Gestión dinámica de nonces por chain
  * 
  * Premisas:

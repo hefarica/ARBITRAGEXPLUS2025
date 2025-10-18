@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/utils/sheets_client.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: SheetsClient
+  FUNCIONES: batch_update, write_values, ensure_sheet_exists
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - .env
+  - service_account
+  - google.oauth2
+
+============================================================================
+"""
+
 
 import os
 import json

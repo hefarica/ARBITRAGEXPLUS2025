@@ -1,4 +1,27 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/chains/manager.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ChainManager
+ *   FUNCIONES: resetChainManager, getChainManager
+ *   INTERFACES: ChainConnection, ChainConfig
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ChainConnection, getChainManager, ChainConfig
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * Chain Manager - Gestión dinámica de blockchains
  * 
  * Gestiona conexiones a múltiples blockchains consumiendo configuración desde Sheets.

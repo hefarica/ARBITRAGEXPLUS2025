@@ -1,3 +1,20 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/scripts/validate-local-health.js
+ * SERVICIO: scripts
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * Build and run the API server locally, then perform a health check.

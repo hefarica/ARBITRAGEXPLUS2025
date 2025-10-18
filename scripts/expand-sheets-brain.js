@@ -1,4 +1,22 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./scripts/expand-sheets-brain.js
+ * SERVICIO: expand-sheets-brain.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: getColumnLetter, expandSheetsBrain
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * expand-sheets-brain.js
  * 
  * Expande Google Sheets Brain según el esquema del Prompt Supremo Definitivo:

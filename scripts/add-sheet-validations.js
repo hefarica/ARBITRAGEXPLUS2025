@@ -1,4 +1,22 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./scripts/add-sheet-validations.js
+ * SERVICIO: add-sheet-validations.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: addValidations
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Add Validations to Google Sheet Brain
  * 
  * Script para agregar validaciones, formato condicional, fórmulas y protecciones

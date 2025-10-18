@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/schedulers/cron_jobs.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: CronScheduler
+  FUNCIONES: run, add_job, __init__
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - schedule
+  - time
+  - logging
+
+============================================================================
+"""
+
 import schedule
 import time
 import asyncio

@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/queues/queueManager.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../exec/flash
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: QueueManager
+ *   INTERFACES: QueueConfig, QueueItem
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: QueueConfig, QueueManager, QueueItem
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../exec/flash
+ * 
+ * ============================================================================
+ */
+
+/**
  * Queue Manager - Gestión dinámica de colas de ejecución
  * 
  * Gestiona colas de operaciones de arbitraje consumiendo configuración desde Sheets.

@@ -1,4 +1,28 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/sheets/route_writer.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+  FUENTE: Google Sheets - ROUTES
+    - Formato: Dict[str, Any]
+
+🔄 TRANSFORMACIÓN:
+  CLASES: RouteWriter
+  FUNCIONES: _default_column_mapping, _get_next_row, _format_path
+
+📤 SALIDA DE DATOS:
+  DESTINO: Google Sheets
+
+🔗 DEPENDENCIAS:
+  - .client
+  - SheetsClient
+  - typing
+
+============================================================================
+"""
+
+"""
 Route Writer - Escritura dinámica de rutas a Google Sheets
 
 Escribe rutas de arbitraje calculadas a la hoja ROUTES de Google Sheets.

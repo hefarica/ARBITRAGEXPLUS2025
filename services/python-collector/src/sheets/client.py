@@ -1,4 +1,28 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/sheets/client.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+  FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+    - Formato: Dict[str, Any]
+
+🔄 TRANSFORMACIÓN:
+  CLASES: SheetsClient
+  FUNCIONES: _initialize_service, _read_range, main
+
+📤 SALIDA DE DATOS:
+  DESTINO: Google Sheets
+
+🔗 DEPENDENCIAS:
+  - Any
+  - google.oauth2.service_account
+  - googleapiclient.errors
+
+============================================================================
+"""
+
+"""
 client.py - Cliente Google Sheets para ARBITRAGEXPLUS2025
 
 Cliente para leer/escribir Google Sheets según Prompt Supremo Definitivo.

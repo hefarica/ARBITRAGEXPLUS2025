@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/utils/mod.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: format_currency, calculate_roi
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 //! Utility functions
 
 pub fn format_currency(amount: f64) -> String {

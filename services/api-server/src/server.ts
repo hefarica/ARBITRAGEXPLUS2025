@@ -1,3 +1,30 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/server.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ASSETS, BLOCKCHAINS, DEXES, CONFIG, POOLS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ *   DEPENDENCIAS: ./config/database, ./lib/logger, @fastify/helmet
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ArbitrageApiServer
+ *   INTERFACES: PriceStreamData, ExecutionRequest, ArbitrageRoute
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ./config/database
+ *   - ./lib/logger
+ *   - @fastify/helmet
+ * 
+ * ============================================================================
+ */
+
 import fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';

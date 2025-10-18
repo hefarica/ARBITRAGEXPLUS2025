@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/check_fly_config.js
+ * SERVICIO: check_fly_config.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: path, fs, url
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: FlyConfigValidator
+ *   FUNCIONES: validateDockerfile, logHeader, validatePerformance
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - path
+ *   - fs
+ *   - url
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

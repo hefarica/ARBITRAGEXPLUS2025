@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/gas/GasManager.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: GasManager
+ *   INTERFACES: GasPrice, GasEstimate
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: GasManager, GasPrice, GasEstimate
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * GasManager.ts
  * 
  * Gestión inteligente de gas pricing para ARBITRAGEXPLUS2025

@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/rust-core/src/domain/mod.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: Asset
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: Asset
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 //! Domain models for the arbitrage engine.
 
 #[derive(Debug, Clone)]

@@ -1,4 +1,23 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./dashboard/src/google-sheets-client.ts
+ * SERVICIO: src
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: GoogleSheetsClient
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: GoogleSheetsClient
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file google-sheets-client.ts
  * @description Google Sheets client for dashboard (stub - implement using python-collector logic)
  */

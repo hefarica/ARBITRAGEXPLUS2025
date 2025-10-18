@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * CONTRATO: Vault
+ * ARCHIVO: ./contracts/src/Vault.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: calculateFlashLoanFee, setMaxFlashLoanPercentage, getAvailableLiquidity
+ * 
+ * 🔄 LÓGICA:
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: LiquidityWithdrawn, LiquidityDeposited, FlashLoanExecuted
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 

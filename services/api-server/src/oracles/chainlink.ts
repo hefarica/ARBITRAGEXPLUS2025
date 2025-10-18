@@ -1,4 +1,29 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/oracles/chainlink.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, ../lib/errors, ../lib/logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ChainlinkOracle
+ *   FUNCIONES: version, description, decimals
+ *   INTERFACES: AssetConfig, ChainlinkPriceData, PriceValidationResult
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ChainlinkOracle
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - ../lib/errors
+ *   - ../lib/logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Chainlink Oracle
  * 
  * Cliente para Chainlink Price Feeds que funciona como fuente secundaria

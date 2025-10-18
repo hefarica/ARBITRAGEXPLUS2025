@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/apps/alpha-flux-terminal/eslint.config.js
+ * SERVICIO: apps
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @eslint/js, globals, eslint-plugin-react-hooks
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @eslint/js
+ *   - globals
+ *   - eslint-plugin-react-hooks
+ * 
+ * ============================================================================
+ */
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

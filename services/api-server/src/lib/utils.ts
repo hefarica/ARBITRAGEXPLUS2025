@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/lib/utils.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, crypto, ./logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: RateLimiter, PerformanceTimer
+ *   FUNCIONES: formatDuration, truncateString, getUnixTimestamp
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: formatDuration, truncateString, getUnixTimestamp
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - crypto
+ *   - ./logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Utility Functions
  * 
  * Funciones utilitarias centralizadas para operaciones comunes,

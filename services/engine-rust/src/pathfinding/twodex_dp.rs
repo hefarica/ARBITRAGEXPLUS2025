@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/twodex_dp.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: calculate_swap_fees, calculate_confidence_score, calculate_direct_arbitrage
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 // twodex_dp.rs
 //
 // Algoritmo de arbitraje two-DEX con programación dinámica y memoización

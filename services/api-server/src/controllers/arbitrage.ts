@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/controllers/arbitrage.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: fastify, ../services/marketDataService, ../services/sheetsService
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ArbitrageController
+ *   FUNCIONES: registerArbitrageRoutes
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ArbitrageController, arbitrageController, registerArbitrageRoutes
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - fastify
+ *   - ../services/marketDataService
+ *   - ../services/sheetsService
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Controlador de Arbitraje
  * 
  * Controlador principal para operaciones de arbitraje siguiendo

@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/apps/alpha-flux-terminal/vite.config.js
+ * SERVICIO: apps
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: vite, @vitejs/plugin-react, path
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - vite
+ *   - @vitejs/plugin-react
+ *   - path
+ * 
+ * ============================================================================
+ */
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'

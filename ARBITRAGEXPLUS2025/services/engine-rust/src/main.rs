@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/services/engine-rust/src/main.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: Health
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: health, main
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: Health
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 use axum::{routing::get, Router, Json};
 use serde::Serialize;
 use rust_core::math;

@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./SCRIPTS/check-fly-config.js
+ * SERVICIO: check-fly-config.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: validateDockerfile, main, checkFileExists
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * ARBITRAGEXPLUS2025 - Fly.io Configuration Checker

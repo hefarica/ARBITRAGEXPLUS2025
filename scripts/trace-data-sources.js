@@ -1,3 +1,29 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/trace-data-sources.js
+ * SERVICIO: trace-data-sources.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ROUTES, ASSETS, BLOCKCHAINS, DEXES, POOLS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ *   DEPENDENCIAS: path, fs, url
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: main, resolveImportPath, detectDataSources
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - path
+ *   - fs
+ *   - url
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

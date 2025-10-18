@@ -1,4 +1,21 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/test/setup.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * Jest Setup File
  * 
  * Configuración global para todos los tests

@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/validate-system-integrity.js
+ * SERVICIO: validate-system-integrity.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: GoogleSheetsClient, WebSocketManager, ValidationResult
+ *   FUNCIONES: readFile, findMatches, main
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

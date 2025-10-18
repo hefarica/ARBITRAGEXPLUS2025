@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * CONTRATO: ChainlinkOracle
+ * ARCHIVO: ./contracts/src/Oracles/ChainlinkOracle.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: version, getPrices, latestRoundData
+ * 
+ * 🔄 LÓGICA:
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: StalePrice, PriceFeedRemoved, PriceFeedAdded
+ * 
+ * 🔒 SEGURIDAD:
+ *   MODIFIERS: onlyOwner
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

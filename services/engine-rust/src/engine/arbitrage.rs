@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/engine/arbitrage.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: ArbitrageOpportunity, TokenPair, DexInfo
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: test_arbitrage_engine_creation, calculate_metrics, find_opportunities
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: ArbitrageOpportunity
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! Arbitrage Engine - Motor principal de detección de arbitraje
 //!
 //! Integra los algoritmos de pathfinding (2-DEX, 3-DEX) con el sistema

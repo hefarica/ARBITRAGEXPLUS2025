@@ -1,4 +1,25 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./test/e2e/full-flow.test.ts
+ * SERVICIO: e2e
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../../services/execution/src/gas-manager, ethers, ../../services/execution/src/oracle-validator
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../../services/execution/src/gas-manager
+ *   - ethers
+ *   - ../../services/execution/src/oracle-validator
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file full-flow.test.ts
  * @description Test E2E completo del flujo ARBITRAGEXPLUS2025: Sheets → Execution → Blockchain
  * 

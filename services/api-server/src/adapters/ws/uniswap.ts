@@ -1,4 +1,29 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/adapters/ws/uniswap.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, ws, events
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: UniswapAdapter
+ *   FUNCIONES: token0, token1, getReserves
+ *   INTERFACES: SwapEvent, UniswapConfig, PoolConfig
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: UniswapAdapter
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - ws
+ *   - events
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Uniswap WebSocket Adapter
  * 
  * Adaptador dinámico para Uniswap V2/V3 que:

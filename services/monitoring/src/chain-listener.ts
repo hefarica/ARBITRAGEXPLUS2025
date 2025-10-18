@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/monitoring/src/chain-listener.ts
+ * SERVICIO: monitoring
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ./alert-manager, ethers, events
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ChainListener
+ *   INTERFACES: CircuitBreakerEvent, BatchExecutedEvent, OperationFailedEvent
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: CircuitBreakerEvent, BatchExecutedEvent, ChainListener
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ./alert-manager
+ *   - ethers
+ *   - events
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file chain-listener.ts
  * @description Listener de eventos on-chain con WebSockets para monitoreo en tiempo real
  * 

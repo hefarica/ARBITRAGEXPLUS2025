@@ -1,4 +1,29 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/executor/FlashLoanExecutorV2.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../oracles/pyth, ../services/sheets, ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: FlashLoanExecutorV2
+ *   FUNCIONES: executeFlashLoanArbitrage, executeArbitrage
+ *   INTERFACES: ExecutionResult, Route, ExecutorConfig
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: FlashLoanExecutorV2
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../oracles/pyth
+ *   - ../services/sheets
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * FlashLoanExecutorV2.ts
  * 
  * Executor de flash loans atómicos con integración completa según Prompt Supremo Definitivo - FASE 4

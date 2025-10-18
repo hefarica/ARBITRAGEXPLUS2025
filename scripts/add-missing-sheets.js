@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/add-missing-sheets.js
+ * SERVICIO: add-missing-sheets.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: getColumnLetter, createSheet, getAuthClient
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * ARBITRAGEXPLUS2025 - Add Missing Sheets to Google Sheet Brain

@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/collectors/dex_prices.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: DexPricesCollector
+  FUNCIONES: collect, collect_from_dex, __init__
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - a
+  - logging
+  - typing
+
+============================================================================
+"""
+
 import asyncio
 import aiohttp
 from typing import List, Dict

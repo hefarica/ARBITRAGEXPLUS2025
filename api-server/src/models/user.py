@@ -1,3 +1,23 @@
+"""
+============================================================================
+ARCHIVO: ./api-server/src/models/user.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: User
+  FUNCIONES: __repr__, to_dict
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - SQLAlchemy
+  - flask_sqlalchemy
+
+============================================================================
+"""
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()

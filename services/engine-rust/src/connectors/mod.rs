@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/connectors/mod.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - pyth
+ *   - sheets
+ *   - defillama
+ * 
+ * ============================================================================
+ */
+
 //! Connectors module for external data sources
 
 pub mod pyth;

@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * CONTRATO: ArbitrageExecutor
+ * ARCHIVO: ./contracts/src/ArbitrageExecutor.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: _getExpectedAmountOut, exactInputSingle, estimateProfit
+ * 
+ * 🔄 LÓGICA:
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: FlashArbitrageExecuted, EmergencyWithdraw, ProfitWithdrawn
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

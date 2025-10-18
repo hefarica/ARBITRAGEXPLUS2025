@@ -1,3 +1,27 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/oracles/pyth.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @solana/web3.js, ../lib/errors, @pythnetwork/client
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: PythOracle
+ *   INTERFACES: RouteValidation, PythPriceData, PriceValidationResult
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: PythOracle
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @solana/web3.js
+ *   - ../lib/errors
+ *   - @pythnetwork/client
+ * 
+ * ============================================================================
+ */
+
 import { Connection, PublicKey } from '@solana/web3.js';
 import { PythHttpClient, getPythProgramKeyForCluster } from '@pythnetwork/client';
 import { Logger } from '../lib/logger';

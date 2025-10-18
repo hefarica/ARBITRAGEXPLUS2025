@@ -1,4 +1,23 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/execution/src/google-sheets-client.ts
+ * SERVICIO: execution
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: GoogleSheetsClient
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: GoogleSheetsClient
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file google-sheets-client.ts
  * @description Cliente para integración con Google Sheets (stub - usar implementación de python-collector)
  */

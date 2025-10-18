@@ -1,3 +1,21 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/setup.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - setuptools
+  - setup
+
+============================================================================
+"""
+
 from setuptools import setup, find_packages
 
 setup(

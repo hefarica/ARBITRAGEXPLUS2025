@@ -1,3 +1,23 @@
+"""
+============================================================================
+ARCHIVO: ./api-server/src/routes/user.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  FUNCIONES: update_user, create_user, delete_user
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - src.models.user
+  - Blueprint
+  - User
+
+============================================================================
+"""
+
 from flask import Blueprint, jsonify, request
 from src.models.user import User, db
 

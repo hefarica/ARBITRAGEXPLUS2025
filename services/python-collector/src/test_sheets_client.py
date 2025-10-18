@@ -1,3 +1,22 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/test_sheets_client.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - .env
+  - sheets_client
+  - load_dotenv
+
+============================================================================
+"""
+
 import os
 import sys
 from dotenv import load_dotenv

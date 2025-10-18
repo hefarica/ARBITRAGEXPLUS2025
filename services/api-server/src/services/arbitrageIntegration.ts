@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/services/arbitrageIntegration.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @logger, events, @errors
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ArbitrageIntegrationService
+ *   INTERFACES: ValidationResult, OpportunityFilter, ExecutionDecision
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ArbitrageIntegrationService, arbitrageIntegrationService
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @logger
+ *   - events
+ *   - @errors
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Arbitrage Integration Service
  * 
  * Servicio que integra MarketDataService con ArbitrageService para

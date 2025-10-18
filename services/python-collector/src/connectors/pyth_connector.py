@@ -1,4 +1,25 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/connectors/pyth_connector.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: PythConnector
+  FUNCIONES: update_prices_from_pyth, main, get_prices_batch
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - DynamicSheetsClient
+  - sheets.dynamic_client
+  - logging
+
+============================================================================
+"""
+
+"""
 pyth_connector.py
 
 Conector de Pyth Network para actualizar precios en ASSETS dinámicamente.

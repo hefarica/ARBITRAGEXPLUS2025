@@ -1,3 +1,27 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/main.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+  FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+    - Formato: Dict[str, Any]
+
+🔄 TRANSFORMACIÓN:
+  CLASES: class, PythonCollector
+  FUNCIONES: _load_initial_configuration, _manual_update_cycle, _initialize_sheets_client
+
+📤 SALIDA DE DATOS:
+  DESTINO: Google Sheets
+
+🔗 DEPENDENCIAS:
+  - src.utils.logger
+  - ThreadPoolExecutor
+  - setup_logger
+
+============================================================================
+"""
+
 #!/usr/bin/env python3
 """
 ARBITRAGEXPLUS2025 - Python Collector Service
@@ -724,3 +748,286 @@ if __name__ == "__main__":
     
     # Ejecutar servicio
     asyncio.run(main())
+
+
+# ==================================================================================
+# PARALLEL ORCHESTRATOR
+# ==================================================================================
+
+class ParallelOrchestrator:
+    """
+    Orquestador paralelo para ejecutar múltiples tareas concurrentemente
+    con gestión de límites, retry y circuit breaker
+    """
+    
+    def __init__(self, max_concurrent: int = 40, max_retries: int = 3):
+        self.logger = setup_logger("ParallelOrchestrator")
+        self.max_concurrent = max_concurrent
+        self.max_retries = max_retries
+        self.semaphore = asyncio.Semaphore(max_concurrent)
+        self.stats = {
+            'total_tasks': 0,
+            'successful_tasks': 0,
+            'failed_tasks': 0,
+            'retried_tasks': 0,
+        }
+    
+    async def execute_batch(self, tasks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Ejecuta un batch de tareas en paralelo
+        
+        Args:
+            tasks: Lista de diccionarios con 'id', 'func', 'args', 'kwargs'
+        
+        Returns:
+            Lista de resultados con 'id', 'success', 'result' o 'error'
+        """
+        self.logger.info(f"🚀 Ejecutando batch de {len(tasks)} tareas (max concurrent: {self.max_concurrent})")
+        
+        async def execute_with_retry(task: Dict[str, Any]) -> Dict[str, Any]:
+            task_id = task.get('id', 'unknown')
+            func = task.get('func')
+            args = task.get('args', [])
+            kwargs = task.get('kwargs', {})
+            
+            for attempt in range(self.max_retries):
+                try:
+                    async with self.semaphore:
+                        self.logger.debug(f"Ejecutando tarea {task_id} (intento {attempt + 1}/{self.max_retries})")
+                        
+                        # Ejecutar función
+                        if asyncio.iscoroutinefunction(func):
+                            result = await func(*args, **kwargs)
+                        else:
+                            result = func(*args, **kwargs)
+                        
+                        self.stats['successful_tasks'] += 1
+                        return {
+                            'id': task_id,
+                            'success': True,
+                            'result': result,
+                            'attempts': attempt + 1,
+                        }
+                
+                except Exception as e:
+                    self.logger.warning(f"Tarea {task_id} falló (intento {attempt + 1}/{self.max_retries}): {e}")
+                    
+                    if attempt < self.max_retries - 1:
+                        self.stats['retried_tasks'] += 1
+                        # Backoff exponencial
+                        await asyncio.sleep(2 ** attempt)
+                    else:
+                        self.stats['failed_tasks'] += 1
+                        return {
+                            'id': task_id,
+                            'success': False,
+                            'error': str(e),
+                            'attempts': attempt + 1,
+                        }
+        
+        # Ejecutar todas las tareas en paralelo
+        self.stats['total_tasks'] += len(tasks)
+        results = await asyncio.gather(*[execute_with_retry(task) for task in tasks])
+        
+        success_count = sum(1 for r in results if r.get('success'))
+        self.logger.info(f"✅ Batch completado: {success_count}/{len(tasks)} exitosas")
+        
+        return results
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Obtiene estadísticas del orchestrator"""
+        success_rate = (self.stats['successful_tasks'] / self.stats['total_tasks'] * 100) if self.stats['total_tasks'] > 0 else 0
+        
+        return {
+            **self.stats,
+            'success_rate': round(success_rate, 2),
+            'max_concurrent': self.max_concurrent,
+        }
+
+# ==================================================================================
+# AUTO-RECOVERY SYSTEM
+# ==================================================================================
+
+class AutoRecoverySystem:
+    """
+    Sistema de auto-recuperación ante fallos
+    Monitorea la salud del sistema y ejecuta acciones correctivas
+    """
+    
+    def __init__(self, collector: PythonCollector):
+        self.logger = setup_logger("AutoRecoverySystem")
+        self.collector = collector
+        self.health_check_interval = 60  # 1 minuto
+        self.recovery_actions = []
+        self.is_running = False
+    
+    async def start(self):
+        """Inicia el sistema de auto-recovery"""
+        self.is_running = True
+        self.logger.info("🏥 Sistema de auto-recovery iniciado")
+        
+        while self.is_running:
+            try:
+                await self.perform_health_check()
+                await asyncio.sleep(self.health_check_interval)
+            except Exception as e:
+                self.logger.error(f"Error en health check: {e}")
+                await asyncio.sleep(self.health_check_interval)
+    
+    async def perform_health_check(self):
+        """Realiza health check completo del sistema"""
+        self.logger.debug("🔍 Realizando health check...")
+        
+        issues = []
+        
+        # 1. Verificar conexión a Sheets
+        if not self.collector.sheets_client or not await self.collector.sheets_client.is_connected():
+            issues.append({
+                'component': 'sheets_client',
+                'issue': 'Conexión perdida',
+                'action': 'reconnect_sheets'
+            })
+        
+        # 2. Verificar conectores
+        if self.collector.pyth_connector and not self.collector.pyth_connector.is_healthy():
+            issues.append({
+                'component': 'pyth_connector',
+                'issue': 'Conector no saludable',
+                'action': 'restart_pyth'
+            })
+        
+        # 3. Verificar métricas
+        if self.collector.metrics.success_rate < 50:
+            issues.append({
+                'component': 'metrics',
+                'issue': f'Success rate bajo: {self.collector.metrics.success_rate}%',
+                'action': 'alert_low_success_rate'
+            })
+        
+        # 4. Verificar última actualización
+        time_since_update = (datetime.now() - self.collector.metrics.last_update).total_seconds() if self.collector.metrics.last_update else float('inf')
+        if time_since_update > 300:  # 5 minutos
+            issues.append({
+                'component': 'updates',
+                'issue': f'Sin actualizaciones desde hace {time_since_update}s',
+                'action': 'force_update'
+            })
+        
+        # Ejecutar acciones correctivas
+        if issues:
+            self.logger.warning(f"⚠️  {len(issues)} problemas detectados")
+            for issue in issues:
+                await self.execute_recovery_action(issue)
+        else:
+            self.logger.debug("✅ Health check OK")
+    
+    async def execute_recovery_action(self, issue: Dict[str, Any]):
+        """Ejecuta una acción de recuperación"""
+        action = issue.get('action')
+        self.logger.info(f"🔧 Ejecutando acción de recuperación: {action}")
+        
+        try:
+            if action == 'reconnect_sheets':
+                await self.collector._initialize_sheets_client()
+            
+            elif action == 'restart_pyth':
+                await self.collector.pyth_connector.reconnect()
+            
+            elif action == 'alert_low_success_rate':
+                # Enviar alerta a Sheets
+                if self.collector.sheets_client:
+                    await self.collector.sheets_client.append_row('ALERTS', {
+                        'timestamp': datetime.now().isoformat(),
+                        'severity': 'WARNING',
+                        'component': issue.get('component'),
+                        'message': issue.get('issue'),
+                        'action_taken': action,
+                    })
+            
+            elif action == 'force_update':
+                await self.collector._manual_update_cycle()
+            
+            self.logger.info(f"✅ Acción de recuperación completada: {action}")
+            self.recovery_actions.append({
+                'timestamp': datetime.now().isoformat(),
+                'issue': issue,
+                'action': action,
+                'success': True,
+            })
+        
+        except Exception as e:
+            self.logger.error(f"❌ Error ejecutando acción de recuperación {action}: {e}")
+            self.recovery_actions.append({
+                'timestamp': datetime.now().isoformat(),
+                'issue': issue,
+                'action': action,
+                'success': False,
+                'error': str(e),
+            })
+    
+    async def stop(self):
+        """Detiene el sistema de auto-recovery"""
+        self.is_running = False
+        self.logger.info("🛑 Sistema de auto-recovery detenido")
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Obtiene estadísticas del sistema de recovery"""
+        successful_recoveries = sum(1 for r in self.recovery_actions if r.get('success'))
+        total_recoveries = len(self.recovery_actions)
+        
+        return {
+            'total_recoveries': total_recoveries,
+            'successful_recoveries': successful_recoveries,
+            'failed_recoveries': total_recoveries - successful_recoveries,
+            'recent_actions': self.recovery_actions[-10:],  # Últimas 10
+        }
+
+# ==================================================================================
+# ENHANCED MAIN WITH ORCHESTRATOR
+# ==================================================================================
+
+async def main_with_orchestrator():
+    """
+    Función principal mejorada con orchestrator y auto-recovery
+    """
+    collector = PythonCollector()
+    orchestrator = ParallelOrchestrator(max_concurrent=40)
+    recovery_system = AutoRecoverySystem(collector)
+    
+    try:
+        # Inicializar collector
+        if not await collector.initialize():
+            print("❌ Error inicializando collector")
+            return
+        
+        # Iniciar sistema de auto-recovery en background
+        recovery_task = asyncio.create_task(recovery_system.start())
+        
+        # Iniciar collector
+        await collector.start()
+        
+        # Esperar a que termine
+        await recovery_task
+    
+    except KeyboardInterrupt:
+        print("\n🛑 Interrupción detectada, deteniendo servicios...")
+    
+    finally:
+        await recovery_system.stop()
+        await collector.stop()
+        
+        # Mostrar estadísticas finales
+        print("\n📊 Estadísticas finales:")
+        print(f"Collector: {collector.get_status()}")
+        print(f"Orchestrator: {orchestrator.get_stats()}")
+        print(f"Recovery: {recovery_system.get_stats()}")
+
+# Exportar orchestrator y recovery system
+__all__ = [
+    'PythonCollector',
+    'ParallelOrchestrator',
+    'AutoRecoverySystem',
+    'main',
+    'main_with_orchestrator',
+]
+

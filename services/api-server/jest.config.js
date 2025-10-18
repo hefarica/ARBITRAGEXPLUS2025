@@ -1,4 +1,21 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/jest.config.js
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * Jest Configuration for API Server Tests
  */
 

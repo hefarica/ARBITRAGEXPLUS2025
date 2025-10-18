@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/validate-dynamic-architecture.js
+ * SERVICIO: validate-dynamic-architecture.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ValidationResult
+ *   FUNCIONES: validateNoHardcoding, findMatches, main
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

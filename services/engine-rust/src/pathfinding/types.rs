@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/types.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: ArbitrageOpportunity, Pool, DPMemoState
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: cache_profit, cache_route, fmt
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: ArbitrageOpportunity
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 // types.rs
 //
 // Tipos y estructuras para el Rust Engine con programación dinámica

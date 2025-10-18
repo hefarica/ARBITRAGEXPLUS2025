@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * CONTRATO: DeployArbitrageSystem
+ * ARCHIVO: ./contracts/script/DeployArbitrageSystem.s.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: _getSupportedTokens, _deployArbitrageManager, _deployBatchExecutor
+ * 
+ * 🔄 LÓGICA:
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

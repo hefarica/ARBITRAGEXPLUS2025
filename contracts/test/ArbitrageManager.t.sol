@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * CONTRATO: ArbitrageManagerTest
+ * ARCHIVO: ./contracts/test/ArbitrageManager.t.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: transfer, transferFrom, testRejectExpiredDeadline
+ * 
+ * 🔄 LÓGICA:
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: Transfer, Approval
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

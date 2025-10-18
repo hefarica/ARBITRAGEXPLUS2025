@@ -1,4 +1,27 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/controllers/pricesController.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: zod, @services/redisService, express
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: PricesController
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: PricesController, pricesController
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - zod
+ *   - @services/redisService
+ *   - express
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Prices Controller
  * 
  * Controlador para endpoints de precios de activos DeFi.

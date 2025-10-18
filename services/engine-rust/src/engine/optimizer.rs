@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/engine/optimizer.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: OptimizerConfig, RouteOptimizer, PortfolioMetrics
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: default, optimize_portfolio, knapsack_optimization
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: OptimizerConfig
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 //! Optimizer - Optimizador de rutas usando programación dinámica
 //!
 //! Optimiza la selección de rutas de arbitraje para maximizar profit

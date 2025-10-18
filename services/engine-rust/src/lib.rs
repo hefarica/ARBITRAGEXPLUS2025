@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/lib.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - pathfinding
+ *   - connectors
+ *   - ffi
+ * 
+ * ============================================================================
+ */
+
 pub mod connectors;
 pub mod engine;
 pub mod pathfinding;

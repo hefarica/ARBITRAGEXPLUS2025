@@ -1,4 +1,25 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/connectors/pyth.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: PythConnector
+  FUNCIONES: update_prices_from_pyth, main, fetch_multiple_prices
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - Any
+  - ..sheets.client
+  - logging
+
+============================================================================
+"""
+
+"""
 pyth.py - Conector Pyth Network para ARBITRAGEXPLUS2025
 
 Conector para obtener precios desde Pyth Network según Prompt Supremo Definitivo.

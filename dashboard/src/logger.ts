@@ -1,4 +1,23 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./dashboard/src/logger.ts
+ * SERVICIO: src
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: Logger
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: Logger
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file logger.ts
  * @description Logger for dashboard server
  */

@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/main.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: ArbitrageRoute, AssetConfig, BlockchainConfig
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: clone_arc, validate_configuration, execute_arbitrage_cycle
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: ArbitrageRoute
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - pathfinding
+ *   - connectors
+ *   - engine
+ * 
+ * ============================================================================
+ */
+
 // ARBITRAGEXPLUS2025 - Rust Engine Main Module
 // 
 // Motor principal de cálculo para arbitraje DeFi implementado en Rust.

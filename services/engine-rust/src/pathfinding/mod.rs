@@ -1,3 +1,27 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/mod.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: PathfinderStats, ArbitrageRoute, ArbitragePathfinder
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: calculate_swap_output, test_generate_route_id, update_min_profit
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: PathfinderStats
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ranking
+ *   - tests
+ *   - twodex
+ * 
+ * ============================================================================
+ */
+
 // pathfinding/mod.rs
 
 //! Módulo de búsqueda de rutas de arbitraje usando Programación Dinámica

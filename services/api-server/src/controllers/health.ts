@@ -1,4 +1,27 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/controllers/health.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @services/redisService, express, @logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: HealthController
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: healthController, HealthController
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @services/redisService
+ *   - express
+ *   - @logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Health Controller
  * 
  * Controlador para endpoints de salud y monitoreo del sistema.

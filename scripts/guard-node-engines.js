@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/guard-node-engines.js
+ * SERVICIO: guard-node-engines.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: semver, url, child_process
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: EngineGuardian
+ *   FUNCIONES: logHeader, parseVersion, logWarning
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - semver
+ *   - url
+ *   - child_process
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

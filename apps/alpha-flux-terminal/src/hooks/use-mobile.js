@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./apps/alpha-flux-terminal/src/hooks/use-mobile.js
+ * SERVICIO: alpha-flux-terminal
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: react
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: useIsMobile
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: useIsMobile
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - react
+ * 
+ * ============================================================================
+ */
+
 import * as React from "react"
 
 const MOBILE_BREAKPOINT = 768

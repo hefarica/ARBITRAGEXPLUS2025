@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/three_dex.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: ThreeDexPathfinder, ThreeDexRoute, DexInfo
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: find_complex_route, test_complexity_calculation, calculate_route_profit
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: ThreeDexPathfinder
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! Three-DEX Arbitrage Algorithm
 //! 
 //! Implementa el algoritmo de programación dinámica para encontrar

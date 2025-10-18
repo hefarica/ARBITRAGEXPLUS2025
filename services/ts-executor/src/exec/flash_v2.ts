@@ -1,4 +1,29 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/exec/flash_v2.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../oracles/chainlink, ethers, ../oracles/pyth
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: FlashLoanExecutor
+ *   FUNCIONES: main
+ *   INTERFACES: ExecutionResult, Route, OraclePrice
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: FlashLoanExecutor
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../oracles/chainlink
+ *   - ethers
+ *   - ../oracles/pyth
+ * 
+ * ============================================================================
+ */
+
+/**
  * flash_v2.ts
  * 
  * TS Executor con Flash Loans Atómicos según Prompt Supremo Definitivo.

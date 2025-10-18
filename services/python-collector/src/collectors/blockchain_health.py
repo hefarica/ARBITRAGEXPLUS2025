@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/collectors/blockchain_health.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: BlockchainHealthCollector
+  FUNCIONES: collect, check_blockchain, __init__
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - logging
+  - typing
+  - List
+
+============================================================================
+"""
+
 import asyncio
 from typing import List, Dict
 import logging

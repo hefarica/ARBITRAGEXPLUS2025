@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./SCRIPTS/scan-dead-paths.js
+ * SERVICIO: scan-dead-paths.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ImportAnalyzer
+ *   FUNCIONES: main
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * scan-dead-paths.js

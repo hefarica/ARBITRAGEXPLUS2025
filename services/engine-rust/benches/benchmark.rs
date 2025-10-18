@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/benches/benchmark.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: benchmark_pathfinding
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
 fn benchmark_pathfinding(c: &mut Criterion) {

@@ -1,3 +1,28 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/exec/flash.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ethers, @aave/core-v3, @aave/protocol-v2
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: FlashLoanExecutor
+ *   FUNCIONES: transfer, approve, allowance
+ *   INTERFACES: ExecutionResult, ValidationResult, FlashLoanParams
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: FlashLoanExecutor
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ethers
+ *   - @aave/core-v3
+ *   - @aave/protocol-v2
+ * 
+ * ============================================================================
+ */
+
 """
 flash.ts
 

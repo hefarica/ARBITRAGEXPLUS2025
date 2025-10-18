@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * CONTRATO: ArbitrageExecutor
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/contracts/src/ArbitrageExecutor.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: execute
+ * 
+ * 🔄 LÓGICA:
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 

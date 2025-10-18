@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pathfinding/ranking.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: RankingCriteria, RankedRoute, Route
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: filter_by_rank, calculate_diversification, top_n
+ *   ALGORITMO: Pathfinding optimizado
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: RankingCriteria
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! Route Ranking Algorithm
 //! 
 //! Implementa algoritmos de ranking y priorización de rutas de arbitraje

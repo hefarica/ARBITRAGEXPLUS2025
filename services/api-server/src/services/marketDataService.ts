@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/services/marketDataService.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: @adapters/ws/pancakeswap, @oracles/pyth, @logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: MarketDataService
+ *   INTERFACES: PoolLiquidity, MarketDataConfig, PriceData
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: marketDataService, MarketDataService
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - @adapters/ws/pancakeswap
+ *   - @oracles/pyth
+ *   - @logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Market Data Service
  * 
  * Servicio integrador que coordina:

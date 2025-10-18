@@ -1,4 +1,28 @@
 """
+============================================================================
+ARCHIVO: ./services/python-collector/src/sheets/schema.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+  FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+    - Formato: Dict[str, Any]
+
+🔄 TRANSFORMACIÓN:
+  CLASES: SchemaValidator, SheetName
+  FUNCIONES: _parse_schema_config, _validate_type, __init__
+
+📤 SALIDA DE DATOS:
+  DESTINO: Google Sheets
+
+🔗 DEPENDENCIAS:
+  - Enum
+  - .client
+  - SheetsClient
+
+============================================================================
+"""
+
+"""
 Schema - Definiciones de esquema dinámicas desde Google Sheets
 
 Define y valida el esquema de datos consumiendo la configuración desde Sheets.

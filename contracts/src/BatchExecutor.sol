@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * CONTRATO: BatchExecutor
+ * ARCHIVO: ./contracts/src/BatchExecutor.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: _decodeExecutionResult, executeParallelOperations, _executeOperation
+ * 
+ * 🔄 LÓGICA:
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: BatchExecutionCompleted, BatchExecutionStarted, OperationFailed
+ * 
+ * 🔒 SEGURIDAD:
+ *   MODIFIERS: onlyAuthorizedExecutor
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

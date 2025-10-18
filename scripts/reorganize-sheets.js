@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/reorganize-sheets.js
+ * SERVICIO: reorganize-sheets.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: reorganizeSheets
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 const { google } = require('googleapis');
 const fs = require('fs');
 

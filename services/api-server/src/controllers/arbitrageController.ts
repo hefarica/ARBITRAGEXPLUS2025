@@ -1,4 +1,27 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/controllers/arbitrageController.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: zod, express, @logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ArbitrageController
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ArbitrageController, arbitrageController
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - zod
+ *   - express
+ *   - @logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Arbitrage Controller
  * 
  * Controlador principal para operaciones de arbitraje DeFi.

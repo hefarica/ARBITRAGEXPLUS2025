@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./scripts/init-google-sheet-brain.js
+ * SERVICIO: init-google-sheet-brain.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: hexToRgb, generateRouteColumns, generateAssetColumns
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Google Sheet Brain Initialization
  * 
  * Script para inicializar el Google Sheet con las 13 hojas maestras

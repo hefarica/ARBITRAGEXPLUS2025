@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/format-is-active-col3.js
+ * SERVICIO: format-is-active-col3.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ROUTES, ASSETS, BLOCKCHAINS, DEXES, CONFIG
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: applyFormatting
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 const { google } = require('googleapis');
 const fs = require('fs');
 

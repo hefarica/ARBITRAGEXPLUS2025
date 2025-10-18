@@ -1,3 +1,23 @@
+"""
+============================================================================
+ARCHIVO: ./api-server/src/main.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  FUNCIONES: start_collectors, get_dex_prices, run_collectors_in_background
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - SocketIO
+  - load_dotenv
+  - dotenv
+
+============================================================================
+"""
+
 import os
 import sys
 # DON'T CHANGE THIS !!!

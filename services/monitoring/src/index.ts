@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/monitoring/src/index.ts
+ * SERVICIO: monitoring
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ./chain-listener, ./logger, dotenv
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: main
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ./chain-listener
+ *   - ./logger
+ *   - dotenv
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file index.ts
  * @description Entry point para el servicio de monitoreo on-chain
  * 

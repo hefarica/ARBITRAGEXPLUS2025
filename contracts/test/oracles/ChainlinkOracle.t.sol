@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * CONTRATO: ChainlinkOracleTest
+ * ARCHIVO: ./contracts/test/oracles/ChainlinkOracle.t.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: testGetPriceUnsafe, testGetPriceWithDifferentDecimals, version
+ * 
+ * 🔄 LÓGICA:
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

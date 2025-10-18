@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/rust-core/src/lib.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - serde_utils
+ *   - errors
+ *   - math
+ * 
+ * ============================================================================
+ */
+
 pub mod domain;
 pub mod math;
 pub mod serde_utils;

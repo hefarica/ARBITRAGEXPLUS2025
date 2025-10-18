@@ -1,3 +1,29 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/analyze-file-completeness.js
+ * SERVICIO: analyze-file-completeness.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - DEXES, BLOCKCHAINS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ *   DEPENDENCIAS: path, fs, url
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: analyzeFile, main
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - path
+ *   - fs
+ *   - url
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

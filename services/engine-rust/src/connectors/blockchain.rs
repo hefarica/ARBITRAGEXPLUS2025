@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/connectors/blockchain.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: TransactionParams, TransactionResult, JsonRpcError
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: call_rpc, test_connector_creation, estimate_gas
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: TransactionParams
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! Blockchain Connector - Multi-chain RPC Interface
 //! 
 //! Este módulo implementa el conector a múltiples blockchains para:

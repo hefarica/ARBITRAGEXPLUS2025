@@ -1,4 +1,29 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/execution/src/parallel-executor.ts
+ * SERVICIO: execution
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: p-limit, ./transaction-builder, ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ParallelExecutor
+ *   FUNCIONES: executeBatch
+ *   INTERFACES: ParallelExecutorConfig, ExecutionResult, ArbitrageOpportunity
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ParallelExecutorConfig, ExecutionResult, ArbitrageOpportunity
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - p-limit
+ *   - ./transaction-builder
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file parallel-executor.ts
  * @description Orquestador de ejecución paralela de hasta 40 operaciones atómicas simultáneas
  * 

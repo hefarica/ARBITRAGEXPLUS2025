@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/pipelines/data_pipeline.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: DataPipeline
+  FUNCIONES: run, __init__
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - asyncio
+  - typing
+  - List
+
+============================================================================
+"""
+
 import asyncio
 from typing import List, Dict
 import logging

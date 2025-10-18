@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/connectors/defillama.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: DefiLlamaConnector
+  FUNCIONES: get_pools, __init__
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - logging
+  - DefiLlama
+  - typing
+
+============================================================================
+"""
+
 import aiohttp
 from typing import List, Dict
 import logging

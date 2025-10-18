@@ -1,4 +1,24 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/config/chains.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: isChainEnabled, getEnabledChains, loadChainsConfig
+ *   INTERFACES: ChainsConfigData, ChainConfig
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ChainsConfigData, parseChainsFromSheets, ChainConfig
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * Chains Configuration - Configuración dinámica de chains desde Google Sheets
  * 
  * Premisas:

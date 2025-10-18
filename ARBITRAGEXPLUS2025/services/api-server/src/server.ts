@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./ARBITRAGEXPLUS2025/services/api-server/src/server.ts
+ * SERVICIO: services
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: fastify, @fastify/cors, @fastify/websocket
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - fastify
+ *   - @fastify/cors
+ *   - @fastify/websocket
+ * 
+ * ============================================================================
+ */
+
 import Fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import websocket from '@fastify/websocket';
 import cors from '@fastify/cors';

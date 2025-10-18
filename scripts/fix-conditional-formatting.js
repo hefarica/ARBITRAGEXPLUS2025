@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./scripts/fix-conditional-formatting.js
+ * SERVICIO: fix-conditional-formatting.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - DEXES, EXECUTIONS, BLOCKCHAINS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: fixConditionalFormatting, getColumnLetter
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Fix Conditional Formatting
  * 
  * Script para corregir el formato condicional en Google Sheets

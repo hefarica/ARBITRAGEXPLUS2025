@@ -1,4 +1,29 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/executor/TransactionExecutor.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../oracles/OracleValidator, ethers, ../gas/GasManager
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: TransactionExecutor
+ *   FUNCIONES: executeArbitrage, executeBatch
+ *   INTERFACES: ExecutionResult, ArbitrageRoute, TransactionResult
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ExecutionResult, ArbitrageRoute, TransactionResult
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../oracles/OracleValidator
+ *   - ethers
+ *   - ../gas/GasManager
+ * 
+ * ============================================================================
+ */
+
+/**
  * TransactionExecutor.ts
  * 
  * Sistema de ejecución real de transacciones para ARBITRAGEXPLUS2025

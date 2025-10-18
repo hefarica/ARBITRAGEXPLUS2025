@@ -1,4 +1,23 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/execution/src/logger.ts
+ * SERVICIO: execution
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: Logger
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: Logger
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file logger.ts
  * @description Logger simple para servicios de ejecución
  */

@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/sheets/config_reader.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: ConfigReader
+  FUNCIONES: _parse_rows, get_blockchains, get_dexes
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - logging
+  - .client
+  - SheetsClient
+
+============================================================================
+"""
+
 from .client import SheetsClient
 from typing import List, Dict
 import logging

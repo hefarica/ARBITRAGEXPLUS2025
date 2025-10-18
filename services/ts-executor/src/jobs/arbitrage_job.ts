@@ -1,4 +1,25 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/jobs/arbitrage_job.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../lib/logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ArbitrageJob
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: ArbitrageJob
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../lib/logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - Arbitrage Job
  * Job principal para ejecutar operaciones de arbitraje
  */

@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/adapters/ws/websocketManager.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ws, axios, events
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: WebSocketManager
+ *   INTERFACES: HealthMetrics, DexConfig, ConnectionState
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: WebSocketManager
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ws
+ *   - axios
+ *   - events
+ * 
+ * ============================================================================
+ */
+
+/**
  * websocketManager.ts
  * 
  * Gestor central de conexiones WebSocket para múltiples DEX.

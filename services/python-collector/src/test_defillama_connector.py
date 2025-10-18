@@ -1,3 +1,23 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/test_defillama_connector.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  FUNCIONES: main
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - .env
+  - load_dotenv
+  - dotenv
+
+============================================================================
+"""
+
 import os
 import sys
 import asyncio

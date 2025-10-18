@@ -1,4 +1,28 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/ts-executor/src/orchestrator/ParallelOrchestrator.ts
+ * SERVICIO: ts-executor
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ../sheets/GoogleSheetsClient, ../executor/TransactionExecutor, ethers
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: ParallelOrchestrator
+ *   INTERFACES: OrchestratorConfig, OrchestratorStats
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: OrchestratorConfig, ParallelOrchestrator, OrchestratorStats
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ../sheets/GoogleSheetsClient
+ *   - ../executor/TransactionExecutor
+ *   - ethers
+ * 
+ * ============================================================================
+ */
+
+/**
  * ParallelOrchestrator.ts
  * 
  * Orquestador para gestionar 40+ operaciones de arbitraje simultáneas

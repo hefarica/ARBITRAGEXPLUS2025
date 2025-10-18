@@ -1,3 +1,22 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/utils/logger.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  FUNCIONES: setup_logger
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - sys
+  - logging
+
+============================================================================
+"""
+
 import logging
 import sys
 

@@ -1,3 +1,31 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/services/sheetsService.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ALERTS, ROUTES, ASSETS, EXECUTIONS, BLOCKCHAINS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ *   DEPENDENCIAS: googleapis, ../lib/errors, ../lib/logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: SheetsService
+ *   INTERFACES: SheetConfig, ExecutionRecord
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: SheetsService
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - googleapis
+ *   - ../lib/errors
+ *   - ../lib/logger
+ * 
+ * ============================================================================
+ */
+
 import { google } from 'googleapis';
 import { Logger } from '../lib/logger';
 import { ApiError } from '../lib/errors';

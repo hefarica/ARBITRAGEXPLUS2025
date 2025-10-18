@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/api-server/src/adapters/ws/pancakeswap.ts
+ * SERVICIO: api-server
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ./uniswap
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: PancakeSwapAdapter
+ *   INTERFACES: PancakeSwapConfig
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: PancakeSwapAdapter
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ./uniswap
+ * 
+ * ============================================================================
+ */
+
+/**
  * ARBITRAGEXPLUS2025 - PancakeSwap WebSocket Adapter
  * 
  * Adaptador dinámico para PancakeSwap que:

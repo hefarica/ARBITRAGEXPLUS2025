@@ -1,3 +1,24 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/connectors/publicnodes.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+  CLASES: PublicNodesConnector
+  FUNCIONES: get_block_number, __init__
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - logging
+  - typing
+  - aiohttp
+
+============================================================================
+"""
+
 import aiohttp
 from typing import Dict
 import logging

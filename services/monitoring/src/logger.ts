@@ -1,4 +1,23 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/monitoring/src/logger.ts
+ * SERVICIO: monitoring
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: Logger
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: Logger
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file logger.ts
  * @description Logger simple para servicio de monitoreo
  */

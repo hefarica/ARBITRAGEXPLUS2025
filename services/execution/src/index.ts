@@ -1,4 +1,26 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/execution/src/index.ts
+ * SERVICIO: execution
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: ./parallel-executor, dotenv, ./logger
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: main
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - ./parallel-executor
+ *   - dotenv
+ *   - ./logger
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file index.ts
  * @description Entry point para el servicio de ejecución paralela
  * 

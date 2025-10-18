@@ -1,3 +1,22 @@
+"""
+============================================================================
+ARCHIVO: ./services/python-collector/src/encode_credentials.py
+============================================================================
+
+📥 ENTRADA DE DATOS:
+
+🔄 TRANSFORMACIÓN:
+
+📤 SALIDA DE DATOS:
+
+🔗 DEPENDENCIAS:
+  - os
+  - base64
+  - json
+
+============================================================================
+"""
+
 import base64
 import json
 import os

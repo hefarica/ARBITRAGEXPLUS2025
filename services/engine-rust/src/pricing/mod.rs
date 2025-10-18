@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/pricing/mod.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: PricingEngine
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: calculate_output, calculate_price_impact, new
+ *   ALGORITMO: Cálculo de precios
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: PricingEngine
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - dex_pricing
+ * 
+ * ============================================================================
+ */
+
 //! Pricing module for calculating optimal execution prices
 
 pub mod dex_pricing;

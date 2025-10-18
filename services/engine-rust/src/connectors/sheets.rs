@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./services/engine-rust/src/connectors/sheets.rs
+ * MÓDULO: Rust Engine
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   STRUCTS: CachedData, PoolData, SheetsConnector
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: invalidate_all_cache, invalidate_cache, get_sheet_data
+ * 
+ * 📤 SALIDA:
+ *   RETORNA: CachedData
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - tests
+ * 
+ * ============================================================================
+ */
+
 //! Google Sheets Connector - Dynamic Configuration Source
 //! 
 //! Este módulo implementa el conector a Google Sheets que funciona como

@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/validate-local-health.js
+ * SERVICIO: validate-local-health.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   DEPENDENCIAS: url, net, node-fetch
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: LocalHealthChecker
+ *   FUNCIONES: logHeader, logWarning, checkPortOpen
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ *   - url
+ *   - net
+ *   - node-fetch
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

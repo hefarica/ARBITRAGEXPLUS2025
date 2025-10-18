@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * CONTRATO: ArbitrageManager
+ * ARCHIVO: ./contracts/src/ArbitrageManager.sol
+ * PRIORIDAD: P0 (CRÍTICO - ON-CHAIN)
+ * ============================================================================
+ * 
+ * 📥 ENTRADA:
+ *   FUNCIONES: _validateOperation, removeSupportedToken, setTokenOracle
+ * 
+ * 🔄 LÓGICA:
+ *   - Arbitrage execution
+ * 
+ * 📤 SALIDA:
+ *   EVENTOS: CircuitBreakerTriggered, OperationExecuted, OperationFailed
+ * 
+ * 🔒 SEGURIDAD:
+ *   - Reentrancy guard
+ *   - Access control
+ * 
+ * ============================================================================
+ */
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

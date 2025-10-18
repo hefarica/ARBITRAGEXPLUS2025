@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/expand-sheets-brain-v2.js
+ * SERVICIO: expand-sheets-brain-v2.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ *   FUENTE: Google Sheets - ALERTS
+ *     - Formato: JSON array
+ *     - Frecuencia: Tiempo real / Polling
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: generateDexColumns, main, generateRouteColumns
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   DESTINO: Google Sheets (actualización)
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 
 /**

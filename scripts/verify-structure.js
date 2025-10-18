@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * ARCHIVO: ./scripts/verify-structure.js
+ * SERVICIO: verify-structure.js
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   FUNCIONES: main, generateReport, verifyPaths
+ * 
+ * 📤 SALIDA DE DATOS:
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
 #!/usr/bin/env node
 /**
  * verify-structure.js

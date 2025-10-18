@@ -1,4 +1,23 @@
 /**
+ * ============================================================================
+ * ARCHIVO: ./services/monitoring/src/google-sheets-client.ts
+ * SERVICIO: monitoring
+ * ============================================================================
+ * 
+ * 📥 ENTRADA DE DATOS:
+ * 
+ * 🔄 TRANSFORMACIÓN:
+ *   CLASES: GoogleSheetsClient
+ * 
+ * 📤 SALIDA DE DATOS:
+ *   EXPORTS: GoogleSheetsClient
+ * 
+ * 🔗 DEPENDENCIAS:
+ * 
+ * ============================================================================
+ */
+
+/**
  * @file google-sheets-client.ts
  * @description Cliente stub para Google Sheets (usar implementación de python-collector)
  */
