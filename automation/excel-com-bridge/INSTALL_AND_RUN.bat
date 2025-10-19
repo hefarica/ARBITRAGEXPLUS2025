@@ -10,7 +10,7 @@ echo.
 REM ========================================
 REM Paso 1: Verificar si ya existe el ejecutable
 REM ========================================
-echo [1/4] Verificando ejecutable...
+echo [1/5] Verificando ejecutable...
 
 if exist "bin\Release\ExcelComBridge.exe" (
     echo [OK] Ejecutable encontrado
@@ -24,7 +24,7 @@ echo.
 REM ========================================
 REM Paso 2: Verificar/Instalar MSBuild
 REM ========================================
-echo [2/4] Verificando MSBuild...
+echo [2/5] Verificando MSBuild...
 
 set "MSBUILD_PATH="
 
@@ -41,10 +41,27 @@ if exist "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Cur
     set "MSBUILD_PATH=C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe"
 )
 
+if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" (
+    set "MSBUILD_PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+)
+
+REM Buscar MSBuild en Visual Studio 2019
+if "%MSBUILD_PATH%"=="" (
+    if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe" (
+        set "MSBUILD_PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe"
+    )
+)
+
+if "%MSBUILD_PATH%"=="" (
+    if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe" (
+        set "MSBUILD_PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"
+    )
+)
+
 if not "%MSBUILD_PATH%"=="" (
-    echo [OK] MSBuild encontrado
+    echo [OK] MSBuild encontrado: %MSBUILD_PATH%
     echo.
-    goto :COMPILE
+    goto :CLEAN_BUILD
 )
 
 REM MSBuild no encontrado - Ofrecer instalacion
@@ -118,33 +135,80 @@ pause
 goto :EOF
 
 REM ========================================
-REM Paso 3: Compilar el proyecto
+REM Paso 3: Limpiar compilaciones anteriores
 REM ========================================
-:COMPILE
-echo [3/4] Compilando proyecto...
+:CLEAN_BUILD
+echo [3/5] Limpiando compilaciones anteriores...
 echo.
 
-"%MSBUILD_PATH%" ExcelComBridge-Framework.csproj /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild /v:minimal
+REM Eliminar carpetas bin y obj si existen
+if exist "bin" (
+    echo [INFO] Eliminando carpeta bin...
+    rmdir /s /q "bin" 2>nul
+)
+
+if exist "obj" (
+    echo [INFO] Eliminando carpeta obj...
+    rmdir /s /q "obj" 2>nul
+)
+
+echo [OK] Limpieza completada
+echo.
+
+REM ========================================
+REM Paso 4: Compilar el proyecto
+REM ========================================
+:COMPILE
+echo [4/5] Compilando proyecto...
+echo.
+echo [INFO] Configuracion: Release
+echo [INFO] Plataforma: AnyCPU
+echo.
+
+REM Compilar con AnyCPU (sin espacio) para evitar errores de OutputPath
+"%MSBUILD_PATH%" ExcelComBridge-Framework.csproj /p:Configuration=Release /p:Platform=AnyCPU /t:Rebuild /v:minimal /nologo
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo [ERROR] Error en compilacion
     echo.
-    echo Ejecuta RUN_DEBUG.bat para ver detalles del error
+    echo Intentando con plataforma x86...
     echo.
-    pause
-    goto :EOF
+    
+    REM Intentar con x86 como fallback
+    "%MSBUILD_PATH%" ExcelComBridge-Framework.csproj /p:Configuration=Release /p:Platform=x86 /t:Rebuild /v:minimal /nologo
+    
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo [ERROR] Error en compilacion con ambas plataformas
+        echo.
+        echo Para ver detalles del error, ejecuta:
+        echo RUN_DEBUG.bat
+        echo.
+        pause
+        goto :EOF
+    )
 )
 
 echo.
 echo [OK] Compilacion exitosa
 echo.
 
+REM Verificar que el ejecutable se creo
+if not exist "bin\Release\ExcelComBridge.exe" (
+    echo [ERROR] El ejecutable no se genero correctamente
+    echo.
+    echo Verifica que el proyecto se compilo sin errores
+    echo.
+    pause
+    goto :EOF
+)
+
 REM ========================================
-REM Paso 4: Ejecutar el programa
+REM Paso 5: Ejecutar el programa
 REM ========================================
 :RUN_EXECUTABLE
-echo [4/4] Ejecutando Excel COM Bridge...
+echo [5/5] Ejecutando Excel COM Bridge...
 echo.
 
 if not exist "bin\Release\ExcelComBridge.exe" (
@@ -163,6 +227,10 @@ for %%p in (
     "..\..\..\data\ARBITRAGEXPLUS2025.xlsx"
     "data\ARBITRAGEXPLUS2025.xlsx"
     "ARBITRAGEXPLUS2025.xlsx"
+    "..\..\data\ARBITRAGEXPLUS2025.xlsm"
+    "..\..\..\data\ARBITRAGEXPLUS2025.xlsm"
+    "data\ARBITRAGEXPLUS2025.xlsm"
+    "ARBITRAGEXPLUS2025.xlsm"
 ) do (
     if exist %%p (
         set "EXCEL_FILE=%%~fp"
@@ -173,7 +241,7 @@ for %%p in (
 REM No encontrado - Pedir al usuario
 echo [INFO] Archivo Excel no encontrado automaticamente
 echo.
-echo Por favor selecciona el archivo ARBITRAGEXPLUS2025.xlsx
+echo Por favor selecciona el archivo ARBITRAGEXPLUS2025.xlsx o .xlsm
 echo.
 pause
 
@@ -191,6 +259,17 @@ if "%EXCEL_FILE%"=="" (
 
 :FOUND_EXCEL
 echo [OK] Archivo Excel: %EXCEL_FILE%
+echo.
+echo ========================================
+echo   Iniciando monitoreo de Excel
+echo ========================================
+echo.
+echo El programa detectara automaticamente:
+echo   - Cambios en columna NAME (hoja BLOCKCHAINS)
+echo   - Celdas con color azul (#4472C4)
+echo   - Actualizara datos en tiempo real
+echo.
+echo Presiona Ctrl+C para detener
 echo.
 
 REM Ejecutar

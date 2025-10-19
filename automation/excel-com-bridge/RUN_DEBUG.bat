@@ -58,7 +58,7 @@ echo Compilando con MSBuild...
 echo Proyecto: ExcelComBridge-Framework.csproj
 echo.
 
-"%MSBUILD_PATH%" ExcelComBridge-Framework.csproj /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild /v:detailed
+"%MSBUILD_PATH%" ExcelComBridge-Framework.csproj /p:Configuration=Release /p:Platform=AnyCPU /t:Rebuild /v:detailed
 
 echo.
 if %ERRORLEVEL% EQU 0 (
