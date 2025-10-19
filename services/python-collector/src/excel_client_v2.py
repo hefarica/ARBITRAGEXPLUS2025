@@ -147,6 +147,57 @@ class ExcelClientV2:
         
         return changes
     
+    def detect_changes_in_push_columns(self, sheet_name: str, start_row: int = 2, end_row: int = 100) -> List[Dict[str, Any]]:
+        """Detecta si alguien borró manualmente datos en columnas PUSH"""
+        wb = self._load_workbook()
+        ws = wb[sheet_name]
+        
+        push_columns = self.get_push_columns(sheet_name)
+        changes = []
+        
+        # Inicializar snapshot si no existe
+        if sheet_name not in self._snapshots:
+            self._snapshots[sheet_name] = {}
+        
+        for row in range(start_row, min(end_row + 1, ws.max_row + 1)):
+            for col_meta in push_columns:
+                cell = ws.cell(row, col_meta.index)
+                current_value = cell.value
+                
+                snapshot_key = (row, col_meta.index)
+                old_value = self._snapshots[sheet_name].get(snapshot_key)
+                
+                # Detectar si se borró un valor que existía (persistencia)
+                if old_value is not None and current_value is None:
+                    changes.append({
+                        'row': row,
+                        'column': col_meta.index,
+                        'column_name': col_meta.name,
+                        'old_value': old_value,
+                        'new_value': current_value,
+                        'action': 'restore'  # Restaurar el valor
+                    })
+        
+        return changes
+    
+    def clear_push_columns(self, sheet_name: str, row: int):
+        """Limpia todas las columnas PUSH de una fila específica"""
+        with self._lock:
+            wb = self._load_workbook()
+            ws = wb[sheet_name]
+            
+            push_columns = self.get_push_columns(sheet_name)
+            
+            for col_meta in push_columns:
+                ws.cell(row, col_meta.index).value = ""
+                
+                # Actualizar snapshot
+                if sheet_name not in self._snapshots:
+                    self._snapshots[sheet_name] = {}
+                self._snapshots[sheet_name][(row, col_meta.index)] = ""
+            
+            wb.save(self.file_path)
+    
     def update_push_columns(self, sheet_name: str, row: int, data: Dict[str, Any]):
         """Actualiza columnas PUSH en una fila específica"""
         with self._lock:
