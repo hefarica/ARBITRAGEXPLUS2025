@@ -1,0 +1,468 @@
+{
+  "stats": {
+    "suites": 6,
+    "tests": 25,
+    "passes": 25,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-10-19T00:05:45.523Z",
+    "end": "2025-10-19T00:05:45.533Z",
+    "duration": 10
+  },
+  "tests": [
+    {
+      "title": "debe consultar precio de ETH exitosamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe consultar precio de ETH exitosamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe normalizar símbolos correctamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe normalizar símbolos correctamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza basada en volumen",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe calcular confianza basada en volumen",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe manejar errores de API gracefully",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe manejar errores de API gracefully",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe estar siempre disponible",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe estar siempre disponible",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe consultar precio de BTC exitosamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe consultar precio de BTC exitosamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe mapear símbolos a IDs de CoinGecko",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe mapear símbolos a IDs de CoinGecko",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza dual (volumen + edad)",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe calcular confianza dual (volumen + edad)",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe rechazar precios muy viejos (> 5 min)",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe rechazar precios muy viejos (> 5 min)",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe soportar API key opcional para Pro",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe soportar API key opcional para Pro",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe estar siempre disponible",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe estar siempre disponible",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe tener contratos desplegados en múltiples chains",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe tener contratos desplegados en múltiples chains",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe consultar getReferenceData() correctamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe consultar getReferenceData() correctamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe normalizar símbolos para Band",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe normalizar símbolos para Band",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza basada en edad",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe calcular confianza basada en edad",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe rechazar precios muy viejos (> 1 hora)",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe rechazar precios muy viejos (> 1 hora)",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe estar disponible si hay providers",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe estar disponible si hay providers",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe tener 6 oráculos registrados",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe tener 6 oráculos registrados",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe consultar múltiples oráculos en paralelo",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe consultar múltiples oráculos en paralelo",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular desviación entre oráculos",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe calcular desviación entre oráculos",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe rechazar si desviación es muy alta",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe rechazar si desviación es muy alta",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza final basada en consenso",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe calcular confianza final basada en consenso",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe cargar columnas de nuevos oráculos desde ORACLE_ASSETS",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Configuración Dinámica desde Google Sheets debe cargar columnas de nuevos oráculos desde ORACLE_ASSETS",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe construir Map dinámico de assets",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Configuración Dinámica desde Google Sheets debe construir Map dinámico de assets",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe filtrar assets activos dinámicamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Configuración Dinámica desde Google Sheets debe filtrar assets activos dinámicamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "debe consultar precio de ETH exitosamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe consultar precio de ETH exitosamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe normalizar símbolos correctamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe normalizar símbolos correctamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza basada en volumen",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe calcular confianza basada en volumen",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe manejar errores de API gracefully",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe manejar errores de API gracefully",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe estar siempre disponible",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BinanceOracleSource debe estar siempre disponible",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe consultar precio de BTC exitosamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe consultar precio de BTC exitosamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe mapear símbolos a IDs de CoinGecko",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe mapear símbolos a IDs de CoinGecko",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza dual (volumen + edad)",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe calcular confianza dual (volumen + edad)",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe rechazar precios muy viejos (> 5 min)",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe rechazar precios muy viejos (> 5 min)",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe soportar API key opcional para Pro",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe soportar API key opcional para Pro",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe estar siempre disponible",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band CoinGeckoOracleSource debe estar siempre disponible",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe tener contratos desplegados en múltiples chains",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe tener contratos desplegados en múltiples chains",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe consultar getReferenceData() correctamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe consultar getReferenceData() correctamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe normalizar símbolos para Band",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe normalizar símbolos para Band",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza basada en edad",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe calcular confianza basada en edad",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe rechazar precios muy viejos (> 1 hora)",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe rechazar precios muy viejos (> 1 hora)",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe estar disponible si hay providers",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band BandOracleSource debe estar disponible si hay providers",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe tener 6 oráculos registrados",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe tener 6 oráculos registrados",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe consultar múltiples oráculos en paralelo",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe consultar múltiples oráculos en paralelo",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular desviación entre oráculos",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe calcular desviación entre oráculos",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe rechazar si desviación es muy alta",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe rechazar si desviación es muy alta",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe calcular confianza final basada en consenso",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Integración Multi-Oracle (6 fuentes) debe calcular confianza final basada en consenso",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe cargar columnas de nuevos oráculos desde ORACLE_ASSETS",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Configuración Dinámica desde Google Sheets debe cargar columnas de nuevos oráculos desde ORACLE_ASSETS",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe construir Map dinámico de assets",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Configuración Dinámica desde Google Sheets debe construir Map dinámico de assets",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "debe filtrar assets activos dinámicamente",
+      "fullTitle": "Nuevos Oráculos - Binance, CoinGecko, Band Configuración Dinámica desde Google Sheets debe filtrar assets activos dinámicamente",
+      "file": "/home/ubuntu/ARBITRAGEXPLUS2025/test/new-oracles.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ]
+}
