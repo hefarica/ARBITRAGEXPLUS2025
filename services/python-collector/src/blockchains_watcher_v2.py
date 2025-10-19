@@ -146,11 +146,15 @@ class BlockchainsWatcherV2:
             logger.info(f"✅ Columnas PUSH actualizadas para '{new_value}'")
             logger.info(f"⏱️  Tiempos: Fetch={fetch_time:.0f}ms, Update={update_time:.0f}ms, Total={total_time:.0f}ms")
             
-            # Verificar si cumplimos con el objetivo de <300ms
-            if total_time > 300:
-                logger.warning(f"⚠️  Latencia total ({total_time:.0f}ms) excede objetivo de 300ms")
+            # Información de rendimiento (no crítico)
+            if total_time < 300:
+                logger.info(f"🎯 Excelente rendimiento: {total_time:.0f}ms < 300ms (objetivo)")
+            elif total_time < 500:
+                logger.info(f"✅ Buen rendimiento: {total_time:.0f}ms < 500ms (aceptable)")
+            elif total_time < 1000:
+                logger.info(f"ℹ️  Rendimiento normal: {total_time:.0f}ms < 1s")
             else:
-                logger.info(f"🎯 Latencia total ({total_time:.0f}ms) dentro del objetivo (<300ms)")
+                logger.warning(f"⚠️  Latencia alta: {total_time:.0f}ms > 1s (considera optimizar conexión)")
     
     def start(self):
         """Inicia el servicio de monitoreo"""
