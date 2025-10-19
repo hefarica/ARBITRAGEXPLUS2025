@@ -26,9 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- ASP.NET Core para REST API -->
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    
     <!-- Newtonsoft.Json para serialización -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     
