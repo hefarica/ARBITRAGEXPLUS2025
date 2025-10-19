@@ -85,8 +85,11 @@ if "%EXCEL_PATH%"=="" (
 
 echo [INFO] Compilando con MSBuild...
 echo.
+echo [DEBUG] Proyecto: ExcelComBridge-Framework.csproj
+echo [DEBUG] MSBuild: %MSBUILD_PATH%
+echo.
 
-"%MSBUILD_PATH%" ExcelComBridge-Framework.csproj /p:Configuration=Release /p:Platform="Any CPU" /v:minimal
+"%MSBUILD_PATH%" "%~dp0ExcelComBridge-Framework.csproj" /p:Configuration=Release /p:Platform="Any CPU" /v:minimal /t:Rebuild
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
