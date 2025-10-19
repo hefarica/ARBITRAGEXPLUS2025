@@ -1,0 +1,11 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Snapshot test directory
+.snapshots_test/
+
