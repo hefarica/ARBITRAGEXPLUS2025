@@ -10,6 +10,19 @@ from openpyxl.utils import column_index_from_string
 from typing import List, Dict, Any, Optional, Tuple
 import threading
 import os
+import sys
+from pathlib import Path
+
+# Agregar directorio utils al path
+utils_dir = Path(__file__).parent / 'utils'
+if str(utils_dir) not in sys.path:
+    sys.path.insert(0, str(utils_dir))
+
+try:
+    from excel_finder import find_excel_file
+    EXCEL_FINDER_AVAILABLE = True
+except ImportError:
+    EXCEL_FINDER_AVAILABLE = False
 
 # Colores para identificación
 BLUE_COLOR = "4472C4"  # PUSH
@@ -29,7 +42,18 @@ class ExcelClientV2:
     """Cliente Excel con detección automática de PUSH/PULL"""
     
     def __init__(self, file_path: Optional[str] = None):
-        self.file_path = file_path or os.getenv("EXCEL_FILE_PATH", "/home/ubuntu/ARBITRAGEXPLUS2025/data/ARBITRAGEXPLUS2025.xlsx")
+        # Intentar encontrar el archivo automáticamente
+        if file_path:
+            self.file_path = file_path
+        elif EXCEL_FINDER_AVAILABLE:
+            found_path = find_excel_file()
+            if found_path:
+                self.file_path = found_path
+            else:
+                # Fallback a variable de entorno o ruta por defecto
+                self.file_path = os.getenv("EXCEL_FILE_PATH", "../../data/ARBITRAGEXPLUS2025.xlsx")
+        else:
+            self.file_path = os.getenv("EXCEL_FILE_PATH", "../../data/ARBITRAGEXPLUS2025.xlsx")
         self._lock = threading.Lock()
         self._column_metadata_cache: Dict[str, List[ColumnMetadata]] = {}
         self._snapshots: Dict[str, Dict[Tuple[int, int], Any]] = {}

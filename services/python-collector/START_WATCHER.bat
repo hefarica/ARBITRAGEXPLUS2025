@@ -17,24 +17,12 @@ if not exist ".venv\Scripts\activate.bat" (
 REM Activar entorno virtual
 call .venv\Scripts\activate.bat
 
-REM Verificar archivo Excel
-set EXCEL_PATH=..\..\data\ARBITRAGEXPLUS2025.xlsx
-if not exist "%EXCEL_PATH%" (
-    echo ERROR: Archivo Excel no encontrado en %EXCEL_PATH%
-    echo.
-    echo Por favor:
-    echo 1. Coloca el archivo ARBITRAGEXPLUS2025.xlsx en la carpeta data\
-    echo 2. O edita la variable EXCEL_PATH en este script
-    echo.
-    pause
-    exit /b 1
-)
-
-echo [OK] Archivo Excel encontrado: %EXCEL_PATH%
+echo [INFO] El sistema buscara automaticamente el archivo Excel
+echo [INFO] Buscara en:
+echo   1. Variable de entorno EXCEL_FILE_PATH
+echo   2. Carpeta data\ del proyecto
+echo   3. Busqueda recursiva en el proyecto
 echo.
-
-REM Configurar variable de entorno
-set EXCEL_FILE_PATH=%EXCEL_PATH%
 
 echo Iniciando watcher...
 echo.
@@ -46,7 +34,7 @@ echo.
 echo ========================================
 echo.
 
-REM Iniciar watcher
+REM Iniciar watcher (el script buscará automáticamente el Excel)
 cd src
 python blockchains_watcher_v2.py
 
