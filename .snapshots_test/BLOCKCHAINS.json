@@ -1,0 +1,1231 @@
+{
+  "sheet_name": "BLOCKCHAINS",
+  "last_update": "2025-10-19T11:26:14.485061",
+  "version": 2,
+  "cells": {
+    "2_1": {
+      "row": 2,
+      "col": 1,
+      "value": "ethereum_001",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_2": {
+      "row": 2,
+      "col": 2,
+      "value": "ethereum",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_3": {
+      "row": 2,
+      "col": 3,
+      "value": 1,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_4": {
+      "row": 2,
+      "col": 4,
+      "value": "ETH",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_5": {
+      "row": 2,
+      "col": 5,
+      "value": "ETH",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_6": {
+      "row": 2,
+      "col": 6,
+      "value": "https://rpc.ethereum.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_7": {
+      "row": 2,
+      "col": 7,
+      "value": "https://rpc2.ethereum.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_8": {
+      "row": 2,
+      "col": 8,
+      "value": "https://rpc3.ethereum.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_9": {
+      "row": 2,
+      "col": 9,
+      "value": "wss://ws.ethereum.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_10": {
+      "row": 2,
+      "col": 10,
+      "value": "https://explorer.ethereum.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_11": {
+      "row": 2,
+      "col": 11,
+      "value": 2000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_12": {
+      "row": 2,
+      "col": 12,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_13": {
+      "row": 2,
+      "col": 13,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_14": {
+      "row": 2,
+      "col": 14,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_15": {
+      "row": 2,
+      "col": 15,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_16": {
+      "row": 2,
+      "col": 16,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_17": {
+      "row": 2,
+      "col": 17,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_18": {
+      "row": 2,
+      "col": 18,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_19": {
+      "row": 2,
+      "col": 19,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_20": {
+      "row": 2,
+      "col": 20,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_21": {
+      "row": 2,
+      "col": 21,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_22": {
+      "row": 2,
+      "col": 22,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_23": {
+      "row": 2,
+      "col": 23,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_24": {
+      "row": 2,
+      "col": 24,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_25": {
+      "row": 2,
+      "col": 25,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_26": {
+      "row": 2,
+      "col": 26,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_27": {
+      "row": 2,
+      "col": 27,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_28": {
+      "row": 2,
+      "col": 28,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_29": {
+      "row": 2,
+      "col": 29,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_30": {
+      "row": 2,
+      "col": 30,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_31": {
+      "row": 2,
+      "col": 31,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_32": {
+      "row": 2,
+      "col": 32,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_33": {
+      "row": 2,
+      "col": 33,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_34": {
+      "row": 2,
+      "col": 34,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_35": {
+      "row": 2,
+      "col": 35,
+      "value": "HEALTHY",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_36": {
+      "row": 2,
+      "col": 36,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_37": {
+      "row": 2,
+      "col": 37,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_38": {
+      "row": 2,
+      "col": 38,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_39": {
+      "row": 2,
+      "col": 39,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_40": {
+      "row": 2,
+      "col": 40,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_41": {
+      "row": 2,
+      "col": 41,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_42": {
+      "row": 2,
+      "col": 42,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_43": {
+      "row": 2,
+      "col": 43,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_44": {
+      "row": 2,
+      "col": 44,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_45": {
+      "row": 2,
+      "col": 45,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_46": {
+      "row": 2,
+      "col": 46,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_47": {
+      "row": 2,
+      "col": 47,
+      "value": "Auto-populated from external sources at 2025-10-19 07:17:30",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_48": {
+      "row": 2,
+      "col": 48,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_49": {
+      "row": 2,
+      "col": 49,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_50": {
+      "row": 2,
+      "col": 50,
+      "value": true,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "2_51": {
+      "row": 2,
+      "col": 51,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_1": {
+      "row": 3,
+      "col": 1,
+      "value": "polygon_001",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_2": {
+      "row": 3,
+      "col": 2,
+      "value": "polygon",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_3": {
+      "row": 3,
+      "col": 3,
+      "value": 137,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_4": {
+      "row": 3,
+      "col": 4,
+      "value": "MATIC",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_5": {
+      "row": 3,
+      "col": 5,
+      "value": "MATIC",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_6": {
+      "row": 3,
+      "col": 6,
+      "value": "https://rpc.polygon.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_7": {
+      "row": 3,
+      "col": 7,
+      "value": "https://rpc2.polygon.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_8": {
+      "row": 3,
+      "col": 8,
+      "value": "https://rpc3.polygon.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_9": {
+      "row": 3,
+      "col": 9,
+      "value": "wss://ws.polygon.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_10": {
+      "row": 3,
+      "col": 10,
+      "value": "https://explorer.polygon.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_11": {
+      "row": 3,
+      "col": 11,
+      "value": 2000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_12": {
+      "row": 3,
+      "col": 12,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_13": {
+      "row": 3,
+      "col": 13,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_14": {
+      "row": 3,
+      "col": 14,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_15": {
+      "row": 3,
+      "col": 15,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_16": {
+      "row": 3,
+      "col": 16,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_17": {
+      "row": 3,
+      "col": 17,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_18": {
+      "row": 3,
+      "col": 18,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_19": {
+      "row": 3,
+      "col": 19,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_20": {
+      "row": 3,
+      "col": 20,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_21": {
+      "row": 3,
+      "col": 21,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_22": {
+      "row": 3,
+      "col": 22,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_23": {
+      "row": 3,
+      "col": 23,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_24": {
+      "row": 3,
+      "col": 24,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_25": {
+      "row": 3,
+      "col": 25,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_26": {
+      "row": 3,
+      "col": 26,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_27": {
+      "row": 3,
+      "col": 27,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_28": {
+      "row": 3,
+      "col": 28,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_29": {
+      "row": 3,
+      "col": 29,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_30": {
+      "row": 3,
+      "col": 30,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_31": {
+      "row": 3,
+      "col": 31,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_32": {
+      "row": 3,
+      "col": 32,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_33": {
+      "row": 3,
+      "col": 33,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_34": {
+      "row": 3,
+      "col": 34,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_35": {
+      "row": 3,
+      "col": 35,
+      "value": "HEALTHY",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_36": {
+      "row": 3,
+      "col": 36,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_37": {
+      "row": 3,
+      "col": 37,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_38": {
+      "row": 3,
+      "col": 38,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_39": {
+      "row": 3,
+      "col": 39,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_40": {
+      "row": 3,
+      "col": 40,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_41": {
+      "row": 3,
+      "col": 41,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_42": {
+      "row": 3,
+      "col": 42,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_43": {
+      "row": 3,
+      "col": 43,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_44": {
+      "row": 3,
+      "col": 44,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_45": {
+      "row": 3,
+      "col": 45,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_46": {
+      "row": 3,
+      "col": 46,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_47": {
+      "row": 3,
+      "col": 47,
+      "value": "Auto-populated from external sources at 2025-10-19 07:17:30",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_48": {
+      "row": 3,
+      "col": 48,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_49": {
+      "row": 3,
+      "col": 49,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_50": {
+      "row": 3,
+      "col": 50,
+      "value": true,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "3_51": {
+      "row": 3,
+      "col": 51,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_1": {
+      "row": 4,
+      "col": 1,
+      "value": "bsc_001",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_2": {
+      "row": 4,
+      "col": 2,
+      "value": "bsc",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_3": {
+      "row": 4,
+      "col": 3,
+      "value": 56,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_4": {
+      "row": 4,
+      "col": 4,
+      "value": "BNB",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_5": {
+      "row": 4,
+      "col": 5,
+      "value": "BNB",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_6": {
+      "row": 4,
+      "col": 6,
+      "value": "https://rpc.bsc.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_7": {
+      "row": 4,
+      "col": 7,
+      "value": "https://rpc2.bsc.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_8": {
+      "row": 4,
+      "col": 8,
+      "value": "https://rpc3.bsc.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_9": {
+      "row": 4,
+      "col": 9,
+      "value": "wss://ws.bsc.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_10": {
+      "row": 4,
+      "col": 10,
+      "value": "https://explorer.bsc.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_11": {
+      "row": 4,
+      "col": 11,
+      "value": 2000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_12": {
+      "row": 4,
+      "col": 12,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_13": {
+      "row": 4,
+      "col": 13,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_14": {
+      "row": 4,
+      "col": 14,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_15": {
+      "row": 4,
+      "col": 15,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_16": {
+      "row": 4,
+      "col": 16,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_17": {
+      "row": 4,
+      "col": 17,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_18": {
+      "row": 4,
+      "col": 18,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_19": {
+      "row": 4,
+      "col": 19,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_20": {
+      "row": 4,
+      "col": 20,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_21": {
+      "row": 4,
+      "col": 21,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_22": {
+      "row": 4,
+      "col": 22,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_23": {
+      "row": 4,
+      "col": 23,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_24": {
+      "row": 4,
+      "col": 24,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_25": {
+      "row": 4,
+      "col": 25,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_26": {
+      "row": 4,
+      "col": 26,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_27": {
+      "row": 4,
+      "col": 27,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_28": {
+      "row": 4,
+      "col": 28,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_29": {
+      "row": 4,
+      "col": 29,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_30": {
+      "row": 4,
+      "col": 30,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_31": {
+      "row": 4,
+      "col": 31,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_32": {
+      "row": 4,
+      "col": 32,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_33": {
+      "row": 4,
+      "col": 33,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_34": {
+      "row": 4,
+      "col": 34,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_35": {
+      "row": 4,
+      "col": 35,
+      "value": "HEALTHY",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_36": {
+      "row": 4,
+      "col": 36,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_37": {
+      "row": 4,
+      "col": 37,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_38": {
+      "row": 4,
+      "col": 38,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_39": {
+      "row": 4,
+      "col": 39,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_40": {
+      "row": 4,
+      "col": 40,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_41": {
+      "row": 4,
+      "col": 41,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_42": {
+      "row": 4,
+      "col": 42,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_43": {
+      "row": 4,
+      "col": 43,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_44": {
+      "row": 4,
+      "col": 44,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_45": {
+      "row": 4,
+      "col": 45,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_46": {
+      "row": 4,
+      "col": 46,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_47": {
+      "row": 4,
+      "col": 47,
+      "value": "Auto-populated from external sources at 2025-10-19 07:17:30",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_48": {
+      "row": 4,
+      "col": 48,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_49": {
+      "row": 4,
+      "col": 49,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_50": {
+      "row": 4,
+      "col": 50,
+      "value": true,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "4_51": {
+      "row": 4,
+      "col": 51,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_1": {
+      "row": 5,
+      "col": 1,
+      "value": "avalanche_test_1760873174",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_2": {
+      "row": 5,
+      "col": 2,
+      "value": "avalanche",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_3": {
+      "row": 5,
+      "col": 3,
+      "value": 43114,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_4": {
+      "row": 5,
+      "col": 4,
+      "value": "AVAX",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_5": {
+      "row": 5,
+      "col": 5,
+      "value": "AVAX",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_6": {
+      "row": 5,
+      "col": 6,
+      "value": "https://avalanche.public-rpc.com",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_7": {
+      "row": 5,
+      "col": 7,
+      "value": "https://api.avax.network/ext/bc/C/rpc",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_8": {
+      "row": 5,
+      "col": 8,
+      "value": "https://rpc.ankr.com/avalanche",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_9": {
+      "row": 5,
+      "col": 9,
+      "value": "wss://avalanche.public-rpc.com",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_10": {
+      "row": 5,
+      "col": 10,
+      "value": "https://snowtrace.io",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_11": {
+      "row": 5,
+      "col": 11,
+      "value": 2000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_12": {
+      "row": 5,
+      "col": 12,
+      "value": 25,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_13": {
+      "row": 5,
+      "col": 13,
+      "value": 200,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_14": {
+      "row": 5,
+      "col": 14,
+      "value": 25,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_15": {
+      "row": 5,
+      "col": 15,
+      "value": true,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_16": {
+      "row": 5,
+      "col": 16,
+      "value": 25,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_17": {
+      "row": 5,
+      "col": 17,
+      "value": 2,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_18": {
+      "row": 5,
+      "col": 18,
+      "value": 15000000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_19": {
+      "row": 5,
+      "col": 19,
+      "value": "0xcA11bde05977b3631167028862bE2a173976CA11",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_20": {
+      "row": 5,
+      "col": 20,
+      "value": "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_21": {
+      "row": 5,
+      "col": 21,
+      "value": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_22": {
+      "row": 5,
+      "col": 22,
+      "value": "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_23": {
+      "row": 5,
+      "col": 23,
+      "value": "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_24": {
+      "row": 5,
+      "col": 24,
+      "value": "TraderJoe, Pangolin, SushiSwap, Curve",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_25": {
+      "row": 5,
+      "col": 25,
+      "value": "Aave, Benqi, TraderJoe",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_26": {
+      "row": 5,
+      "col": 26,
+      "value": 2927787936.222067,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_27": {
+      "row": 5,
+      "col": 27,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_28": {
+      "row": 5,
+      "col": 28,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_29": {
+      "row": 5,
+      "col": 29,
+      "value": 21000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_30": {
+      "row": 5,
+      "col": 30,
+      "value": 1,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_31": {
+      "row": 5,
+      "col": 31,
+      "value": true,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_32": {
+      "row": 5,
+      "col": 32,
+      "value": false,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_33": {
+      "row": 5,
+      "col": 33,
+      "value": false,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_34": {
+      "row": 5,
+      "col": 34,
+      "value": false,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_35": {
+      "row": 5,
+      "col": 35,
+      "value": "degraded",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_36": {
+      "row": 5,
+      "col": 36,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_37": {
+      "row": 5,
+      "col": 37,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_38": {
+      "row": 5,
+      "col": 38,
+      "value": "synced",
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_39": {
+      "row": 5,
+      "col": 39,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_40": {
+      "row": 5,
+      "col": 40,
+      "value": 99.5,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_41": {
+      "row": 5,
+      "col": 41,
+      "value": 0.5,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_42": {
+      "row": 5,
+      "col": 42,
+      "value": 0,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_43": {
+      "row": 5,
+      "col": 43,
+      "value": 15000,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_44": {
+      "row": 5,
+      "col": 44,
+      "value": 3,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_45": {
+      "row": 5,
+      "col": 45,
+      "value": 10,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_46": {
+      "row": 5,
+      "col": 46,
+      "value": 100,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_47": {
+      "row": 5,
+      "col": 47,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_48": {
+      "row": 5,
+      "col": 48,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_49": {
+      "row": 5,
+      "col": 49,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_50": {
+      "row": 5,
+      "col": 50,
+      "value": true,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    },
+    "5_51": {
+      "row": 5,
+      "col": 51,
+      "value": null,
+      "timestamp": "2025-10-19T11:26:14.485061"
+    }
+  }
+}

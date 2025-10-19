@@ -294,9 +294,60 @@ class ExcelClient:
         
         logger.debug(f"Cleared range {range_notation}")
     
+    def get_column_metadata(self, sheet_name: str) -> Dict[int, Dict[str, str]]:
+        """
+        Lee los metadatos de las columnas basándose en el color del encabezado.
+        Azul (#4472C4) = PUSH, Blanco/Otro = PULL
+        
+        Args:
+            sheet_name: Nombre de la hoja
+        
+        Returns:
+            Dict[col_index, {"name": str, "type": "PUSH"|"PULL"}]
+        """
+        with self._lock:
+            wb = self._load_workbook()
+            ws = wb[sheet_name]
+            metadata = {}
+            
+            # Leer fila 1 (headers)
+            for col_idx in range(1, ws.max_column + 1):
+                cell = ws.cell(1, col_idx)
+                col_name = cell.value
+                
+                if not col_name:
+                    continue
+                
+                # Detectar color de fondo
+                fill = cell.fill
+                col_type = "PULL"  # Default
+                
+                if fill and fill.start_color:
+                    # Normalizar color (puede venir como ARGB o RGB)
+                    color_value = fill.start_color
+                    
+                    # Intentar obtener el color RGB
+                    if hasattr(color_value, 'rgb'):
+                        color = str(color_value.rgb)
+                    elif hasattr(color_value, 'index'):
+                        color = str(color_value.index)
+                    else:
+                        color = str(color_value)
+                    
+                    # Azul = 4472C4 (puede venir como FF4472C4 con alpha)
+                    if "4472C4" in color.upper():
+                        col_type = "PUSH"
+                
+                metadata[col_idx] = {
+                    "name": str(col_name),
+                    "type": col_type
+                }
+            
+            return metadata
+    
     def get_sheet_names(self) -> List[str]:
         """
-        Obtiene la lista de nombres de hojas en el workbook
+        Obtiene lista de nombres de hojas en el workbook
         
         Returns:
             Lista de nombres de hojas
