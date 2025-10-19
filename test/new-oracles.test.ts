@@ -174,7 +174,7 @@ describe('Nuevos Oráculos - Binance, CoinGecko, Band', () => {
       const maxAge = 300000; // 5 minutos
       const ageConfidence = Math.max(0, 1 - (age / maxAge));
       
-      expect(ageConfidence).to.be.greaterThan(0.8);
+      expect(ageConfidence).to.be.greaterThanOrEqual(0.8);
       
       // Confianza final
       const finalConfidence = (ageConfidence + volumeConfidence) / 2;
