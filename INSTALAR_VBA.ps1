@@ -40,7 +40,7 @@ if ($null -eq $excelPath) {
     }
     Write-Host ""
     Write-Host "Presiona cualquier tecla para salir..." -ForegroundColor Yellow
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
     exit 1
 }
 
@@ -56,7 +56,7 @@ if (-not (Test-Path $vbaCodePath)) {
     Write-Host "     Ruta esperada: $vbaCodePath" -ForegroundColor Gray
     Write-Host ""
     Write-Host "Presiona cualquier tecla para salir..." -ForegroundColor Yellow
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
     exit 1
 }
 
@@ -74,7 +74,7 @@ try {
     Write-Host "     $_" -ForegroundColor Gray
     Write-Host ""
     Write-Host "Presiona cualquier tecla para salir..." -ForegroundColor Yellow
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
     exit 1
 }
 
@@ -126,13 +126,13 @@ try {
     Write-Host ""
     
     # Verificar si el acceso a VBA está habilitado
-    if ($_.Exception.Message -like "*programmatic access*") {
+    if ($_.Exception.Message -like '*programmatic access*') {
         Write-Host "SOLUCIÓN:" -ForegroundColor Yellow
         Write-Host "  1. Abre Excel" -ForegroundColor White
-        Write-Host "  2. Ve a Archivo > Opciones > Centro de confianza" -ForegroundColor White
-        Write-Host "  3. Haz clic en 'Configuración del Centro de confianza'" -ForegroundColor White
-        Write-Host "  4. Ve a 'Configuración de macros'" -ForegroundColor White
-        Write-Host "  5. Marca 'Confiar en el acceso al modelo de objetos de proyectos de VBA'" -ForegroundColor White
+        Write-Host '  2. Ve a Archivo > Opciones > Centro de confianza' -ForegroundColor White
+        Write-Host '  3. Haz clic en Configuracion del Centro de confianza' -ForegroundColor White
+        Write-Host '  4. Ve a Configuracion de macros' -ForegroundColor White
+        Write-Host '  5. Marca: Confiar en el acceso al modelo de objetos de proyectos de VBA' -ForegroundColor White
         Write-Host "  6. Haz clic en Aceptar y cierra Excel" -ForegroundColor White
         Write-Host "  7. Ejecuta este script de nuevo" -ForegroundColor White
         Write-Host ""
@@ -146,5 +146,5 @@ try {
 }
 
 Write-Host "Presiona cualquier tecla para salir..." -ForegroundColor Yellow
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
