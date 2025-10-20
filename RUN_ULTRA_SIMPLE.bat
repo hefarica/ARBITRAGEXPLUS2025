@@ -1,10 +1,18 @@
 @ECHO OFF
 CLS
+
+REM ============================================================================
+REM   CAMBIAR AL DIRECTORIO DONDE ESTA ESTE SCRIPT
+REM ============================================================================
+REM Esto es CRITICO cuando se ejecuta como administrador
+PUSHD "%~dp0"
+
 ECHO.
 ECHO ============================================================================
 ECHO   ARBITRAGEXPLUS2025 - VERSION ULTRA SIMPLE
 ECHO ============================================================================
 ECHO.
+ECHO Directorio del script: %~dp0
 ECHO Directorio actual: %CD%
 ECHO.
 
@@ -17,10 +25,12 @@ IF NOT EXIST "installer\MASTER_RUNNER.csproj" (
     ECHO 1. Estar en la raiz del proyecto ARBITRAGEXPLUS2025
     ECHO 2. Haber descargado/clonado el repositorio completo
     ECHO.
+    ECHO Archivos en este directorio:
     DIR /B
     ECHO.
     ECHO Presiona cualquier tecla para salir...
     PAUSE >nul
+    POPD
     EXIT /B 1
 )
 
@@ -41,6 +51,7 @@ IF %ERRORLEVEL% NEQ 0 (
     ECHO.
     ECHO Presiona cualquier tecla para salir...
     PAUSE >nul
+    POPD
     EXIT /B 1
 )
 
@@ -75,4 +86,6 @@ ECHO.
 
 ECHO Presiona cualquier tecla para salir...
 PAUSE >nul
+
+POPD
 

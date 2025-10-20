@@ -1,6 +1,12 @@
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
 
+REM ============================================================================
+REM   CAMBIAR AL DIRECTORIO DONDE ESTA ESTE SCRIPT
+REM ============================================================================
+REM Esto es CRITICO cuando se ejecuta como administrador
+PUSHD "%~dp0"
+
 REM ############################################################################
 REM #                                                                          #
 REM #  ARBITRAGEXPLUS2025 - Instalador y Ejecutor Maestro                     #
@@ -11,6 +17,9 @@ ECHO.
 ECHO ============================================================================
 ECHO   ARBITRAGEXPLUS2025 - CONFIGURACION E INICIO DEL SISTEMA
 ECHO ============================================================================
+ECHO.
+ECHO Directorio del script: %~dp0
+ECHO Directorio actual: %CD%
 ECHO.
 
 REM --- Paso 0: Verificacion de Privilegios de Administrador ---
@@ -26,6 +35,7 @@ IF %ERRORLEVEL% NEQ 0 (
     ECHO "Ejecutar como administrador".
     ECHO.
     PAUSE
+    POPD
     EXIT /B 1
 )
 ECHO [OK] Ejecutando con privilegios de administrador.
@@ -47,6 +57,7 @@ IF %ERRORLEVEL% NEQ 0 (
         ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
         ECHO.
         PAUSE
+        POPD
         EXIT /B 1
     )
     
@@ -60,6 +71,7 @@ IF %ERRORLEVEL% NEQ 0 (
         ECHO [INFO] Es posible que necesite reiniciar la terminal.
         ECHO.
         PAUSE
+        POPD
         EXIT /B 1
     )
     
@@ -89,6 +101,7 @@ IF %ERRORLEVEL% NEQ 0 (
         ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
         ECHO.
         PAUSE
+        POPD
         EXIT /B 1
     )
     
@@ -122,6 +135,7 @@ IF %ERRORLEVEL% NEQ 0 (
             ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
             ECHO.
             PAUSE
+            POPD
             EXIT /B 1
         )
         
@@ -176,6 +190,7 @@ IF %ERRORLEVEL% NEQ 0 (
         ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
         ECHO.
         PAUSE
+        POPD
         EXIT /B 1
     )
     
@@ -199,6 +214,7 @@ IF NOT EXIST "installer" (
     ECHO [ERROR] Directorio actual: %CD%
     ECHO.
     PAUSE
+    POPD
     EXIT /B 1
 )
 
@@ -209,6 +225,8 @@ IF %ERRORLEVEL% NEQ 0 (
     ECHO [ERROR] No se pudo cambiar al directorio installer.
     ECHO.
     PAUSE
+    CD ..
+    POPD
     EXIT /B 1
 )
 
@@ -222,6 +240,7 @@ IF %ERRORLEVEL% NEQ 0 (
     ECHO.
     CD ..
     PAUSE
+    POPD
     EXIT /B 1
 )
 
@@ -269,5 +288,6 @@ ECHO y abre una nueva terminal o reinicia tu equipo.
 ECHO.
 
 PAUSE
+POPD
 ENDLOCAL
 
