@@ -3,28 +3,22 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Platforms>x64</Platforms>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
+    <AssemblyName>ExcelComBridge</AssemblyName>
+    <RootNamespace>ArbitrageXStreamListener</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Manus AI</Authors>
+    <Description>Puente COM para integración Excel - ARBITRAGEXPLUS2025</Description>
+    
+    <!-- Configuración COM -->
+    <EnableComHosting>true</EnableComHosting>
+    <EnableRegFreeCom>true</EnableRegFreeCom>
   </PropertyGroup>
 
-
-
   <ItemGroup>
-    <!-- Excel Interop via NuGet -->
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
-    
-    <!-- Newtonsoft.Json para serialización -->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    
-    <!-- Serilog para logging -->
-    <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

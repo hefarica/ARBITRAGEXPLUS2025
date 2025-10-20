@@ -1,0 +1,7 @@
+{
+  "logLevel": "info",
+  "comBridge": {
+    "updateIntervalMs": 100
+  }
+}
+
