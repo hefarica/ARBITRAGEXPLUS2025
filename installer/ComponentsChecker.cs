@@ -400,8 +400,8 @@ public static class ComponentsChecker
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "npm",
-                    Arguments = "install",
+                    FileName = "cmd.exe",
+                    Arguments = "/c npm install",
                     WorkingDirectory = Path.GetFullPath(apiServerPath),
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
