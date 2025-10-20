@@ -121,7 +121,7 @@ public static class ComponentsChecker
                 throw new Exception("Node.js no encontrado");
             }
 
-            // Verificar npm
+            // Verificar npm - Intentar agregar al PATH si no está
             var npmProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -129,24 +129,92 @@ public static class ComponentsChecker
                     FileName = "npm",
                     Arguments = "--version",
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
             
-            npmProcess.Start();
-            string npmVersion = await npmProcess.StandardOutput.ReadToEndAsync();
-            await npmProcess.WaitForExitAsync();
+            try
+            {
+                npmProcess.Start();
+                string npmVersion = await npmProcess.StandardOutput.ReadToEndAsync();
+                await npmProcess.WaitForExitAsync();
 
-            if (npmProcess.ExitCode == 0)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"  ✓ npm encontrado: {npmVersion.Trim()}");
-                Console.ResetColor();
+                if (npmProcess.ExitCode == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"  ✓ npm encontrado: {npmVersion.Trim()}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    throw new Exception("npm no encontrado");
+                }
             }
-            else
+            catch
             {
-                throw new Exception("npm no encontrado");
+                // Intentar agregar Node.js al PATH
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("  ⚠ npm no encontrado en PATH, intentando agregar...");
+                Console.ResetColor();
+                
+                // Ubicaciones comunes de Node.js
+                string[] possiblePaths = new[]
+                {
+                    @"C:\Program Files\nodejs",
+                    @"C:\Program Files (x86)\nodejs",
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "nodejs"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "npm")
+                };
+
+                foreach (var path in possiblePaths)
+                {
+                    if (Directory.Exists(path))
+                    {
+                        var currentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+                        if (!currentPath.Contains(path))
+                        {
+                            Environment.SetEnvironmentVariable("PATH", $"{currentPath};{path}", EnvironmentVariableTarget.Process);
+                            Console.WriteLine($"  ✓ Agregado al PATH: {path}");
+                        }
+                    }
+                }
+
+                // Intentar de nuevo
+                var npmRetry = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "npm",
+                        Arguments = "--version",
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
+                
+                try
+                {
+                    npmRetry.Start();
+                    string npmVersion = await npmRetry.StandardOutput.ReadToEndAsync();
+                    await npmRetry.WaitForExitAsync();
+
+                    if (npmRetry.ExitCode == 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"  ✓ npm encontrado: {npmVersion.Trim()}");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        throw new Exception("npm no encontrado después de agregar al PATH");
+                    }
+                }
+                catch
+                {
+                    throw new Exception("npm no encontrado");
+                }
             }
         }
         catch (Exception)
