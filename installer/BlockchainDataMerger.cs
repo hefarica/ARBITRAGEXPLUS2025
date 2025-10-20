@@ -1,7 +1,48 @@
-using MASTER_RUNNER.Collectors;
-using ArbitrageXStreamListener;
+using System.Collections.Generic;
 
 namespace MASTER_RUNNER;
+
+// --- Clases de Datos Definidas Aquí Mismo ---
+
+public class DefiLlamaData
+{
+    public string name { get; set; } = "";
+    public string chainId { get; set; } = "";
+    public string symbol { get; set; } = "";
+    public double tvl { get; set; }
+    public double dailyVolume { get; set; }
+    public double txns24h { get; set; }
+    public double gasCostUSD { get; set; }
+}
+
+public class LlamanodesData
+{
+    public string name { get; set; } = "";
+    public string chainId { get; set; } = "";
+    public List<string>? rpcUrls { get; set; }
+    public string? wssUrl { get; set; }
+    public string? explorerUrl { get; set; }
+    public bool eip1559Supported { get; set; }
+    public double? maxGasPrice { get; set; }
+    public double? minGasPrice { get; set; }
+}
+
+public class PublicnodesData
+{
+    public string? rpcUrl { get; set; }
+    public string health { get; set; } = "unknown";
+}
+
+public class BlockchainData
+{
+    public Dictionary<string, object> Data { get; set; } = new();
+
+    public string? GetString(string key) => Data.TryGetValue(key, out var value) ? value?.ToString() : null;
+    public double? GetDouble(string key) => Data.TryGetValue(key, out var value) && value is double d ? d : null;
+    public void SetData(string key, object? value) { if (value != null) Data[key] = value; }
+}
+
+// --- Lógica de Fusión ---
 
 public static class BlockchainDataMerger
 {

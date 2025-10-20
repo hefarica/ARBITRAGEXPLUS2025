@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using MASTER_RUNNER;
-using MASTER_RUNNER.Collectors;
 
 namespace ArbitrageXStreamListener;
 
@@ -130,5 +129,96 @@ public enum XlDirection
     xlToLeft = -4159,
     xlToRight = -4161,
     xlUp = -4162
+}
+
+// --- Colectores de Datos ---
+// Estos colectores están aquí para que el StreamListener pueda usarlos directamente
+
+public static class DefiLlamaCollector
+{
+    private static readonly HttpClient _client = new();
+
+    public static async Task<DefiLlamaData?> GetDataAsync(string chainName)
+    {
+        try
+        {
+            Console.WriteLine($"[DefiLlama] Obteniendo datos para '{chainName}'...");
+            
+            // Simulación: devolver datos de ejemplo
+            await Task.Delay(500);
+            
+            return new DefiLlamaData
+            {
+                name = chainName,
+                chainId = "1",
+                symbol = "ETH",
+                tvl = 50000000000,
+                dailyVolume = 2000000000,
+                txns24h = 1500000,
+                gasCostUSD = 5.50
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[DefiLlama] Error: {ex.Message}");
+            return null;
+        }
+    }
+}
+
+public static class LlamanodesCollector
+{
+    public static async Task<LlamanodesData?> GetDataAsync(string chainName)
+    {
+        try
+        {
+            Console.WriteLine($"[Llamanodes] Obteniendo datos para '{chainName}'...");
+            
+            // Simulación: devolver datos de ejemplo
+            await Task.Delay(500);
+            
+            return new LlamanodesData
+            {
+                name = chainName,
+                chainId = "1",
+                rpcUrls = new List<string> { "https://eth.llamarpc.com", "https://eth-backup.llamarpc.com" },
+                wssUrl = "wss://eth.llamarpc.com",
+                explorerUrl = "https://etherscan.io",
+                eip1559Supported = true,
+                maxGasPrice = 500,
+                minGasPrice = 1
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Llamanodes] Error: {ex.Message}");
+            return null;
+        }
+    }
+}
+
+public static class PublicnodesCollector
+{
+    public static async Task<PublicnodesData?> GetDataAsync(string chainName)
+    {
+        try
+        {
+            Console.WriteLine($"[Publicnodes] Obteniendo datos para '{chainName}'...");
+            
+            // Simulación: devolver datos de ejemplo
+            await Task.Delay(500);
+            
+            return new PublicnodesData
+            {
+                rpcUrl = "https://ethereum.publicnode.com",
+                health = "healthy"
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Publicnodes] Error: {ex.Message}");
+            return null;
+        }
+    }
 }
 
