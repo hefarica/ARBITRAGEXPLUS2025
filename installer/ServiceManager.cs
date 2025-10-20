@@ -44,8 +44,8 @@ public static class ServiceManager
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "npm",
-                    Arguments = "run dev",
+                    FileName = "cmd.exe",
+                    Arguments = "/c npm run dev",
                     WorkingDirectory = Path.GetFullPath(apiServerPath),
                     UseShellExecute = false,
                     CreateNoWindow = true,
@@ -186,6 +186,7 @@ public static class ServiceManager
         // Buscar el ejecutable en las posibles ubicaciones
         var possiblePaths = new[]
         {
+            Path.Combine("..", "automation", "excel-com-bridge", "bin", "x86", "Release", "net48", "win-x86", "ExcelComBridge.exe"),
             Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net48", "win-x86", "ExcelComBridge.exe"),
             Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net48", "ExcelComBridge.exe"),
             Path.Combine("..", "automation", "excel-com-bridge", "bin", "x86", "Release", "net48", "ExcelComBridge.exe")
