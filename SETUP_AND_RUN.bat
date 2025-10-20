@@ -1,17 +1,9 @@
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
+
 REM ############################################################################
 REM #                                                                          #
 REM #  ARBITRAGEXPLUS2025 - Instalador y Ejecutor Maestro                     #
-REM #                                                                          #
-REM #  Este script es IDEMPOTENTE. Puede ejecutarse multiples veces y         #
-REM #  siempre dejara el sistema en el estado deseado:                        #
-REM #    - Chocolatey instalado                                               #
-REM #    - Node.js v22.20.0 instalado                                         #
-REM #    - npm v10.9.3 (incluido con Node.js)                                 #
-REM #    - Python 3.11+ instalado                                             #
-REM #    - .NET SDK instalado                                                 #
-REM #    - Todos los servicios compilados y ejecutandose                      #
 REM #                                                                          #
 REM ############################################################################
 
@@ -45,13 +37,15 @@ WHERE choco >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     ECHO [INFO] Chocolatey no encontrado. Iniciando instalacion...
     ECHO [INFO] Este proceso puede tardar varios minutos...
+    ECHO.
     
-    powershell -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command ^
-    "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; ^
-    iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+    powershell -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
     
     IF %ERRORLEVEL% NEQ 0 (
+        ECHO.
         ECHO [ERROR] Fallo la instalacion de Chocolatey.
+        ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
+        ECHO.
         PAUSE
         EXIT /B 1
     )
@@ -64,6 +58,7 @@ IF %ERRORLEVEL% NEQ 0 (
     IF %ERRORLEVEL% NEQ 0 (
         ECHO [ERROR] Chocolatey no esta disponible despues de la instalacion.
         ECHO [INFO] Es posible que necesite reiniciar la terminal.
+        ECHO.
         PAUSE
         EXIT /B 1
     )
@@ -85,10 +80,14 @@ WHERE node >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     ECHO [INFO] Node.js no encontrado.
     ECHO [INFO] Instalando Node.js %REQUIRED_NODE_VERSION%...
+    ECHO.
     choco install nodejs --version="%REQUIRED_NODE_VERSION_NUM%" -y --force
     
     IF %ERRORLEVEL% NEQ 0 (
+        ECHO.
         ECHO [ERROR] Fallo la instalacion de Node.js.
+        ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
+        ECHO.
         PAUSE
         EXIT /B 1
     )
@@ -109,14 +108,19 @@ IF %ERRORLEVEL% NEQ 0 (
         ECHO [WARN] Version incorrecta detectada: !CURRENT_NODE_VERSION!
         ECHO [INFO] Se requiere: %REQUIRED_NODE_VERSION%
         ECHO [INFO] Desinstalando version actual...
+        ECHO.
         
         choco uninstall nodejs -y --remove-dependencies
         
         ECHO [INFO] Instalando Node.js %REQUIRED_NODE_VERSION%...
+        ECHO.
         choco install nodejs --version="%REQUIRED_NODE_VERSION_NUM%" -y --force
         
         IF %ERRORLEVEL% NEQ 0 (
+            ECHO.
             ECHO [ERROR] Fallo la reinstalacion de Node.js.
+            ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
+            ECHO.
             PAUSE
             EXIT /B 1
         )
@@ -136,12 +140,20 @@ WHERE python >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     ECHO [INFO] Python no encontrado.
     ECHO [INFO] Instalando Python 3.11...
+    ECHO.
     choco install python --version=3.11.0 -y
     
-    ECHO [INFO] Refrescando variables de entorno...
-    CALL refreshenv.cmd >nul 2>&1
-    
-    ECHO [OK] Python instalado correctamente.
+    IF %ERRORLEVEL% NEQ 0 (
+        ECHO.
+        ECHO [ERROR] Fallo la instalacion de Python.
+        ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
+        ECHO [INFO] Continuando sin Python (algunos componentes no funcionaran)...
+        ECHO.
+    ) ELSE (
+        ECHO [INFO] Refrescando variables de entorno...
+        CALL refreshenv.cmd >nul 2>&1
+        ECHO [OK] Python instalado correctamente.
+    )
 ) ELSE (
     FOR /F "tokens=*" %%p IN ('python --version 2^>nul') DO SET "PYTHON_VERSION=%%p"
     ECHO [OK] Python ya esta instalado (!PYTHON_VERSION!).
@@ -155,11 +167,20 @@ WHERE dotnet >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     ECHO [INFO] .NET SDK no encontrado.
     ECHO [INFO] Instalando .NET SDK...
+    ECHO.
     choco install dotnet-sdk -y
+    
+    IF %ERRORLEVEL% NEQ 0 (
+        ECHO.
+        ECHO [ERROR] Fallo la instalacion de .NET SDK.
+        ECHO [ERROR] Codigo de salida: %ERRORLEVEL%
+        ECHO.
+        PAUSE
+        EXIT /B 1
+    )
     
     ECHO [INFO] Refrescando variables de entorno...
     CALL refreshenv.cmd >nul 2>&1
-    
     ECHO [OK] .NET SDK instalado correctamente.
 ) ELSE (
     FOR /F "tokens=*" %%d IN ('dotnet --version 2^>nul') DO SET "DOTNET_VERSION=%%d"
@@ -171,8 +192,40 @@ REM --- Paso 5: Compilacion y Ejecucion del Sistema ---
 ECHO [PASO 5/6] Iniciando sistema ARBITRAGEXPLUS2025...
 ECHO.
 
+REM Verificar que estamos en el directorio correcto
+IF NOT EXIST "installer" (
+    ECHO [ERROR] No se encuentra el directorio 'installer'.
+    ECHO [ERROR] Asegurate de ejecutar este script desde la raiz del proyecto.
+    ECHO [ERROR] Directorio actual: %CD%
+    ECHO.
+    PAUSE
+    EXIT /B 1
+)
+
+ECHO [INFO] Cambiando al directorio installer...
 CD installer
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO [ERROR] No se pudo cambiar al directorio installer.
+    ECHO.
+    PAUSE
+    EXIT /B 1
+)
+
+ECHO [INFO] Ejecutando MASTER_RUNNER...
+ECHO.
 dotnet run
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO.
+    ECHO [ERROR] El MASTER_RUNNER fallo con codigo de salida: %ERRORLEVEL%
+    ECHO.
+    CD ..
+    PAUSE
+    EXIT /B 1
+)
+
+CD ..
 
 ECHO.
 
@@ -193,7 +246,7 @@ npm -v 2>nul || ECHO [ERROR] npm no disponible
 
 ECHO.
 ECHO Python:
-python --version 2>nul || ECHO [ERROR] python no disponible
+python --version 2>nul || ECHO [WARN] python no disponible
 
 ECHO.
 ECHO .NET SDK:
@@ -205,12 +258,12 @@ choco -v 2>nul || ECHO [ERROR] choco no disponible
 
 ECHO.
 ECHO ============================================================================
-ECHO   SISTEMA ARBITRAGEXPLUS2025 INICIADO
+ECHO   SISTEMA ARBITRAGEXPLUS2025 FINALIZADO
 ECHO ============================================================================
 ECHO.
-ECHO El entorno de desarrollo ha sido configurado correctamente.
-ECHO Todas las dependencias requeridas estan instaladas.
+ECHO El entorno de desarrollo ha sido configurado.
 ECHO.
+ECHO Si hubo errores, revisa los mensajes anteriores.
 ECHO Si los comandos no funcionan, cierra esta ventana
 ECHO y abre una nueva terminal o reinicia tu equipo.
 ECHO.
