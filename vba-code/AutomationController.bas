@@ -1,158 +1,218 @@
 Attribute VB_Name = "AutomationController"
-'===============================================================================
-' AutomationController - Módulo VBA para ARBITRAGEXPLUS2025
-' Detecta cambios en columnas PULL (blancas) y activa el sistema backend
-'===============================================================================
+' ========================================
+' ARBITRAGEXPLUS2025 - Excel VBA Macros
+' ========================================
+'
+' Instrucciones de instalación:
+' 1. Abre ARBITRAGEXPLUS2025.xlsm
+' 2. Presiona Alt+F11 para abrir el editor VBA
+' 3. Haz doble clic en "ThisWorkbook"
+' 4. Copia y pega este código
+' 5. Guarda el archivo
+' 6. Cierra el editor VBA
+'
+' ========================================
 
 Option Explicit
 
-' Referencia al objeto COM externo
-Private ExternalComBridge As Object
+' Variable global para el objeto COM externo
+Public ExternalComBridge As Object
 
-' Flag para prevenir bucles infinitos
-Private EnableEventHandling As Boolean
+' ========================================
+' Evento: Al abrir el libro
+' ========================================
+Private Sub Workbook_Open()
+    ' Mensaje de bienvenida
+    Debug.Print "ARBITRAGEXPLUS2025 - Sistema de automatización cargado"
+    
+    ' Habilitar eventos
+    Application.EnableEvents = True
+    
+    ' Opcional: Conectar con COM Bridge externo
+    ' ConnectToComBridge
+End Sub
 
-' Constantes de colores (RGB en formato Long)
-Private Const COLOR_PUSH As Long = &HC47244  ' Azul (#4472C4)
-Private Const COLOR_PULL As Long = &HFFFFFF  ' Blanco
-
-'===============================================================================
-' INICIALIZACIÓN
-'===============================================================================
-
-Public Sub StartAutomationEngine()
+' ========================================
+' Evento: Al cambiar cualquier celda
+' ========================================
+Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range)
+    ' Solo procesar si es la hoja BLOCKCHAINS
+    If Sh.Name <> "BLOCKCHAINS" Then Exit Sub
+    
+    ' Solo procesar si es la columna B (NAME)
+    If Target.Column <> 2 Then Exit Sub
+    
+    ' Evitar bucles infinitos y parpadeo
+    Application.EnableEvents = False
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
     On Error GoTo ErrorHandler
     
-    ' Intentar crear instancia del objeto COM
-    Set ExternalComBridge = CreateObject("ExcelComBridge.StreamListener")
+    ' Obtener el valor de la celda
+    Dim cellValue As String
+    cellValue = Trim(Target.Value)
     
-    If Not ExternalComBridge Is Nothing Then
-        Debug.Print "[VBA] Motor de automatización conectado correctamente"
-        MsgBox "Sistema de automatización iniciado correctamente.", vbInformation, "ARBITRAGEXPLUS2025"
-        EnableEventHandling = True
+    ' Si el valor está vacío, limpiar la fila
+    If cellValue = "" Then
+        Call ClearPushColumns(Target.Row)
+        Debug.Print "Fila " & Target.Row & " limpiada (NAME vacío)"
     Else
-        Debug.Print "[VBA] Error: No se pudo crear instancia del objeto COM"
-        MsgBox "No se pudo conectar al motor de automatización." & vbCrLf & _
-               "Asegúrate de que ExcelComBridge.exe esté en ejecución.", vbExclamation, "Error"
+        ' Notificar cambio al sistema externo
+        Debug.Print "Cambio detectado en fila " & Target.Row & ": " & cellValue
+        
+        ' Si hay COM Bridge conectado, notificar
+        If Not ExternalComBridge Is Nothing Then
+            ExternalComBridge.OnNameChanged Target.Row, cellValue
+        End If
     End If
-    
-    Exit Sub
     
 ErrorHandler:
-    Debug.Print "[VBA] Error al inicializar: " & Err.Description
-    MsgBox "Error al inicializar el sistema de automatización:" & vbCrLf & _
-           Err.Description & vbCrLf & vbCrLf & _
-           "Asegúrate de que el puente COM esté compilado y registrado.", vbCritical, "Error"
-End Sub
-
-Public Sub StopAutomationEngine()
-    On Error Resume Next
+    ' Restaurar configuración
+    Application.EnableEvents = True
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
     
-    If Not ExternalComBridge Is Nothing Then
-        Set ExternalComBridge = Nothing
-        Debug.Print "[VBA] Motor de automatización desconectado"
-        EnableEventHandling = False
+    If Err.Number <> 0 Then
+        Debug.Print "Error en Workbook_SheetChange: " & Err.Description
     End If
 End Sub
 
-'===============================================================================
-' MANEJO DE EVENTOS
-'===============================================================================
-
-Public Sub HandleCellChange(ByVal Sh As Object, ByVal Target As Range)
-    ' Prevenir bucles infinitos
-    If Not EnableEventHandling Then Exit Sub
-    
-    ' Solo procesar cambios de una celda a la vez
-    If Target.Cells.Count > 1 Then Exit Sub
-    
-    On Error GoTo ErrorHandler
+' ========================================
+' Limpiar columnas PUSH de una fila
+' ========================================
+Sub ClearPushColumns(ByVal rowNumber As Long)
+    ' Desactivar actualización de pantalla
+    Dim screenState As Boolean
+    screenState = Application.ScreenUpdating
+    Application.ScreenUpdating = False
     
     Dim ws As Worksheet
-    Set ws = Sh
+    Set ws = ThisWorkbook.Worksheets("BLOCKCHAINS")
     
-    ' Verificar si la hoja es una de las soportadas
-    If Not IsSupportedSheet(ws.Name) Then Exit Sub
+    ' Obtener encabezados
+    Dim lastCol As Long
+    lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
     
-    ' Obtener información de la columna
-    Dim colIndex As Long
-    colIndex = Target.Column
-    
-    Dim headerCell As Range
-    Set headerCell = ws.Cells(1, colIndex)
-    
-    ' Verificar si es columna PULL (encabezado blanco)
-    If Not IsPullColumn(headerCell) Then Exit Sub
-    
-    ' Obtener datos
-    Dim rowNum As Long
-    rowNum = Target.Row
-    
-    Dim colName As String
-    colName = headerCell.Value
-    
-    Dim cellValue As String
-    cellValue = Target.Value
-    
-    Debug.Print "[VBA] Cambio detectado: " & ws.Name & "!" & colName & rowNum & " = '" & cellValue & "'"
-    
-    ' Llamar al objeto COM
-    If Not ExternalComBridge Is Nothing Then
-        EnableEventHandling = False ' Desactivar eventos temporalmente
+    Dim col As Long
+    For col = 1 To lastCol
+        ' Obtener color de fondo del encabezado
+        Dim headerColor As Long
+        headerColor = ws.Cells(1, col).Interior.Color
         
-        ExternalComBridge.OnCellChanged rowNum, colName, cellValue
-        
-        EnableEventHandling = True ' Reactivar eventos
-    Else
-        Debug.Print "[VBA] Error: Objeto COM no está disponible"
-    End If
+        ' Si es azul (#4472C4 = RGB(68, 114, 196) = 12874308)
+        ' Permitir un rango de colores azules
+        If IsBlueColor(headerColor) Then
+            ' Limpiar la celda
+            ws.Cells(rowNumber, col).Value = ""
+        End If
+    Next col
     
-    Exit Sub
-    
-ErrorHandler:
-    EnableEventHandling = True ' Asegurar que se reactiven los eventos
-    Debug.Print "[VBA] Error en HandleCellChange: " & Err.Description
+    ' Restaurar actualización de pantalla
+    Application.ScreenUpdating = screenState
 End Sub
 
-'===============================================================================
-' FUNCIONES AUXILIARES
-'===============================================================================
-
-Private Function IsSupportedSheet(ByVal sheetName As String) As Boolean
-    ' Lista de hojas soportadas
-    Select Case UCase(sheetName)
-        Case "BLOCKCHAINS", "DEXES", "ASSETS", "POOLS", "ROUTES"
-            IsSupportedSheet = True
-        Case Else
-            IsSupportedSheet = False
-    End Select
-End Function
-
-Private Function IsPullColumn(ByVal headerCell As Range) As Boolean
-    ' Verificar si el color de fondo es blanco (PULL)
-    Dim bgColor As Long
-    bgColor = headerCell.Interior.Color
+' ========================================
+' Verificar si un color es azul (PUSH)
+' ========================================
+Function IsBlueColor(ByVal Color As Long) As Boolean
+    ' Convertir color a RGB
+    Dim r As Long, g As Long, b As Long
+    r = Color Mod 256
+    g = (Color \ 256) Mod 256
+    b = (Color \ 65536) Mod 256
     
-    ' Blanco (RGB: 255,255,255 = 16777215 en Long)
-    ' También considerar celdas sin color (xlNone = -4142)
-    If bgColor = COLOR_PULL Or bgColor = 16777215 Or bgColor = -4142 Then
-        IsPullColumn = True
+    ' Azul #4472C4 = RGB(68, 114, 196)
+    ' Permitir variación de ±10 en cada componente
+    If Abs(r - 196) <= 10 And Abs(g - 114) <= 10 And Abs(b - 68) <= 10 Then
+        IsBlueColor = True
     Else
-        IsPullColumn = False
+        IsBlueColor = False
     End If
 End Function
 
-Private Function IsPushColumn(ByVal headerCell As Range) As Boolean
-    ' Verificar si el color de fondo es azul (PUSH)
-    Dim bgColor As Long
-    bgColor = headerCell.Interior.Color
+' ========================================
+' Conectar con COM Bridge externo
+' ========================================
+Sub ConnectToComBridge()
+    On Error Resume Next
     
-    ' Azul #4472C4 (RGB: 68,114,196)
-    ' En formato Long: 196*65536 + 114*256 + 68 = 12874308
-    If bgColor = COLOR_PUSH Or bgColor = 12874308 Then
-        IsPushColumn = True
+    ' Intentar conectar con el objeto COM
+    Set ExternalComBridge = GetObject(, "ExcelComBridge.Application")
+    
+    If Err.Number <> 0 Then
+        Debug.Print "COM Bridge no está ejecutándose (normal si usas solo VBA)"
+        Set ExternalComBridge = Nothing
     Else
-        IsPushColumn = False
+        Debug.Print "Conectado a COM Bridge externo"
     End If
-End Function
+    
+    On Error GoTo 0
+End Sub
+
+' ========================================
+' Desconectar COM Bridge
+' ========================================
+Sub DisconnectComBridge()
+    If Not ExternalComBridge Is Nothing Then
+        Set ExternalComBridge = Nothing
+        Debug.Print "Desconectado de COM Bridge"
+    End If
+End Sub
+
+' ========================================
+' Función de prueba manual
+' ========================================
+Sub TestAutomation()
+    ' Prueba: Escribir "polygon" en B5
+    ThisWorkbook.Worksheets("BLOCKCHAINS").Range("B5").Value = "polygon"
+    
+    ' Esperar 2 segundos
+    Application.Wait Now + TimeValue("00:00:02")
+    
+    ' Verificar si se llenaron las columnas PUSH
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Worksheets("BLOCKCHAINS")
+    
+    Dim chainId As String
+    chainId = ws.Range("C5").Value ' Asumiendo que CHAIN_ID está en columna C
+    
+    If chainId <> "" Then
+        MsgBox "✓ Automatización funcionando!" & vbCrLf & "CHAIN_ID: " & chainId, vbInformation
+    Else
+        MsgBox "⚠ Las columnas PUSH no se llenaron automáticamente" & vbCrLf & "Verifica que el COM Bridge esté ejecutándose", vbExclamation
+    End If
+End Sub
+
+' ========================================
+' Limpiar todas las filas vacías
+' ========================================
+Sub CleanEmptyRows()
+    ' Desactivar actualización de pantalla para mejor rendimiento
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Worksheets("BLOCKCHAINS")
+    
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, 2).End(xlUp).Row
+    
+    Dim Row As Long
+    Dim cleaned As Long
+    cleaned = 0
+    
+    For Row = 2 To lastRow
+        If Trim(ws.Cells(Row, 2).Value) = "" Then
+            Call ClearPushColumns(Row)
+            cleaned = cleaned + 1
+        End If
+    Next Row
+    
+    ' Restaurar configuración
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    
+    MsgBox "Limpiadas " & cleaned & " filas con NAME vacío", vbInformation
+End Sub
 
