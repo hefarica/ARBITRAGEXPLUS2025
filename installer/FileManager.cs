@@ -7,7 +7,7 @@ public static class FileManager
     public static async Task CompileComBridgeAsync()
     {
         string projectPath = Path.Combine("..", "automation", "excel-com-bridge", "ExcelComBridge.csproj");
-        string exePath = Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net8.0", "ExcelComBridge.exe");
+        string exePath = Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net48", "win-x86", "ExcelComBridge.exe");
 
         if (!File.Exists(projectPath))
         {
@@ -30,9 +30,11 @@ public static class FileManager
             
             // Verificar archivos .cs en la carpeta
             var csFiles = Directory.GetFiles(Path.GetDirectoryName(projectPath)!, "*.cs", SearchOption.AllDirectories);
-            var newestCsFile = csFiles.Select(f => File.GetLastWriteTime(f)).Max();
-            
-            needsCompilation = newestCsFile > exeLastWrite || projectLastWrite > exeLastWrite;
+            if (csFiles.Length > 0)
+            {
+                var newestCsFile = csFiles.Select(f => File.GetLastWriteTime(f)).Max();
+                needsCompilation = newestCsFile > exeLastWrite || projectLastWrite > exeLastWrite;
+            }
         }
 
         if (!needsCompilation)
@@ -44,7 +46,7 @@ public static class FileManager
             return;
         }
 
-        Console.WriteLine("  Compilando Excel COM Bridge...");
+        Console.WriteLine("  Compilando Excel COM Bridge para x86 (.NET Framework 4.8)...");
         Console.WriteLine("  (Esto puede tardar 1-2 minutos)");
         Console.WriteLine();
 
@@ -55,7 +57,7 @@ public static class FileManager
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = $"build \"{projectPath}\" -c Release --nologo",
+                    Arguments = $"build \"{projectPath}\" -c Release /p:Platform=x86 --nologo",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -90,7 +92,7 @@ public static class FileManager
             {
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("  ✓ Excel COM Bridge compilado exitosamente");
+                Console.WriteLine("  ✓ Excel COM Bridge compilado exitosamente para x86");
                 Console.ResetColor();
                 Console.WriteLine($"    Ejecutable: {Path.GetFullPath(exePath)}");
             }

@@ -92,7 +92,7 @@ public static class ServiceManager
             await Task.Delay(2000);
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("  ✓ API Server iniciado (puerto 3000)");
+            Console.WriteLine("  ✓ API Server iniciado (puerto 8009)");
             Console.ResetColor();
         }
         catch (Exception ex)
@@ -183,13 +183,34 @@ public static class ServiceManager
 
     private static async Task StartComBridgeAsync()
     {
-        string comBridgePath = Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net8.0", "ExcelComBridge.exe");
+        // Buscar el ejecutable en las posibles ubicaciones
+        var possiblePaths = new[]
+        {
+            Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net48", "win-x86", "ExcelComBridge.exe"),
+            Path.Combine("..", "automation", "excel-com-bridge", "bin", "Release", "net48", "ExcelComBridge.exe"),
+            Path.Combine("..", "automation", "excel-com-bridge", "bin", "x86", "Release", "net48", "ExcelComBridge.exe")
+        };
 
-        if (!File.Exists(comBridgePath))
+        string? comBridgePath = null;
+        foreach (var path in possiblePaths)
+        {
+            if (File.Exists(path))
+            {
+                comBridgePath = path;
+                break;
+            }
+        }
+
+        if (comBridgePath == null)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("  ⚠ Excel COM Bridge no encontrado, omitiendo...");
             Console.WriteLine("    El puente COM debe compilarse primero.");
+            Console.WriteLine("    Ubicaciones buscadas:");
+            foreach (var path in possiblePaths)
+            {
+                Console.WriteLine($"      - {Path.GetFullPath(path)}");
+            }
             Console.ResetColor();
             return;
         }
@@ -265,16 +286,28 @@ public static class ServiceManager
             Path.Combine("..", "ARBITRAGEXPLUS2025.xlsm"),
             Path.Combine("..", "data", "ARBITRAGEXPLUS2025.xlsm"),
             Path.Combine("..", "..", "ARBITRAGEXPLUS2025.xlsm"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "ARBITRAGEXPLUS2025.xlsm"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ARBITRAGEXPLUS2025.xlsm"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "ARBITRAGEXPLUS2025.xlsm"),
             "ARBITRAGEXPLUS2025.xlsm"
         };
 
         string? excelPath = null;
         foreach (var path in possiblePaths)
         {
-            if (File.Exists(path))
+            try
             {
-                excelPath = Path.GetFullPath(path);
-                break;
+                string fullPath = Path.GetFullPath(path);
+                if (File.Exists(fullPath))
+                {
+                    excelPath = fullPath;
+                    break;
+                }
+            }
+            catch
+            {
+                // Ignorar errores de ruta inválida
+                continue;
             }
         }
 
@@ -302,7 +335,14 @@ public static class ServiceManager
             Console.WriteLine("    Ubicaciones buscadas:");
             foreach (var path in possiblePaths)
             {
-                Console.WriteLine($"      - {Path.GetFullPath(path)}");
+                try
+                {
+                    Console.WriteLine($"      - {Path.GetFullPath(path)}");
+                }
+                catch
+                {
+                    Console.WriteLine($"      - {path}");
+                }
             }
             Console.ResetColor();
             Console.WriteLine();
