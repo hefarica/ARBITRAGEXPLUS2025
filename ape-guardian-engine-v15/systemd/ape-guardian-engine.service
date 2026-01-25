@@ -1,0 +1,17 @@
+[Unit]
+Description=APE Guardian Engine v15
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ape-guardian
+ExecStart=/usr/bin/python3 /opt/ape-guardian/api_server.py
+Restart=always
+RestartSec=5
+Environment=PYTHONPATH=/opt/ape-guardian
+Environment=M3U8_DIRECTORY=/var/www/lists
+Environment=JWT_SECRET=ape-guardian-secret-key-change-in-production
+
+[Install]
+WantedBy=multi-user.target
